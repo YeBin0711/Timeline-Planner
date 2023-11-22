@@ -13,14 +13,16 @@
         android:textSize="16dp"
         android:textStyle="bold"
         android:layout_marginTop="70dp"/>
-    
+
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/user"
+        android:layout_width="88dp"
+        android:layout_height="89dp"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:background="@drawable/edittext_background"/>
+        android:background="@drawable/background_circle"
+        android:padding="13dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
