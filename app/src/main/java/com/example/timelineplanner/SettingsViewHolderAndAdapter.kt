@@ -53,8 +53,8 @@ class SettingsAdapter(val settingNames: MutableList<String>) : RecyclerView.Adap
                     AlertDialog.Builder(this).run {
                         setTitle(settingNames[position])
                         setSingleChoiceItems(timeStyles, 처음_선택할_항목_인덱스, 핸들러)
-                        setPositiveButton("확인")
-                        setNegativeButton("취소")
+                        setPositiveButton("확인", )
+                        setNegativeButton("취소", )
                         setCancelable(true)
                         show()
                     }.setCanceledOnTouchOutside(true)
@@ -62,9 +62,9 @@ class SettingsAdapter(val settingNames: MutableList<String>) : RecyclerView.Adap
                 3 -> {
                     AlertDialog.Builder(this).run {
                         setTitle(settingNames[position])
-                        setSingleChoiceItems(sorting, 처음_선택할_항목_인덱스, 핸들러
-                        setPositiveButton("확인")
-                        setNegativeButton("취소")
+                        setSingleChoiceItems(sorting, 처음_선택할_항목_인덱스, 핸들러)
+                        setPositiveButton("확인", )
+                        setNegativeButton("취소", )
                         setCancelable(true)
                         show()
                     }.setCanceledOnTouchOutside(true)
@@ -73,8 +73,8 @@ class SettingsAdapter(val settingNames: MutableList<String>) : RecyclerView.Adap
                     AlertDialog.Builder(this).run {
                         setTitle(settingNames[position])
                         setMultiChoiceItems(accounts, 처음_선택할_항목_인덱스, 핸들러)
-                        setPositiveButton("확인")
-                        setNegativeButton("취소")
+                        setPositiveButton("확인", )
+                        setNegativeButton("취소", )
                         setCancelable(true)
                         show()
                     }.setCanceledOnTouchOutside(true)
