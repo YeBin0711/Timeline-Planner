@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_marginLeft="25dp"
+        android:textStyle="bold"
+        android:text="2023년 11월" />
+
+    <ImageButton
+        android:layout_width="23dp"
+        android:layout_height="20dp"
+        android:src="@drawable/book" />
+
+</LinearLayout>
