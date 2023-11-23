@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.TimelinePlanner" parent="Base.Theme.TimelinePlanner" />
+
+    <style name="settingName">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="settingItem">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#AEAEAE</item>
+    </style>
 </resources>
