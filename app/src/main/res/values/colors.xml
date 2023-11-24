@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#D9D9D9</color>
     <color name="drakgray">#C4C4C4</color>
+    <color name="phvink">#F2D5FF</color>
+    <color name="skyblue">#7FE8FF</color>
 </resources>

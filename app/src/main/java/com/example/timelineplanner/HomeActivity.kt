@@ -43,23 +43,22 @@ class HomeActivity : AppCompatActivity() {
         val dateTextView0: TextView = findViewById(R.id.main_day)
         dateTextView0.text = "$formattedDate0" // TextView에 날짜 설정
 
-        //날짜 출력
+        fun setTextViewDates(currentDate: LocalDate) {
+            val formatter = DateTimeFormatter.ofPattern("dd")
 
-        val dateFormatter1 = DateTimeFormatter.ofPattern("dd") // 날짜 형식 지정 (예: 2023-11-24)
-        val formattedDate1 = currentDate.format(dateFormatter1)
+            val dateTextViewIds = listOf(R.id.day_text1, R.id.day_text2, R.id.day_text3,
+                R.id.day_text4, R.id.day_text5, R.id.day_text6, R.id.day_text7)
 
-        val dateTextView1: TextView = findViewById(R.id.day_text1)
-        dateTextView1.text = "$formattedDate1"
+            val dateOffsets = listOf(-3, -2, -1, 0, 1, 2, 3)
 
-        //날짜 출력
+            dateTextViewIds.forEachIndexed { index, textViewId ->
+                val formattedDate = currentDate.plusDays(dateOffsets[index].toLong()).format(formatter)
+                val dateTextView: TextView = findViewById(textViewId)
+                dateTextView.text = formattedDate
+            }
+        }
 
-        val dateFormatter2 = DateTimeFormatter.ofPattern("dd") // 날짜 형식 지정 (예: 2023-11-24)
-        val formattedDate2 = currentDate.plusDays(1).format(dateFormatter2) // 날짜를 하루 늘림
-
-        val dateTextView2: TextView = findViewById(R.id.day_text2)
-        dateTextView2.text = formattedDate2
-
-
+        setTextViewDates(currentDate)
 
         //recyclerview 작성
         recyclerView = findViewById(R.id.weekday_recyclerView)

@@ -40,12 +40,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/weekday_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="611dp" />
+            android:layout_height="500dp" />
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right"
+            android:backgroundTint="@color/gray">
+
+        </Button>
 
     </LinearLayout>
 
