@@ -3,7 +3,6 @@ package com.example.timelineplanner
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MotionEvent
 import com.example.timelineplanner.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +21,5 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
-   }
+    }
 }
-
-
