@@ -17,4 +17,9 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#AEAEAE</item>
     </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- colorAccent를 변경하여 체크박스의 색상을 설정할 수 있어요. -->
+        <item name="colorAccent">@color/gray</item>
+    </style>
 </resources>

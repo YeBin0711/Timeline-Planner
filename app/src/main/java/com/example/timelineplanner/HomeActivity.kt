@@ -1,6 +1,11 @@
 package com.example.timelineplanner
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
+import android.graphics.drawable.shapes.RectShape
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,13 +13,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.ActivityHomeBinding
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -33,6 +42,11 @@ class HomeActivity : AppCompatActivity() {
         binding.settings.setOnClickListener{
             val intent = Intent(this,SettingsActivity::class.java )
             startActivity(intetnt)
+        }
+
+        binding.btnPlus.setOnClickListener{
+            val intent = Intent(this,수정창:class.java)
+            startActivity(intent)
         }*/
 
         //달력 출력
@@ -43,22 +57,49 @@ class HomeActivity : AppCompatActivity() {
         val dateTextView0: TextView = findViewById(R.id.main_day)
         dateTextView0.text = "$formattedDate0" // TextView에 날짜 설정
 
-        fun setTextViewDates(currentDate: LocalDate) {
-            val formatter = DateTimeFormatter.ofPattern("dd")
+        fun getDate(currentDate: LocalDate): String {
+            val dateFormatter = DateTimeFormatter.ofPattern("E\n dd")
+            return currentDate.format(dateFormatter)
+        }
+
+        fun updateDates() {
+            val currentDate = LocalDate.now()
+            val startOfWeek = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - DayOfWeek.MONDAY.value.toLong())
 
             val dateTextViewIds = listOf(R.id.day_text1, R.id.day_text2, R.id.day_text3,
                 R.id.day_text4, R.id.day_text5, R.id.day_text6, R.id.day_text7)
 
-            val dateOffsets = listOf(-3, -2, -1, 0, 1, 2, 3)
+            var offset = 0
 
             dateTextViewIds.forEachIndexed { index, textViewId ->
-                val formattedDate = currentDate.plusDays(dateOffsets[index].toLong()).format(formatter)
+                val currentDay = startOfWeek.plusDays(offset.toLong())
+                //val dateFormatter = DateTimeFormatter.ofPattern("MM/dd (E)")
+                val formattedDate = getDate(currentDay)
+
                 val dateTextView: TextView = findViewById(textViewId)
                 dateTextView.text = formattedDate
+
+                // 요일을 대문자, Bold체로 출력
+                val dayOfWeek = currentDay.dayOfWeek.toString().toUpperCase(Locale.US)
+                val boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD)
+                val boldDayOfWeek = "<b>$dayOfWeek</b>"
+                dateTextView.text = formattedDate.replace(dayOfWeek, boldDayOfWeek)
+                dateTextView.setTypeface(boldTypeface)
+
+                val shape = ShapeDrawable(RectShape())
+                shape.paint.color = if (currentDay == currentDate) Color.LTGRAY else Color.TRANSPARENT
+                dateTextView.background = shape
+
+
+                offset++ // 다음 날짜로 이동
+
+                // 만약 출력한 일요일을 지나면 다음 주의 월요일부터 다시 출력
+                if (offset == 7 && currentDay.dayOfWeek == DayOfWeek.SUNDAY) {
+                    offset = 0 // 월요일부터 시작하도록 오프셋 초기화
+                }
             }
         }
-
-        setTextViewDates(currentDate)
+        updateDates()
 
         //recyclerview 작성
         recyclerView = findViewById(R.id.weekday_recyclerView)
@@ -66,11 +107,27 @@ class HomeActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
 
-        val datas1 = mutableListOf("MON", "TUE","WED" ,"THR","FRI","SAT","SUN")
-        val datas2 = mutableListOf("24","25","26","27","28","29","30")
 
-        adapter = HomeAdapter(datas1, datas2)
+        val stime = mutableListOf("9:00","10:00","13:00","17:00","20:00") //예시로 담아 놓은 것이고 id가 들어와야함
+        val ltime = mutableListOf("10:00","12:00","15:00","19:00","23:00")
+        val ticon = mutableListOf(R.drawable.wakeup,R.drawable.book,R.drawable.muscle,R.drawable.computer,R.drawable.sleeping)
+        val mname = mutableListOf("MON", "TUE","WED","THR","FRI")
+        val note = mutableListOf("24","25","26","27","28")
+
+        adapter = HomeAdapter(stime,ltime,ticon,mname,note)
         recyclerView.adapter = adapter
 
+        /*
+        val imageView = findViewById<ImageView>(R.id.ticon)
+
+        // 다른 색을 받아 배경색을 변경하는 함수
+        fun changeBackgroundColor(color: String) {
+            val parsedColor = Color.parseColor(color)
+            imageView.setBackgroundColor(parsedColor)
+        }
+
+        // 예시: 사용자로부터 입력을 받아 색상 변경
+        val userInputColor = "#00FF00" // 여기에 사용자로부터 입력 받은 색상이 들어가야 합니다.
+        changeBackgroundColor(userInputColor)*/
     }
 }
