@@ -3,8 +3,6 @@ package com.example.timelineplanner
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.SettingsItemBinding
 
@@ -29,6 +27,7 @@ class SettingsAdapter(val settingNames: MutableList<String>) : RecyclerView.Adap
 
 
         binding.settingName.text = settingNames[position]
+
         when (position) {
             0 -> binding.themeSetting.visibility = View.VISIBLE
             1 -> binding.timeStyleSetting.visibility = View.VISIBLE
@@ -37,6 +36,7 @@ class SettingsAdapter(val settingNames: MutableList<String>) : RecyclerView.Adap
             5 -> binding.versionSetting.visibility = View.VISIBLE
         }
 
+        /*
         binding.settingItem.setOnClickListener{
             when (position) {
                 0 -> {
@@ -81,5 +81,6 @@ class SettingsAdapter(val settingNames: MutableList<String>) : RecyclerView.Adap
                 }
             }
         }
+         */
     }
 }

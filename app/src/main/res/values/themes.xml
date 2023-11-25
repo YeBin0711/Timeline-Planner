@@ -16,5 +16,6 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#AEAEAE</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 </resources>
