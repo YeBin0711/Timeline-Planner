@@ -109,7 +109,7 @@ class HomeActivity : AppCompatActivity() {
 
 
         val stime = mutableListOf("9:00","10:00","13:00","17:00","20:00") //예시로 담아 놓은 것이고 id가 들어와야함
-        val ltime = mutableListOf("10:00","12:00","15:00","19:00","23:00")
+        val ltime = mutableListOf("9:30","12:00","15:00","19:00","23:00")
         val ticon = mutableListOf(R.drawable.wakeup,R.drawable.book,R.drawable.muscle,R.drawable.computer,R.drawable.sleeping)
         val mname = mutableListOf("MON", "TUE","WED","THR","FRI")
         val note = mutableListOf("24","25","26","27","28")
