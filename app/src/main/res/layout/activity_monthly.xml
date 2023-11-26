@@ -5,20 +5,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/monthly_header"
-        layout="@layout/monthly_header"
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="85dp">
 
-    <!--
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
-    -->
+            <TextView
+                android:id="@+id/month"
+                android:text="2023년 11월"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:gravity="center"/>
+
+            <ImageView
+                android:src="@android:drawable/arrow_down_float"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/month" />
+
+            <include
+                layout="@layout/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
     <com.kizitonwose.calendar.view.CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
@@ -28,5 +50,4 @@
         app:cv_daySize="rectangle"
         app:cv_outDateStyle="endOfRow"
         app:cv_monthHeaderResource="@layout/monthly_header"/>
-
 </LinearLayout>
