@@ -21,6 +21,10 @@
             android:text="2023년 11월"
             android:textSize="20dp"
             android:textStyle="bold" />
+        <ImageButton
+            android:id="@+id/ca"
+            android:layout_width="20dp"
+            android:layout_height="30dp"/>
 
         <include
             layout="@layout/menu"

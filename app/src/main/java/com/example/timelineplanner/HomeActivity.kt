@@ -34,18 +34,25 @@ class HomeActivity : AppCompatActivity() {
         val binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //월별창 뜨게하는 버튼 이벤트
         /*binding.monthly.setOnClickListener{
             val intent = Intent(this,MonthlyActivity::class.java )
             startActivity(intetnt)
         }
-
+        //설정창 뜨게하는 버튼 이벤트
         binding.settings.setOnClickListener{
             val intent = Intent(this,SettingsActivity::class.java )
             startActivity(intetnt)
         }
 
+        //수정창 뜨게하는 버튼 이벤트
         binding.btnPlus.setOnClickListener{
             val intent = Intent(this,수정창:class.java)
+            startActivity(intent)
+        }*/
+        /* 날짜 뜨게하는 버튼 이벤트
+        binding.ca.setOnClickListener{
+            val intent = Intent(this, 날짜창:class.java)
             startActivity(intent)
         }*/
 
@@ -79,7 +86,7 @@ class HomeActivity : AppCompatActivity() {
                 val dateTextView: TextView = findViewById(textViewId)
                 dateTextView.text = formattedDate
 
-                // 요일을 대문자, Bold체로 출력
+                //폰트 수정
                 val dayOfWeek = currentDay.dayOfWeek.toString().toUpperCase(Locale.US)
                 val boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD)
                 val boldDayOfWeek = "<b>$dayOfWeek</b>"
@@ -90,10 +97,9 @@ class HomeActivity : AppCompatActivity() {
                 shape.paint.color = if (currentDay == currentDate) Color.LTGRAY else Color.TRANSPARENT
                 dateTextView.background = shape
 
-
                 offset++ // 다음 날짜로 이동
 
-                // 만약 출력한 일요일을 지나면 다음 주의 월요일부터 다시 출력
+                // 주마다 출력되는 기능
                 if (offset == 7 && currentDay.dayOfWeek == DayOfWeek.SUNDAY) {
                     offset = 0 // 월요일부터 시작하도록 오프셋 초기화
                 }
@@ -107,12 +113,12 @@ class HomeActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
 
-
-        val stime = mutableListOf("9:00","10:00","13:00","17:00","20:00") //예시로 담아 놓은 것이고 id가 들어와야함
-        val ltime = mutableListOf("9:30","12:00","15:00","19:00","23:00")
+        //예시로 담아 놓은 것이고 id의 내용들이 추가되어야함
+        val stime = mutableListOf("9:00","10:00","13:00","17:00","20:00")
+        val ltime = mutableListOf("9:30","11:00","15:00","20:00","21:00")
         val ticon = mutableListOf(R.drawable.wakeup,R.drawable.book,R.drawable.muscle,R.drawable.computer,R.drawable.sleeping)
-        val mname = mutableListOf("MON", "TUE","WED","THR","FRI")
-        val note = mutableListOf("24","25","26","27","28")
+        val mname = mutableListOf("기상하기", "수업듣기","운동하기","과제하기","취침준비")
+        val note = mutableListOf("약 챙겨먹기","노트북 필요"," ","모소 lab03 하기"," ")
 
         adapter = HomeAdapter(stime,ltime,ticon,mname,note)
         recyclerView.adapter = adapter
