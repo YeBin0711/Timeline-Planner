@@ -27,7 +27,7 @@ class MonthlyActivity : AppCompatActivity() {
         binding.calendarView.monthHeaderBinder = MonthlyHeaderBinder()
         binding.calendarView.monthScrollListener = { month ->
             binding.calendarView.notifyMonthChanged(month.yearMonth)
-            binding.month.text = month.yearMonth.toString()
+            binding.month.text = "${month.yearMonth.year}년 ${month.yearMonth.monthValue}월"
         }
     }
 }
