@@ -3,15 +3,21 @@ package com.example.timelineplanner
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.timelineplanner.databinding.ActivityMonthlyBinding
+import com.example.timelineplanner.databinding.CalendarCellBinding
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.MarginValues
+import java.time.LocalDate
 import java.time.YearMonth
 
 class MonthlyActivity : AppCompatActivity() {
     lateinit var binding: ActivityMonthlyBinding
+    lateinit var cellBinding : CalendarCellBinding
+    private var selectedDate: LocalDate = LocalDate.now()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMonthlyBinding.inflate(layoutInflater)
+        cellBinding = CalendarCellBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         
@@ -26,8 +32,23 @@ class MonthlyActivity : AppCompatActivity() {
         binding.calendarView.dayBinder = MonthlyCellBinder()
         binding.calendarView.monthHeaderBinder = MonthlyHeaderBinder()
         binding.calendarView.monthScrollListener = { month ->
+            selectedDate = LocalDate.of(month.yearMonth.year, month.yearMonth.monthValue, selectedDate.dayOfMonth)
+            binding.monthText.text = "${month.yearMonth.year}년 ${month.yearMonth.monthValue}월"
             binding.calendarView.notifyMonthChanged(month.yearMonth)
-            binding.month.text = "${month.yearMonth.year}년 ${month.yearMonth.monthValue}월"
+
+            //cellBinding.eventList.layoutManager = LinearLayoutManager(this)
+            //cellBinding.eventList.adapter = MonthlyEventListAdapter(listOf(Todo("test1", "12:00", Color.RED), Todo("test2", "13:00", Color.BLUE), Todo("test3", "14:00", Color.GREEN)))
         }
+
+        binding.monthSelector.setOnClickListener() {
+            val datepickerdialog = DatePickerDialog(this, this, startMonth.year+1, endMonth.year-1, selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
+            datepickerdialog.show()
+        }
+    }
+
+    fun onClickOkButton(year: Int, month: Int, day: Int) {
+        selectedDate = LocalDate.of(year, month, day)
+        binding.calendarView.scrollToDate(selectedDate)
+        binding.calendarView.notifyMonthChanged(YearMonth.of(year, month))
     }
 }

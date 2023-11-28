@@ -13,23 +13,31 @@
             android:layout_width="match_parent"
             android:layout_height="85dp">
 
-            <TextView
-                android:id="@+id/month"
-                android:text="2023년 11월"
+            <LinearLayout
+                android:id="@+id/monthSelector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:textStyle="bold"
                 android:layout_centerVertical="true"
-                android:gravity="center"/>
+                android:gravity="center">
 
-            <ImageView
-                android:src="@android:drawable/arrow_down_float"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/month" />
+                <TextView
+                    android:id="@+id/monthText"
+                    android:text="2023년 11월"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="21sp"
+                    android:textStyle="bold"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:src="@drawable/toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/monthText" />
+            </LinearLayout>
 
             <include
                 layout="@layout/menu"
