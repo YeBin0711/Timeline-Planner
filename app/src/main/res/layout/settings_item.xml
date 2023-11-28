@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/setting_item"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingVertical="25dp"
     android:paddingHorizontal="50dp"
     android:orientation="vertical">
@@ -17,7 +17,7 @@
 
 
     <TextView
-        android:text="없음"
+        android:text="테마"
         android:id="@+id/theme_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         style="@style/settingItem"/>
 
     <TextView
-        android:text="없음"
+        android:text="12시간"
         android:id="@+id/time_style_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,13 +34,13 @@
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/holiday_setting"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         style="@style/settingItem"/>
 
     <TextView
-        android:text="없음"
+        android:text="시간순"
         android:id="@+id/sorting_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
         style="@style/settingItem"/>
 
     <TextView
-        android:text="없음"
+        android:text="34"
         android:id="@+id/version_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

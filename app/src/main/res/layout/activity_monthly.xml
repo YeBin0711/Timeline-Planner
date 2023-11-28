@@ -1,43 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="85dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/month"
-            android:text="2023년 11월"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:textSize="25sp"
-            android:textStyle="bold"/>
-        <ImageView
-            android:src="@android:drawable/arrow_down_float"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/month"
-            android:layout_centerVertical="true"
-            android:layout_marginHorizontal="5dp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="85dp">
 
-        <include
-            layout="@layout/menu"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"/>
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/month"
+                android:text="2023년 11월"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:gravity="center"/>
 
-    <androidx.viewpager2.widget.ViewPager2
+            <ImageView
+                android:src="@android:drawable/arrow_down_float"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/month" />
+
+            <include
+                layout="@layout/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.kizitonwose.calendar.view.CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
-
+        app:cv_dayViewResource="@layout/calendar_cell"
+        app:cv_scrollPaged="true"
+        app:cv_daySize="rectangle"
+        app:cv_outDateStyle="endOfRow"
+        app:cv_monthHeaderResource="@layout/monthly_header"/>
 </LinearLayout>
