@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Timeline Planner</string>
+    <string name="untitled">제목 입력</string>
 </resources>
