@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Timeline Planner</string>
-    <string name="untitled">제목 입력</string>
+    <string name="todo_title">제목 입력</string>
+    <string name="todo_memo">내용 입력</string>
+    <string name="todo_repeat">안 함</string>
+    <string name="todo_alarm">안 함</string>
 </resources>
