@@ -20,8 +20,6 @@ class MonthlyActivity : AppCompatActivity() {
         cellBinding = CalendarCellBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        
-
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
@@ -35,9 +33,6 @@ class MonthlyActivity : AppCompatActivity() {
             selectedDate = LocalDate.of(month.yearMonth.year, month.yearMonth.monthValue, selectedDate.dayOfMonth)
             binding.monthText.text = "${month.yearMonth.year}년 ${month.yearMonth.monthValue}월"
             binding.calendarView.notifyMonthChanged(month.yearMonth)
-
-            //cellBinding.eventList.layoutManager = LinearLayoutManager(this)
-            //cellBinding.eventList.adapter = MonthlyEventListAdapter(listOf(Todo("test1", "12:00", Color.RED), Todo("test2", "13:00", Color.BLUE), Todo("test3", "14:00", Color.GREEN)))
         }
 
         binding.monthSelector.setOnClickListener() {

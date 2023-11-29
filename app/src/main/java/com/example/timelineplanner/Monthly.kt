@@ -24,26 +24,12 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
+import java.time.LocalDate
 
 
 class CalendarCellContainer(view: View) : ViewContainer(view) {
     lateinit var day: CalendarDay
     val binding = CalendarCellBinding.bind(view)
-    init {
-        binding.calendarCell.setOnClickListener {
-            val todo = listOf(Todo("test1", "12:00", Color.RED), Todo("test2", "13:00", Color.BLUE), Todo("test3", "14:00", Color.GREEN))
-            val dialogBinding = TodoListDialogBinding.inflate(LayoutInflater.from(view.context), null, false)
-            dialogBinding.yearMonthDate.text = "${day.date.year}년 ${day.date.monthValue}월 ${day.date.dayOfMonth}일"
-            dialogBinding.todoListOfDialog.layoutManager = LinearLayoutManager(view.context)
-            dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(todo)
-
-            MaterialAlertDialogBuilder(view.context).run {
-                setView(dialogBinding.root)
-                setCancelable(true)
-                show()
-            }.setCanceledOnTouchOutside(true)
-        }
-    }
 }
 class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
     override fun create(view: View) = CalendarCellContainer(view)
@@ -56,10 +42,35 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             container.binding.day.setTextColor(ContextCompat.getColor(container.view.context, R.color.gray))
         }
 
-        //container.binding.eventList.layoutManager = LinearLayoutManager(container.view.context)
-        //container.binding.eventList.adapter = MonthlyEventListAdapter(listOf(Todo("test1", "12:00", Color.RED), Todo("test2", "13:00", Color.BLUE), Todo("test3", "14:00", Color.GREEN)))
+
+        //Todo: 데이터베이스에서 일정 정보 가져오기
+        val todo : List<Todo> = listOf(Todo("test1", "12:00", Color.RED, LocalDate.of(2023, 11, 10)), Todo("test2", "13:00", Color.BLUE, LocalDate.of(2023, 11, 10)), Todo("test3", "14:00", Color.GREEN, LocalDate.of(2023, 11, 10)))
+        //Todo: 해당 날짜의 일정만 가져오기
+        var todos : MutableList<Todo> = mutableListOf()
+        for(i in 0..todo.size-1) {
+            if(data.date == todo[i].date) {
+                todos.add(todo[i])
+            }
+        }
+        //일정 정보를 리사이클러뷰에 넣기
+        container.binding.eventList.layoutManager = LinearLayoutManager(container.view.context)
+        container.binding.eventList.adapter = MonthlyEventListAdapter(todos)
+
+        //다이얼로그
+        container.binding.calendarCell.setOnClickListener {
+            val dialogBinding = TodoListDialogBinding.inflate(LayoutInflater.from(container.view.context), null, false)
+            dialogBinding.yearMonthDate.text = "${container.day.date.year}년 ${container.day.date.monthValue}월 ${container.day.date.dayOfMonth}일"
+            dialogBinding.todoListOfDialog.layoutManager = LinearLayoutManager(container.view.context)
+            dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(todos)
+
+            val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
+            monthlyDialog.setView(dialogBinding.root)
+            monthlyDialog.setCancelable(true)
+            monthlyDialog.show()
+        }
     }
 }
+
 
 class MonthlyEventListViewHolder(val binding: MonthlyEventListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -117,7 +128,8 @@ class TodoListDialogAdapter(private val todoList: List<Todo>) : RecyclerView.Ada
 class Todo (
     val title: String,
     val time: String,
-    val color: Int
+    val color: Int,
+    val date: LocalDate
 )
 
 
