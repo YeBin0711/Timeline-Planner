@@ -11,6 +11,7 @@ class JoinActivity : AppCompatActivity() {
         val binding = ActivityJoinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        /*
         binding.btnBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -19,7 +20,7 @@ class JoinActivity : AppCompatActivity() {
         binding.btnJoin2.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
     }
 }

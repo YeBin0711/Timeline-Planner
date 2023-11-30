@@ -1,5 +1,6 @@
 package com.example.timelineplanner
 
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        /*
         binding.btnJoin1.setOnClickListener {
             val intent = Intent(this, JoinActivity::class.java)
             startActivity(intent)
@@ -21,5 +23,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
+        */
     }
 }

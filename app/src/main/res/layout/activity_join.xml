@@ -194,5 +194,4 @@
             android:textColor="@color/black"
             android:backgroundTint="@color/gray"/>
     </LinearLayout>
-
 </LinearLayout>
