@@ -62,6 +62,9 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             dialogBinding.yearMonthDate.text = "${container.day.date.year}년 ${container.day.date.monthValue}월 ${container.day.date.dayOfMonth}일"
             dialogBinding.todoListOfDialog.layoutManager = LinearLayoutManager(container.view.context)
             dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(todos)
+            dialogBinding.addTodoButton.setOnClickListener() {
+                //Todo: 일정 추가 이벤트
+            }
 
             val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
             monthlyDialog.setView(dialogBinding.root)
