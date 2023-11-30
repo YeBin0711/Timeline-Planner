@@ -57,17 +57,19 @@ class MonthlyActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         0 -> {
-            val intent = Intent(this,MonthlyActivity::class.java )
+            val intent = Intent(this,HomeActivity::class.java )
             startActivity(intent)
             true
         }
         1 -> {
             val intent = Intent(this,MonthlyActivity::class.java )
             startActivity(intent)
+            true
         }
         2 -> {
             val intent = Intent(this,SettingsActivity::class.java )
             startActivity(intent)
+            true
         }
         else -> super.onOptionsItemSelected(item)
     }
