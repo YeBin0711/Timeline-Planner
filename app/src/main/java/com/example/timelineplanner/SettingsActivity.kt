@@ -1,6 +1,9 @@
 package com.example.timelineplanner
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timelineplanner.databinding.ActivitySettingsBinding
@@ -10,6 +13,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
         val settingNames = mutableListOf(
             "테마",
@@ -24,5 +28,29 @@ class SettingsActivity : AppCompatActivity() {
         val layoutmanager = LinearLayoutManager(this)
         binding.settingList.layoutManager = layoutmanager
         binding.settingList.adapter = SettingsAdapter(settingNames)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.daily -> {
+            val intent = Intent(this,HomeActivity::class.java )
+            startActivity(intent)
+            true
+        }
+        R.id.monthly -> {
+            val intent = Intent(this,MonthlyActivity::class.java )
+            startActivity(intent)
+            true
+        }
+        R.id.settings -> {
+            val intent = Intent(this,SettingsActivity::class.java )
+            startActivity(intent)
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 }

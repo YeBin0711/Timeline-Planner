@@ -22,6 +22,9 @@ class MonthlyActivity : AppCompatActivity() {
         binding = ActivityMonthlyBinding.inflate(layoutInflater)
         cellBinding = CalendarCellBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
 
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
@@ -52,21 +55,29 @@ class MonthlyActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
+        //menu?.findItem(R.id.daily)?.isChecked = true
+        menu?.findItem(R.id.monthly)?.isChecked = true
+        //menu?.findItem(R.id.settings)?.isChecked = true
+        for (i in 0 until menu!!.size()) {
+            val item = menu.getItem(i)
+            if(item.isChecked) item.iconTintList = getColorStateList(R.color.black)
+            else item.iconTintList = getColorStateList(R.color.darkgray)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        0 -> {
+        R.id.daily -> {
             val intent = Intent(this,HomeActivity::class.java )
             startActivity(intent)
             true
         }
-        1 -> {
+        R.id.monthly -> {
             val intent = Intent(this,MonthlyActivity::class.java )
             startActivity(intent)
             true
         }
-        2 -> {
+        R.id.settings -> {
             val intent = Intent(this,SettingsActivity::class.java )
             startActivity(intent)
             true

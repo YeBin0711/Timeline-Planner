@@ -46,7 +46,7 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
         //Todo: 데이터베이스에서 일정 정보 가져오기
         val todo : List<Todo> = listOf(Todo("test1", "12:00", Color.RED, LocalDate.of(2023, 11, 10)), Todo("test2", "13:00", Color.BLUE, LocalDate.of(2023, 11, 10)), Todo("test3", "14:00", Color.GREEN, LocalDate.of(2023, 11, 10)))
         //Todo: 해당 날짜의 일정만 가져오기
-        var todos : MutableList<Todo> = mutableListOf()
+        val todos : MutableList<Todo> = mutableListOf()
         for(i in 0..todo.size-1) {
             if(data.date == todo[i].date) {
                 todos.add(todo[i])
@@ -64,6 +64,8 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(todos)
             dialogBinding.addTodoButton.setOnClickListener() {
                 //Todo: 일정 추가 이벤트
+                //val intent = Intent(this,AddActivity::class.java )
+                //startActivity(intent)
             }
 
             val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
@@ -100,7 +102,7 @@ class MonthlyHeaderContainer(view: View) : ViewContainer(view) {
 
 class MonthlyHeaderBinder : MonthHeaderFooterBinder<MonthlyHeaderContainer> {
     override fun create(view: View) = MonthlyHeaderContainer(view)
-    override fun bind(container: MonthlyHeaderContainer, month: CalendarMonth) {
+    override fun bind(container: MonthlyHeaderContainer, data: CalendarMonth) {
     }
 }
 

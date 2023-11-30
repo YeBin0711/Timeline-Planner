@@ -6,47 +6,34 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:minHeight="85dp"
+        android:gravity="center">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="85dp">
+        <LinearLayout
+            android:id="@+id/monthSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:layout_centerVertical="true"
+            android:gravity="center">
 
-            <LinearLayout
-                android:id="@+id/monthSelector"
+            <TextView
+                android:id="@+id/monthText"
+                android:text="2023년 11월"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:gravity="center">
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
 
-                <TextView
-                    android:id="@+id/monthText"
-                    android:text="2023년 11월"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="21sp"
-                    android:textStyle="bold"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"/>
-
-                <ImageView
-                    android:src="@drawable/toggle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/monthText" />
-            </LinearLayout>
-
-            <include
-                layout="@layout/menu"
+            <ImageView
+                android:src="@drawable/toggle"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginRight="20dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"/>
-        </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp" />
+        </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <com.kizitonwose.calendar.view.CalendarView

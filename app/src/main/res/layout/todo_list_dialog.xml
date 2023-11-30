@@ -32,6 +32,7 @@
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
         android:backgroundTint="#DCDCDC"
+        app:tint="@color/black"
         app:elevation="0dp"
         app:shapeAppearance="@style/FloatingButtonShape"
         app:srcCompat="@drawable/plus_icon"/>
