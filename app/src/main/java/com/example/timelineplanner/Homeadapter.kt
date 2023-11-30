@@ -1,9 +1,14 @@
 package com.example.timelineplanner
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
+import com.kizitonwose.calendar.view.ViewContainer
+import com.kizitonwose.calendar.core.WeekDay
+import com.example.timelineplanner.databinding.CalendarMonthHeaderBinding
+import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 
 class HomeViewHolder(val binding: DayRecyclerviewBinding):
         RecyclerView.ViewHolder(binding.root)
@@ -21,7 +26,6 @@ class HomeAdapter(var stime: MutableList<String>,var ltime: MutableList<String>,
             LayoutInflater.from(parent.context), parent, false
         )
     )
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as HomeViewHolder).binding
 
@@ -57,4 +61,34 @@ class HomeAdapter(var stime: MutableList<String>,var ltime: MutableList<String>,
 
 
     }
+
 }
+
+class DayViewContainer(view: View) : ViewContainer(view) {
+    val calendarDayNumber = ItemCalendarDayBinding.bind(view).calendarDayNumber
+    val calendarDayName = ItemCalendarDayBinding.bind(view).calendarDayName
+
+    // Will be set when this container is bound
+    lateinit var day: WeekDay
+
+    init {
+        view.setOnClickListener {
+            val date = "${day.date.dayOfMonth}-${day.date.monthValue}-${day.date.year}"
+            onDayClickListener.onDayClicked(date)
+        }
+    }
+
+    lateinit var onDayClickListener: OnDayClickListener
+    fun interface OnDayClickListener {
+        fun onDayClicked(date: String)
+    }
+}
+
+class MonthHeaderViewContainer(view: View) : ViewContainer(view) {
+    val calendarMonthTitle = CalendarMonthHeaderBinding.bind(view).monthTitle
+}
+
+
+
+
+
