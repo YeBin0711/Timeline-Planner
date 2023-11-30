@@ -194,4 +194,9 @@
             android:textColor="@color/black"
             android:backgroundTint="@color/gray"/>
     </LinearLayout>
+     android:text="회원가입"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:layout_marginTop="70dp"/>
+  
 </LinearLayout>

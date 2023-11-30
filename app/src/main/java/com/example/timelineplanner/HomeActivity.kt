@@ -24,8 +24,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
-import com.example.timelineplanner.HomeAdapter
-import com.example.timelineplanner.R
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -75,8 +73,7 @@ class HomeActivity : AppCompatActivity() {
             val currentDate = LocalDate.now()
             val startOfWeek = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - DayOfWeek.MONDAY.value.toLong())
 
-            val dateTextViewIds = listOf(
-                R.id.day_text1, R.id.day_text2, R.id.day_text3,
+            val dateTextViewIds = listOf(R.id.day_text1, R.id.day_text2, R.id.day_text3,
                 R.id.day_text4, R.id.day_text5, R.id.day_text6, R.id.day_text7)
 
             var offset = 0
