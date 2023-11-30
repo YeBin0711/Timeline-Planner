@@ -1,6 +1,9 @@
 package com.example.timelineplanner
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.timelineplanner.databinding.ActivityMonthlyBinding
 import com.example.timelineplanner.databinding.CalendarCellBinding
@@ -45,5 +48,27 @@ class MonthlyActivity : AppCompatActivity() {
         selectedDate = LocalDate.of(year, month, day)
         binding.calendarView.scrollToDate(selectedDate)
         binding.calendarView.notifyMonthChanged(YearMonth.of(year, month))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        0 -> {
+            val intent = Intent(this,MonthlyActivity::class.java )
+            startActivity(intent)
+            true
+        }
+        1 -> {
+            val intent = Intent(this,MonthlyActivity::class.java )
+            startActivity(intent)
+        }
+        2 -> {
+            val intent = Intent(this,SettingsActivity::class.java )
+            startActivity(intent)
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 }
