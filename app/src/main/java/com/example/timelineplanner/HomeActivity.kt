@@ -161,7 +161,7 @@ class HomeActivity : AppCompatActivity() {
 
                 // Show the month dates. Remember that views are reused!
                 val colorResId: Int =
-                    if (container.day.date == selectedDate) R.color.gray else R.color.black
+                    if (container.day.date == selectedDate) R.color.drakgray else R.color.black
 
                 container.calendarDayNumber.setTextColor(
                     ContextCompat.getColor(
