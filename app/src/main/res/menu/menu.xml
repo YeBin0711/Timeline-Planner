@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/daily"
+        android:title="일별"
+        android:icon="@drawable/check"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/monthly"
+        android:title="월별"
+        android:icon="@drawable/calendar"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/settings"
+        android:title="설정"
+        android:icon="@drawable/setting"
+        app:showAsAction="always"/>
+</menu>
