@@ -14,7 +14,7 @@ class MonthlyActivity : AppCompatActivity() {
         binding = ActivityMonthlyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        
 
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
