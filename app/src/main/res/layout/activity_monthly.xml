@@ -45,9 +45,9 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cv_dayViewResource="@layout/calendar_cell"
-        app:cv_scrollPaged="true"
         app:cv_daySize="rectangle"
+        app:cv_dayViewResource="@layout/calendar_cell"
+        app:cv_monthHeaderResource="@layout/monthly_header"
         app:cv_outDateStyle="endOfRow"
-        app:cv_monthHeaderResource="@layout/monthly_header"/>
+        app:cv_scrollPaged="true" />
 </LinearLayout>
