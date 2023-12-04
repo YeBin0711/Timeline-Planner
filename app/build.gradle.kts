@@ -54,4 +54,10 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("com.kizitonwose.calendar:view:2.4.0")
     implementation("com.kizitonwose.calendar:compose:2.4.0")
+
+    implementation("androidx.preference:preference:1.2.1") {
+        exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel")
+        exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel-ktx")
+    }
+
 }
