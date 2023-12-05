@@ -22,10 +22,12 @@ class MonthlyActivity : AppCompatActivity() {
         binding = ActivityMonthlyBinding.inflate(layoutInflater)
         cellBinding = CalendarCellBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //툴바 메뉴 설정
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-
+        //달력 설정
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
@@ -41,6 +43,7 @@ class MonthlyActivity : AppCompatActivity() {
             binding.calendarView.notifyMonthChanged(month.yearMonth)
         }
 
+        //달력의 날짜 클릭 이벤트
         binding.monthSelector.setOnClickListener() {
             val datepickerdialog = DatePickerDialog(this, this, startMonth.year+1, endMonth.year-1, selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
             datepickerdialog.show()
@@ -78,7 +81,7 @@ class MonthlyActivity : AppCompatActivity() {
             true
         }
         R.id.settings -> {
-            val intent = Intent(this,SettingsActivity::class.java )
+            val intent = Intent(this,SettingActivity::class.java )
             startActivity(intent)
             true
         }

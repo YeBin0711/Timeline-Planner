@@ -60,4 +60,6 @@ dependencies {
         exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel-ktx")
     }
 
+    implementation("androidx.fragment:fragment-ktx:1.5.5")
+
 }

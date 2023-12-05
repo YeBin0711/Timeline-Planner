@@ -1,7 +1,6 @@
 package com.example.timelineplanner
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -22,6 +21,7 @@ class SettingFragment : PreferenceFragmentCompat() {
         sortingPref?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
         //Todo:설정값 변경 이벤트 처리
+        /*
         themePreference?.setOnPreferenceChangeListener { preference, newValue ->
             val theme = newValue as String
             when(theme){
@@ -55,5 +55,6 @@ class SettingFragment : PreferenceFragmentCompat() {
             }
             true
         }
+        */
     }
 }
