@@ -1,10 +1,10 @@
 package com.example.timelineplanner
 
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.SettingsItemBinding
 
@@ -25,10 +25,12 @@ class SettingsAdapter(val settingNames: MutableList<String>) : RecyclerView.Adap
         val timeStyles = arrayOf("12시간", "24시간")
         val sorting = arrayOf("시간순", "중요도순", "제목순")
         val accounts = arrayOf("Google 계정", "Apple 계정")
+        val accountsSelectionState = booleanArrayOf(true, false)
 
 
 
         binding.settingName.text = settingNames[position]
+
         when (position) {
             0 -> binding.themeSetting.visibility = View.VISIBLE
             1 -> binding.timeStyleSetting.visibility = View.VISIBLE
@@ -37,49 +39,137 @@ class SettingsAdapter(val settingNames: MutableList<String>) : RecyclerView.Adap
             5 -> binding.versionSetting.visibility = View.VISIBLE
         }
 
+
+        val themeSettingEventHandler = { dialog: DialogInterface, which: Int ->
+            when (which) {
+                0 -> {
+                    // 시스템 설정에 따름
+                }
+                1 -> {
+                    // 라이트 모드
+                }
+                2 -> {
+                    // 다크 모드
+                }
+                DialogInterface.BUTTON_NEGATIVE -> {
+                    // 취소
+                }
+                DialogInterface.BUTTON_POSITIVE -> {
+                    // 확인
+                }
+            }
+        }
+
+        val timeStyleSettingEventHandler = { dialog: DialogInterface, which: Int ->
+            when (which) {
+                0 -> {
+                    // 12시간
+                }
+                1 -> {
+                    // 24시간
+                }
+                DialogInterface.BUTTON_NEGATIVE -> {
+                    // 취소
+                }
+                DialogInterface.BUTTON_POSITIVE -> {
+                    // 확인
+                }
+            }
+        }
+
+        val sortingSettingEventHandler = { dialog: DialogInterface, which: Int ->
+            when (which) {
+                0 -> {
+                    // 시간순
+                }
+                1 -> {
+                    // 중요도순
+                }
+                2 -> {
+                    // 제목순
+                }
+                DialogInterface.BUTTON_NEGATIVE -> {
+                    // 취소
+                }
+                DialogInterface.BUTTON_POSITIVE -> {
+                    // 확인
+                }
+            }
+        }
+
+        val accountSettingEventHandler = { dialog: DialogInterface, which: Int, isChecked: Boolean ->
+            when (which) {
+                0 -> {
+                    // Google 계정
+                }
+                1 -> {
+                    // Apple 계정
+                }
+                DialogInterface.BUTTON_NEGATIVE -> {
+                    // 취소
+                }
+                DialogInterface.BUTTON_POSITIVE -> {
+                    // 확인
+                }
+            }
+        }
+
+        val accountSettingButtonHandler = { dialog: DialogInterface, which: Int ->
+            when (which) {
+                DialogInterface.BUTTON_NEGATIVE -> {
+                    // 취소
+                }
+                DialogInterface.BUTTON_POSITIVE -> {
+                    // 확인
+                }
+            }
+        }
+
+
         binding.settingItem.setOnClickListener{
             when (position) {
                 0 -> {
-                    AlertDialog.Builder(this).run {
+                    AlertDialog.Builder(binding.root.context).run {
                         setTitle(settingNames[position])
-                        setSingleChoiceItems(themes, 처음_선택할_항목_인덱스, 핸들러)
-                        setPositiveButton("확인", 핸들러)
-                        setNegativeButton("취소", 핸들러)
+                        setSingleChoiceItems(themes, 0, themeSettingEventHandler)
+                        setPositiveButton("확인", themeSettingEventHandler)
+                        setNegativeButton("취소", themeSettingEventHandler)
                         setCancelable(true)
                         show()
                     }.setCanceledOnTouchOutside(true)
                 }
                 1 -> {
-                    AlertDialog.Builder(this).run {
+                    AlertDialog.Builder(binding.root.context).run {
                         setTitle(settingNames[position])
-                        setSingleChoiceItems(timeStyles, 처음_선택할_항목_인덱스, 핸들러)
-                        setPositiveButton("확인", )
-                        setNegativeButton("취소", )
+                        setSingleChoiceItems(timeStyles, 0, timeStyleSettingEventHandler)
+                        setPositiveButton("확인", timeStyleSettingEventHandler)
+                        setNegativeButton("취소", timeStyleSettingEventHandler)
                         setCancelable(true)
                         show()
                     }.setCanceledOnTouchOutside(true)
                 }
                 3 -> {
-                    AlertDialog.Builder(this).run {
+                    AlertDialog.Builder(binding.root.context).run {
                         setTitle(settingNames[position])
-                        setSingleChoiceItems(sorting, 처음_선택할_항목_인덱스, 핸들러)
-                        setPositiveButton("확인", )
-                        setNegativeButton("취소", )
+                        setSingleChoiceItems(sorting, 0, sortingSettingEventHandler)
+                        setPositiveButton("확인", sortingSettingEventHandler)
+                        setNegativeButton("취소", sortingSettingEventHandler)
                         setCancelable(true)
                         show()
                     }.setCanceledOnTouchOutside(true)
                 }
                 4 -> {
-                    AlertDialog.Builder(this).run {
+                    AlertDialog.Builder(binding.root.context).run {
                         setTitle(settingNames[position])
-                        setMultiChoiceItems(accounts, 처음_선택할_항목_인덱스, 핸들러)
-                        setPositiveButton("확인", )
-                        setNegativeButton("취소", )
+                        setMultiChoiceItems(accounts, accountsSelectionState, accountSettingEventHandler)
+                        setPositiveButton("확인", accountSettingButtonHandler)
+                        setNegativeButton("취소", accountSettingButtonHandler)
                         setCancelable(true)
                         show()
                     }.setCanceledOnTouchOutside(true)
                 }
             }
         }
+
     }
 }

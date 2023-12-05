@@ -10,6 +10,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         val settingNames = mutableListOf(
             "테마",
             "시간 표시 방식",
@@ -20,8 +21,8 @@ class SettingsActivity : AppCompatActivity() {
             "도움말",
             "로그아웃"
         )
-
-        binding.settingList.layoutManager = LinearLayoutManager(this)
+        val layoutmanager = LinearLayoutManager(this)
+        binding.settingList.layoutManager = layoutmanager
         binding.settingList.adapter = SettingsAdapter(settingNames)
     }
 }
