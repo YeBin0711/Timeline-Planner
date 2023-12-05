@@ -1,6 +1,7 @@
 package com.example.timelineplanner
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -21,7 +22,6 @@ class SettingFragment : PreferenceFragmentCompat() {
         sortingPref?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
         //Todo:설정값 변경 이벤트 처리
-        /*
         themePreference?.setOnPreferenceChangeListener { preference, newValue ->
             val theme = newValue as String
             when(theme){
@@ -31,27 +31,34 @@ class SettingFragment : PreferenceFragmentCompat() {
             }
             true
         }
+        /*없어도 됨 아마도
         timeStylePref?.setOnPreferenceChangeListener { preference, newValue ->
             val timeStyle = newValue as String
+            //todolist다이얼로그, 일별, timepicker
+            //DB에 저장되는 형식은 24시간
             when (timeStyle) {
-                "12" ->;
-                "24" ->;
+                "12" -> timepicker.setIs24HourView(false)
+                "24" -> timepicker.setIs24HourView(true)
             }
             true
         }
+        */
+        /*
         holidayPref?.setOnPreferenceChangeListener { preference, newValue ->
             val holiday = newValue as Boolean
             when (holiday) {
-                true ->;
-                false ->;
+                true ->
+                false ->
             }
             true
         }
+        */
+        /*없어도 됨
         sortingPref?.setOnPreferenceChangeListener { preference, newValue ->
             val sortingStyle = newValue as String
             when (sortingStyle) {
-                "time" ->;
-                "title" ->;
+                "time" ->
+                "title" ->
             }
             true
         }

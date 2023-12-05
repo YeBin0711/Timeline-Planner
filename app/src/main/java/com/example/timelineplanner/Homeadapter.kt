@@ -2,6 +2,7 @@ package com.example.timelineplanner
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 
@@ -25,8 +26,18 @@ class HomeAdapter(var stime: MutableList<String>,var ltime: MutableList<String>,
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as HomeViewHolder).binding
 
-        binding.sTime.text = stime[position]
-        binding.lTime.text = ltime[position]
+        //Todo: 시간 형식 설정 반영
+        if(PreferenceManager.getDefaultSharedPreferences(컨텍스트).getString("timeStyles", "12") == "12") {
+            binding.sTime.text = (stime[position].toInt() % 12).toString()
+        } else {
+            binding.sTime.text = stime[position]
+        }
+        if(PreferenceManager.getDefaultSharedPreferences(컨텍스트).getString("timeStyles", "12") == "12") {
+            binding.lTime.text = (ltime[position].toInt() % 12).toString()
+        } else {
+            binding.lTime.text = ltime[position]
+        }
+
         binding.ticon.setImageResource((ticon[position]))
         binding.itemName.text = mname[position]
         binding.itemNote.text = note[position]

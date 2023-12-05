@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.CalendarCellBinding
@@ -24,6 +25,7 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
+import kotlinx.coroutines.NonDisposableHandle.parent
 import java.time.LocalDate
 
 
@@ -41,17 +43,33 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
         } else {
             container.binding.day.setTextColor(ContextCompat.getColor(container.view.context, R.color.gray))
         }
-
+        //Todo: 설정에 따라 휴일 표시
+        if(PreferenceManager.getDefaultSharedPreferences(컨텍스트).getBoolean("holiday", false)) {
+            //휴일 표시
+            if(data.date.dayOfMonth == 휴일) {
+                container.binding.day.setTextColor(Color.RED)
+            }
+        }
 
         //Todo: 데이터베이스에서 일정 정보 가져오기
         val todo : List<Todo> = listOf(Todo("test1", "12:00", Color.RED, LocalDate.of(2023, 11, 10)), Todo("test2", "13:00", Color.BLUE, LocalDate.of(2023, 11, 10)), Todo("test3", "14:00", Color.GREEN, LocalDate.of(2023, 11, 10)))
         //Todo: 해당 날짜의 일정만 가져오기
-        val todos : MutableList<Todo> = mutableListOf()
+        var todos : MutableList<Todo> = mutableListOf()
         for(i in 0..todo.size-1) {
             if(data.date == todo[i].date) {
                 todos.add(todo[i])
             }
         }
+        //Todo: 설정에 따라 todos 정렬(시간순, 제목순)
+        if(PreferenceManager.getDefaultSharedPreferences(컨텍스트).getString("sortingStyles", "time") == "time") {
+            //시간순 정렬
+            todos.sortBy(){ it.time }
+        } else {
+            //제목순 정렬
+            todos.sortWith(compareBy { it.title })
+        }
+
+
         //일정 정보를 리사이클러뷰에 넣기
         container.binding.eventList.layoutManager = LinearLayoutManager(container.view.context)
         container.binding.eventList.adapter = MonthlyEventListAdapter(todos)
@@ -126,11 +144,17 @@ class TodoListDialogAdapter(private val todoList: List<Todo>) : RecyclerView.Ada
         }
         binding.square.setCardBackgroundColor(ColorStateList.valueOf(todoList[position].color))
         binding.title.text = todoList[position].title
-        binding.time.text = todoList[position].time
+
+        //Todo: 설정에 따른 시간 형식 반영 (12/24시간)
+        if(PreferenceManager.getDefaultSharedPreferences(컨텍스트).getString("timeStyles", "12") == "12") {
+            binding.time.text = (todoList[position].time.toInt() % 12).toString()
+        } else {
+            binding.time.text = todoList[position].time
+        }
     }
 }
 
-class Todo (
+class Todo(
     val title: String,
     val time: String,
     val color: Int,
