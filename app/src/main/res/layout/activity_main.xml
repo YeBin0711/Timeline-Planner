@@ -17,7 +17,7 @@
 
     <ImageButton
         android:layout_width="270dp"
-        android:layout_height="43dp"
+        android:layout_height="48dp"
         android:layout_marginTop="280dp"
         android:gravity="center"
         android:layout_gravity="center"
@@ -26,39 +26,51 @@
 
     <EditText
         android:id="@+id/id"
-        android:layout_width="250dp"
-        android:layout_height="40dp"
+        android:layout_width="270dp"
+        android:layout_height="50dp"
         android:inputType="textPersonName"
-        android:text="아이디를 입력하세요"
-        android:textSize="16dp"
-        android:gravity="center"
+        android:hint="아이디를 입력하세요"
+        android:textSize="20dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:paddingRight="77dp"
+        android:paddingLeft="10dp"
         android:background="@drawable/edittext_background"/>
 
     <EditText
         android:id="@+id/pw"
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:inputType="textPersonName"
-        android:text="비밀번호를 입력하세요"
-        android:textSize="16dp"
-        android:gravity="center"
+        android:layout_width="270dp"
+        android:layout_height="50dp"
+        android:inputType="textPassword"
+        android:hint="비밀번호를 입력하세요"
+        android:textSize="20dp"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:paddingRight="60dp"
+        android:paddingLeft="10dp"
         android:background="@drawable/edittext_background"/>
 
-    <Button
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:background="#00ff0000"
-        android:text="회원가입"
-        android:textSize="13dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_marginTop="2dp"
-        android:textColor="@color/black"/>
+        android:layout_marginTop="2dp">
+        <Button
+            android:id="@+id/btn_join1"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:background="#00ff0000"
+            android:text="회원가입"
+            android:textSize="13sp"
+            android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:background="#00ff0000"
+            android:text="로그인"
+            android:textSize="13sp"
+            android:textColor="@color/black"/>
+    </LinearLayout>
 
 </LinearLayout>
