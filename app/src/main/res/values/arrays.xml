@@ -13,18 +13,18 @@
     <string-array name="themes">
         <item>시스템 기본 설정</item>
         <item>밝은 테마</item>
-        <item>어두은 테마</item>
+        <item>어두운 테마</item>
     </string-array>
     <string-array name="themes_values">
         <item>default</item>
         <item>light</item>
         <item>dark</item>
     </string-array>
-    <string-array name="timeSyles">
+    <string-array name="timeStyles">
         <item>12시간</item>
         <item>24시간</item>
     </string-array>
-    <string-array name="timeSyles_values">
+    <string-array name="timeStyles_values">
         <item>12</item>
         <item>24</item>
     </string-array>

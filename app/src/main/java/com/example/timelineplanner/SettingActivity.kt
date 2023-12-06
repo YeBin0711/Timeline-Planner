@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.example.timelineplanner.databinding.ActivitySettingBinding
 
 class SettingActivity : AppCompatActivity() {
@@ -20,13 +21,21 @@ class SettingActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
+        //menu?.findItem(R.id.daily)?.isChecked = true
+        //menu?.findItem(R.id.monthly)?.isChecked = true
+        menu?.findItem(R.id.settings)?.isChecked = true
+        for (i in 0 until menu!!.size()) {
+            val item = menu.getItem(i)
+            if(!item.isChecked) item.iconTintList = getColorStateList(R.color.semi_transparent)
+            else if(PreferenceManager.getDefaultSharedPreferences(this).getString("themes", "light") == "dark") item.iconTintList = getColorStateList(R.color.white)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.daily -> {
-            val intent = Intent(this,HomeActivity::class.java )
-            startActivity(intent)
+            //val intent = Intent(this,HomeActivity::class.java )
+            //startActivity(intent)
             true
         }
         R.id.monthly -> {

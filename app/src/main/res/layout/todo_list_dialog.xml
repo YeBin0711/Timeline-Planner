@@ -13,9 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="25dp"
         android:gravity="center"
-        android:text="2023년 11월 14일 화요일"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="30sp" />
 
 
@@ -31,7 +30,7 @@
         android:layout_gravity="right"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
-        android:backgroundTint="#DCDCDC"
+        android:backgroundTint="@color/gray"
         app:tint="@color/black"
         app:elevation="0dp"
         app:shapeAppearance="@style/FloatingButtonShape"

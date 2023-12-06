@@ -14,4 +14,14 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50dp</item>
     </style>
+
+    <style name="dayofweek">
+        <item name="android:layout_width">0sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
 </resources>

@@ -11,8 +11,8 @@
         app:key="timeStyles"
         app:title="시간 표시 방식"
         app:summary="시간 표시 방식을 12시간 또는 24시간으로 선택하실 수 있습니다."
-        app:entries="@array/timeSyles"
-        app:entryValues="@array/timeSyles_values"
+        app:entries="@array/timeStyles"
+        app:entryValues="@array/timeStyles_values"
         app:defaultValue="12"/>
     <SwitchPreference
         app:key="holiday"

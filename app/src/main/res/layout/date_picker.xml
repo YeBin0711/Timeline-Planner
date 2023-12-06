@@ -20,7 +20,7 @@
             android:gravity="center"
             android:layout_gravity="center"
             android:backgroundTint="#00000000"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="20sp"/>
         <TextView
             android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
             android:backgroundTint="#00000000"
             android:gravity="center"
             android:layout_gravity="center"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="14dp"
@@ -40,7 +40,7 @@
             android:backgroundTint="#00000000"
             android:gravity="center"
             android:layout_gravity="center"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="20sp"/>
         <TextView
             android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="14dp"
             android:backgroundTint="#00000000"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             android:text="월"/>
         <NumberPicker
@@ -60,7 +60,7 @@
             android:backgroundTint="#00000000"
             android:gravity="center"
             android:layout_gravity="center"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="20sp"/>
         <TextView
             android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
             android:gravity="center"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             android:backgroundTint="#00000000"
             android:text="일"/>
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#00000000"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             android:text="취소"/>
         <Button
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#00000000"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             android:text="확인"/>
     </LinearLayout>

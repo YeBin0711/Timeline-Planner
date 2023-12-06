@@ -2,7 +2,6 @@ package com.example.timelineplanner
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 
@@ -27,16 +26,34 @@ class HomeAdapter(var stime: MutableList<String>,var ltime: MutableList<String>,
         val binding = (holder as HomeViewHolder).binding
 
         //Todo: 시간 형식 설정 반영
-        if(PreferenceManager.getDefaultSharedPreferences(컨텍스트).getString("timeStyles", "12") == "12") {
-            binding.sTime.text = (stime[position].toInt() % 12).toString()
+        /*
+        if(PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12") == "12") {
+            if(stime[position].hour.toInt() == 12) {
+                binding.sTime.text = stime[position].hour + ":" + stime[position].minute + " PM"
+            } else if(stime[position].hour.toInt() == 24) {
+                binding.sTime.text = "12:" + stime[position].minute + " AM"
+            }else if(stime[position].hour.toInt() > 12) {
+                binding.sTime.text = (stime[position].hour.toInt() % 12).toString() + ":" + stime[position].minute + " PM"
+            } else if(stime[position].hour.toInt() < 12) {
+                binding.sTime.text = (stime[position].hour.toInt() % 12).toString() + ":" + stime[position].minute + " AM"
+            }
         } else {
-            binding.sTime.text = stime[position]
+            binding.sTime.text = stime[position].hour + ":" + stime[position].minute
         }
-        if(PreferenceManager.getDefaultSharedPreferences(컨텍스트).getString("timeStyles", "12") == "12") {
-            binding.lTime.text = (ltime[position].toInt() % 12).toString()
+        if(PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12") == "12") {
+            if(ltime[position].hour.toInt() == 12) {
+                binding.lTime.text = ltime[position].hour + ":" + ltime[position].minute + " PM"
+            } else if(ltime[position].hour.toInt() == 24) {
+                binding.lTime.text = "12:" + ltime[position].minute + " AM"
+            }else if(ltime[position].hour.toInt() > 12) {
+                binding.lTime.text = (ltime[position].hour.toInt() % 12).toString() + ":" + ltime[position].minute + " PM"
+            } else if(ltime[position].hour.toInt() < 12) {
+                binding.lTime.text = (ltime[position].hour.toInt() % 12).toString() + ":" + ltime[position].minute + " AM"
+            }
         } else {
-            binding.lTime.text = ltime[position]
+            binding.sTime.text = ltime[position].hour + ":" + ltime[position].minute
         }
+         */
 
         binding.ticon.setImageResource((ticon[position]))
         binding.itemName.text = mname[position]
