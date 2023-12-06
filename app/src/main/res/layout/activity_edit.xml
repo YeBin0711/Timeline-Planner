@@ -34,7 +34,7 @@
             android:layout_height="35dp"
             android:layout_marginLeft="5dp"
             android:layout_gravity="center_vertical"
-            android:background="#87CEEB" />
+            android:background="#7FE8FF" />
     </LinearLayout>
 
     <LinearLayout
@@ -160,13 +160,19 @@
             android:text="달력에 표시"
             android:textSize="20sp"
             android:textStyle="bold" />
+
         <androidx.appcompat.widget.SwitchCompat
-            android:layout_width="40dp"
-            android:layout_height="30dp"
+            android:id="@+id/cswitch"
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
 
-            android:btn="@drawable/switch_btn"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/switch_btn"
+            app:switchMinWidth="0dp"
+            app:thumbTextPadding="24dp"
             app:track="@drawable/switch_track" />
     </LinearLayout>
 

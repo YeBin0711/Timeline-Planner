@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:rowCount="2"
+    android:columnCount="3" >
+
+    <ImageView
+        android:id="@+id/wakeup"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#FFD5D5"
+        android:layout_margin="10dp" />
+    <ImageView
+        android:id="@+id/sleeping"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#FAFFBD"
+        android:layout_margin="10dp" />
+    <ImageView
+        android:id="@+id/train"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#ADFFAC"
+        android:layout_margin="10dp" />
+    <ImageView
+        android:id="@+id/car"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#D9D9D9"
+        android:layout_margin="10dp" />
+    <ImageView
+        android:id="@+id/computer"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#F2D5FF"
+        android:layout_margin="10dp" />
+    <ImageView
+        android:id="@+id/book"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#7FE8FF"
+        android:layout_margin="10dp" />
+</GridLayout>
