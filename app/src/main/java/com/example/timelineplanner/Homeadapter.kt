@@ -1,5 +1,7 @@
 package com.example.timelineplanner
 
+import android.content.Context
+import android.database.sqlite.SQLiteOpenHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,7 +89,6 @@ class DayViewContainer(view: View) : ViewContainer(view) {
 class MonthHeaderViewContainer(view: View) : ViewContainer(view) {
     val calendarMonthTitle = CalendarMonthHeaderBinding.bind(view).monthTitle
 }
-
 
 
 

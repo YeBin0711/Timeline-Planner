@@ -7,39 +7,34 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="wrap_content"
+        android:minHeight="85dp"
+        android:gravity="center">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp">
+        <LinearLayout
+            android:id="@+id/monthSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:layout_centerVertical="true"
+            android:gravity="center">
 
             <TextView
-                android:id="@+id/month"
+                android:id="@+id/monthText"
+                android:text="2023년 11월"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:text="2023년 11월"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
 
             <ImageView
+                android:src="@drawable/toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginHorizontal="5dp"
-                android:layout_toRightOf="@id/month"
-                android:src="@android:drawable/arrow_down_float" />
-
-            <include
-                layout="@layout/menu"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp" />
-        </RelativeLayout>
+                android:layout_marginHorizontal="5dp" />
+        </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout

@@ -18,7 +18,6 @@
         android:textColor="@color/black"
         android:textSize="30sp" />
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todoListOfDialog"
         android:layout_width="match_parent"

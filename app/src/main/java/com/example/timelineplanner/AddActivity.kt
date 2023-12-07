@@ -6,11 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar
 
 class AddActivity : AppCompatActivity() {
-    swNotificationPayment.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-            swNotificationAll.isChecked = true
-        }
-    }
     private fun dayOfWeek(): String? {
         val cal: Calendar = Calendar.getInstance()
         var strweek : String? = null

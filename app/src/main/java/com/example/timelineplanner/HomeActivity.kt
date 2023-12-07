@@ -1,8 +1,11 @@
 package com.example.timelineplanner
 
+import android.content.Intent
 import android.icu.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -46,26 +49,14 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        /*월별창 뜨게하는 버튼 이벤트
-        binding.monthly.setOnClickListener{
-            val intent = Intent(this,MonthlyActivity::class.java )
-            startActivity(intetnt)
-        }
-        //설정창 뜨게하는 버튼 이벤트
-        binding.settings.setOnClickListener{
-            val intent = Intent(this,SettingsActivity::class.java )
-            startActivity(intetnt)
-        }
-
-        //수정창 뜨게하는 버튼 이벤트
+        /*수정창 뜨게하는 버튼 이벤트
         binding.btnPlus.setOnClickListener{
             val intent = Intent(this,수정창:class.java)
             startActivity(intent)
         }
-        // 날짜 뜨게하는 버튼 이벤트
-        binding.ca.setOnClickListener{
-            val intent = Intent(this, 날짜창:class.java)
-            startActivity(intent)
+        override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+            menuInflater.inflate(R.menu.menu, menu)
+            return super.onCreateOptionsMenu(menu)
         }*/
 
         //달력 출력
@@ -73,8 +64,8 @@ class HomeActivity : AppCompatActivity() {
         val dateFormatter0 = DateTimeFormatter.ofPattern("yyyy년 MM월") // 날짜 형식 지정 (예: 2023-11-24)
         val formattedDate0 = currentDate.format(dateFormatter0)
 
-        val dateTextView0: TextView = findViewById(R.id.month)
-        dateTextView0.text = "$formattedDate0" // TextView에 날짜 설정
+        //val dateTextView0: TextView = findViewById(R.id.month)
+        //dateTextView0.text = "$formattedDate0" // TextView에 날짜 설정
 
         fun getDate(currentDate: LocalDate): String {
             val dateFormatter = DateTimeFormatter.ofPattern("E\n dd")
@@ -201,4 +192,24 @@ class HomeActivity : AppCompatActivity() {
         binding.weekCalendarView.setup(startDate, endDate, firstDayOfWeek)
         binding.weekCalendarView.scrollToWeek((currentDate))
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.daily -> {
+            val intent = Intent(this,HomeActivity::class.java )
+            startActivity(intent)
+            true
+        }
+        R.id.monthly -> {
+            val intent = Intent(this,MonthlyActivity::class.java )
+            startActivity(intent)
+            true
+        }
+        R.id.settings -> {
+            val intent = Intent(this,SettingActivity::class.java )
+            startActivity(intent)
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
 }
+
+

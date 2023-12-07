@@ -25,7 +25,7 @@
             android:id="@+id/icon_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/check"
+            android:src="@drawable/game"
             android:padding="10dp"
             android:layout_marginLeft="10dp"/>
         <ImageView
@@ -161,13 +161,18 @@
             android:textSize="20sp"
             android:textStyle="bold" />
         <androidx.appcompat.widget.SwitchCompat
-            android:layout_width="40dp"
-            android:layout_height="30dp"
+            android:id="@+id/cswitch"
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
 
-            android:btn="@drawable/switch_btn"
-            app:track="@drawable/switch_track" />
+            android:thumb="@drawable/switch_btn"
+            app:track="@drawable/switch_track"
+            app:thumbTextPadding="24dp"
+            app:switchMinWidth="0dp"
+            android:textOff=""
+            android:textOn="" />
     </LinearLayout>
 
     <LinearLayout
