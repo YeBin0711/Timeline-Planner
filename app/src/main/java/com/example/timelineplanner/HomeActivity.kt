@@ -1,41 +1,53 @@
 package com.example.timelineplanner
 
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.OvalShape
-import android.graphics.drawable.shapes.RectShape
+import android.icu.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.DatePicker
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.ActivityHomeBinding
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
 import java.util.Locale
+import java.time.YearMonth
+
+import com.kizitonwose.calendar.core.atStartOfMonth
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.kizitonwose.calendar.core.Week
+import com.kizitonwose.calendar.core.WeekDay
+import com.kizitonwose.calendar.view.WeekDayBinder
+import com.kizitonwose.calendar.view.WeekHeaderFooterBinder
+import java.time.format.DateTimeFormatter
+
+import com.example.timelineplanner.R
+import com.example.timelineplanner.DayViewContainer
+import java.text.SimpleDateFormat
+
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: HomeAdapter
+    lateinit var binding: ActivityHomeBinding
+
+    var selectedDate: LocalDate = LocalDate.now() // today
+    // this month
+    val calendar = Calendar.getInstance()
+    val month = calendar.get(Calendar.MONTH)
+    val monthName = SimpleDateFormat("MMMM", Locale.US).format(calendar.time)
+    var year = Calendar.getInstance().get(Calendar.YEAR).toString() // this year
+
+    var calendarHeaderTitle = "$monthName - $year" // default header
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val binding = ActivityHomeBinding.inflate(layoutInflater)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //월별창 뜨게하는 버튼 이벤트
-        /*binding.monthly.setOnClickListener{
+        /*월별창 뜨게하는 버튼 이벤트
+        binding.monthly.setOnClickListener{
             val intent = Intent(this,MonthlyActivity::class.java )
             startActivity(intetnt)
         }
@@ -49,8 +61,8 @@ class HomeActivity : AppCompatActivity() {
         binding.btnPlus.setOnClickListener{
             val intent = Intent(this,수정창:class.java)
             startActivity(intent)
-        }*/
-        /* 날짜 뜨게하는 버튼 이벤트
+        }
+        // 날짜 뜨게하는 버튼 이벤트
         binding.ca.setOnClickListener{
             val intent = Intent(this, 날짜창:class.java)
             startActivity(intent)
@@ -61,14 +73,14 @@ class HomeActivity : AppCompatActivity() {
         val dateFormatter0 = DateTimeFormatter.ofPattern("yyyy년 MM월") // 날짜 형식 지정 (예: 2023-11-24)
         val formattedDate0 = currentDate.format(dateFormatter0)
 
-        val dateTextView0: TextView = findViewById(R.id.main_day)
+        val dateTextView0: TextView = findViewById(R.id.month)
         dateTextView0.text = "$formattedDate0" // TextView에 날짜 설정
 
         fun getDate(currentDate: LocalDate): String {
             val dateFormatter = DateTimeFormatter.ofPattern("E\n dd")
             return currentDate.format(dateFormatter)
         }
-
+        /*
         fun updateDates() {
             val currentDate = LocalDate.now()
             val startOfWeek = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - DayOfWeek.MONDAY.value.toLong())
@@ -106,6 +118,8 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         updateDates()
+        */
+
 
         //recyclerview 작성
         recyclerView = findViewById(R.id.weekday_recyclerView)
@@ -135,5 +149,56 @@ class HomeActivity : AppCompatActivity() {
         // 예시: 사용자로부터 입력을 받아 색상 변경
         val userInputColor = "#00FF00" // 여기에 사용자로부터 입력 받은 색상이 들어가야 합니다.
         changeBackgroundColor(userInputColor)*/
+
+        binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
+            // Called only when a new container is needed.
+            override fun create(view: View) = DayViewContainer(view)
+
+            // Called every time we need to reuse a container.
+            override fun bind(container: DayViewContainer, data: WeekDay) {
+                // Initialize the calendar day for this container.
+                container.day = data
+
+                // Show the month dates. Remember that views are reused!
+                val colorResId: Int =
+                    if (container.day.date == selectedDate) R.color.drakgray else R.color.black
+
+                container.calendarDayNumber.setTextColor(
+                    ContextCompat.getColor(
+                        this@HomeActivity,
+                        colorResId
+                    )
+                )
+                container.calendarDayName.setTextColor(
+                    ContextCompat.getColor(
+                        this@HomeActivity,
+                        colorResId
+                    )
+                )
+
+                //monthName = data.date.month.toString() // for use outside (in header)
+                year = data.date.year.toString()
+                calendarHeaderTitle = "$monthName - $year"
+                container.calendarDayNumber.text = data.date.dayOfMonth.toString()
+                container.calendarDayName.text = data.date.dayOfWeek.toString().substring(0..2)
+            }
+        }
+
+        binding.weekCalendarView.weekHeaderBinder =
+            object : WeekHeaderFooterBinder<MonthHeaderViewContainer> {
+                override fun create(view: View) = MonthHeaderViewContainer(view)
+
+                override fun bind(container: MonthHeaderViewContainer, data: Week) {
+                    container.calendarMonthTitle.text = calendarHeaderTitle
+                }
+            }
+
+        //val currentDate = LocalDate.now()
+        val currentMonth = YearMonth.now()
+        val startDate = currentMonth.minusMonths(10).atStartOfMonth()
+        val endDate = currentMonth.plusMonths(10).atEndOfMonth()
+        val firstDayOfWeek = firstDayOfWeekFromLocale()
+        binding.weekCalendarView.setup(startDate, endDate, firstDayOfWeek)
+        binding.weekCalendarView.scrollToWeek((currentDate))
     }
 }

@@ -22,7 +22,7 @@
             android:name=".MonthlyActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".SettingActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -33,6 +33,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".JoinActivity"></activity>
+        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".MonthlyActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
