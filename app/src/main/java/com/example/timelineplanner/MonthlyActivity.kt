@@ -14,6 +14,8 @@ class MonthlyActivity : AppCompatActivity() {
         binding = ActivityMonthlyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        
+
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
@@ -23,7 +25,6 @@ class MonthlyActivity : AppCompatActivity() {
         binding.calendarView.scrollToMonth(currentMonth)
         binding.calendarView.dayBinder = MonthlyCellBinder()
         binding.calendarView.monthHeaderBinder = MonthlyHeaderBinder()
-
         binding.calendarView.monthScrollListener = { month ->
             binding.calendarView.notifyMonthChanged(month.yearMonth)
             binding.month.text = "${month.yearMonth.year}년 ${month.yearMonth.monthValue}월"
