@@ -1,16 +1,21 @@
 package com.example.timelineplanner
 
+import android.app.Dialog
 import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.core.WeekDay
 import com.example.timelineplanner.databinding.CalendarMonthHeaderBinding
+import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
+import java.time.LocalDate
 
 class HomeViewHolder(val binding: DayRecyclerviewBinding):
         RecyclerView.ViewHolder(binding.root)
@@ -90,6 +95,30 @@ class MonthHeaderViewContainer(view: View) : ViewContainer(view) {
     val calendarMonthTitle = CalendarMonthHeaderBinding.bind(view).monthTitle
 }
 
+class DatePickerDialog2(context: Context, val activity: HomeActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int): Dialog(context) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val binding = DatePickerBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
 
+        binding.yearPicker.minValue = minYear
+        binding.yearPicker.maxValue = maxYear
+        binding.yearPicker.value = year
+        binding.monthPicker.minValue = 1
+        binding.monthPicker.maxValue = 12
+        binding.monthPicker.value = month
+        binding.dayPicker.minValue = 1
+        binding.dayPicker.maxValue = 31
+        binding.dayPicker.value = day
+
+        binding.cancel.setOnClickListener() {
+            dismiss()
+        }
+        binding.ok.setOnClickListener() {
+            activity.onClickOkButton2(binding.yearPicker.value, binding.monthPicker.value, binding.dayPicker.value)
+            dismiss()
+        }
+    }
+}
 
 
