@@ -179,24 +179,14 @@
         android:gravity="center">
         <Button
             android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/DefaultButton"
             android:text="뒤로가기"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/gray"
-            android:layout_marginRight="60dp"/>
-
+            android:layout_marginRight="20dp"/>
         <Button
             android:id="@+id/btn_join2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/DefaultButton"
             android:text="회원가입"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/gray"/>
+            android:layout_marginLeft="20dp"/>
     </LinearLayout>
-     android:text="회원가입"
-        android:textSize="16dp"
-        android:textStyle="bold"
-        android:layout_marginTop="70dp"/>
   
 </LinearLayout>

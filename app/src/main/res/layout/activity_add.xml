@@ -225,24 +225,14 @@
         android:gravity="center_horizontal" >
         <Button
             android:id="@+id/btn_cancel"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
+            style="@style/DefaultButton"
             android:text="취소"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/gray"
             android:layout_gravity="bottom"
             android:layout_marginRight="10dp" />
         <Button
             android:id="@+id/btn_save"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
+            style="@style/DefaultButton"
             android:text="저장"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/gray"
             android:layout_gravity="bottom"
             android:layout_marginLeft="10dp" />
     </LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.timelineplanner
 
+import android.content.Intent
 import android.icu.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -55,16 +56,17 @@ class HomeActivity : AppCompatActivity() {
         binding.settings.setOnClickListener{
             val intent = Intent(this,SettingsActivity::class.java )
             startActivity(intetnt)
-        }
+        }*/
 
-        //수정창 뜨게하는 버튼 이벤트
+        //추가창 뜨게 하는 버튼 이벤트
         binding.btnPlus.setOnClickListener{
-            val intent = Intent(this,수정창:class.java)
+            val intent = Intent(this, AddActivity::class.java)
             startActivity(intent)
         }
+        /*
         // 날짜 뜨게하는 버튼 이벤트
         binding.ca.setOnClickListener{
-            val intent = Intent(this, 날짜창:class.java)
+            val intent = Intent(this, 날짜창::class.java)
             startActivity(intent)
         }*/
 
