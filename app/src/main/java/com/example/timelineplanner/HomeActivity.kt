@@ -29,9 +29,12 @@ import com.example.timelineplanner.R
 import com.example.timelineplanner.DayViewContainer
 import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
+import com.example.timelineplanner.model.ItemData
+import com.google.firebase.firestore.FirebaseFirestore
 import com.kizitonwose.calendar.core.daysOfWeek
 import org.w3c.dom.Text
 import java.text.SimpleDateFormat
+import java.time.LocalTime
 import java.time.Month
 import java.time.MonthDay
 import java.time.Year
@@ -40,9 +43,12 @@ import java.util.Date
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: HomeAdapter
+    private lateinit var adapter: Homeadapter
     lateinit var binding: ActivityHomeBinding
     lateinit var monthText2TextView: TextView
+    private lateinit var Homeadapter:Homeadapter
+    private val db = FirebaseFirestore.getInstance()
+    private val itemList = ArrayList<ItemData>()
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     val calendar = Calendar.getInstance()
@@ -59,6 +65,14 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        recyclerView = findViewById(R.id.weekday_recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        Homeadapter = Homeadapter(itemList)
+        recyclerView.adapter = Homeadapter
+
+        fetchDataFromFirestore()
+
+        //action bar
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
@@ -72,23 +86,6 @@ class HomeActivity : AppCompatActivity() {
 
         //달력 출력
         val currentDate = LocalDate.now()
-
-        //recyclerview 작성
-        recyclerView = findViewById(R.id.weekday_recyclerView)
-
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-
-        //예시로 담아 놓은 것이고 id의 내용들이 추가되어야함
-        val stime = mutableListOf("9:00","10:00","13:00","17:00","20:00")
-        val ltime = mutableListOf("9:30","11:00","15:00","20:00","21:00")
-        val ticon = mutableListOf(R.drawable.wakeup,R.drawable.book,R.drawable.muscle,R.drawable.computer,R.drawable.sleeping)
-        val mname = mutableListOf("기상하기", "수업듣기","운동하기","과제하기","취침준비")
-        val note = mutableListOf("약 챙겨먹기","노트북 필요"," ","모소 lab03 하기"," ")
-
-        adapter = HomeAdapter(stime,ltime,ticon,mname,note)
-        recyclerView.adapter = adapter
-
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
 
@@ -141,6 +138,29 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
+    private fun fetchDataFromFirestore() {
+        db.collection("users")
+            .get()
+            .addOnSuccessListener { result ->
+                val itemList = mutableListOf<ItemData>()
+
+                for (document in result) {
+                    val item = document.toObject(ItemData::class.java)
+                    itemList.add(item)
+                }
+                // itemList의 시간 데이터를 LocalTime으로 변환하여 정렬
+                itemList.sortBy { it.firstTimeHour?.toInt() ?: 0 }
+
+                // RecyclerView에 데이터 설정
+                val recyclerView = findViewById<RecyclerView>(R.id.weekday_recyclerView)
+                val adapter = Homeadapter(itemList)
+                recyclerView.adapter = adapter
+            }
+            .addOnFailureListener { exception ->
+                // 실패했을 때 처리
+            }
+    }
+
     //날짜 변경
     fun onClickOkButton2(year: Int, month: Int, day: Int) {
         selectedDate = LocalDate.of(year, month, day)

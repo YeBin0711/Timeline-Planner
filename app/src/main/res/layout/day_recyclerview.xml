@@ -7,37 +7,75 @@
     android:layout_margin="10dp">
 
     <LinearLayout
-        android:layout_width="40dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/s_time"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-        <TextView
-            android:id="@+id/l_time"
+            <TextView
+                android:id="@+id/first_time_Hour"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:paddingTop="5dp"/>
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:text=":"
+                android:gravity="center"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/first_time_Min"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:paddingTop="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/last_time_Hour"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:paddingTop="5dp"/>
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:text=":"
+                android:gravity="center"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/last_time_Min"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:paddingTop="5dp"/>
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <ImageView
             android:id="@+id/ticon"
             android:layout_width="50dp"
-            android:layout_height="30dp"
-            android:background="@drawable/edittext_background"/>
-
-        <View
-            android:id="@+id/connect_line"
-            android:layout_width="4dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/gray"/>
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/edittext_background" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -51,14 +89,14 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textSize="18sp"/>
+            android:textSize="20sp"/>
 
         <TextView
-            android:id="@+id/item_note"
+            android:id="@+id/item_memo"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textSize="14sp"/>
+            android:textSize="15sp"/>
     </LinearLayout>
 
     <CheckBox
