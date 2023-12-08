@@ -2,15 +2,14 @@ package com.example.timelineplanner
 
 import android.app.Dialog
 import android.content.Context
-import android.database.sqlite.SQLiteOpenHelper
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 import com.kizitonwose.calendar.view.ViewContainer
@@ -18,11 +17,6 @@ import com.kizitonwose.calendar.core.WeekDay
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
-import org.w3c.dom.Text
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.util.Date
-import java.util.Locale
 
 class HomeViewHolder(val binding: DayRecyclerviewBinding):
     RecyclerView.ViewHolder(binding.root)
@@ -52,19 +46,28 @@ class Homeadapter(private val itemList: List<ItemData>) :
             currentItem.lastTimeHour ?: "0"
         )
         holder.imageViewBox.layoutParams.height = imageViewHeight
+
+        // 해당 TextView의 layoutparams를 가져와서 설정
+        holder.emptyView.layoutParams.height=imageViewHeight - 100
+
     }
     private fun calculateImageViewHeight(firstTimeHour: String, lastTimeHour: String): Int {
-        val minHeight = 300 // 최소 높이
-        val maxHeight = 1000 // 최대 높이
+        val minHeight = 200 // 최소 높이
+        val Height2 = 250
+        val Height3 = 300
+        val Height4 = 400
+        val maxHeight = 450// 최대 높이
 
         val firstHour = firstTimeHour.toIntOrNull() ?: 0
         val lastHour = lastTimeHour.toIntOrNull() ?: 0
 
         val difference = lastHour - firstHour
         val calculatedHeight = when {
-            difference < 1 -> minHeight // 시간 차이가 1시간 미만인 경우 최소 높이 적용
-            difference > 5 -> maxHeight // 시간 차이가 5시간 이상인 경우 최대 높이 적용
-            else -> difference * 150 // 그 외의 경우, 시간 차이에 비례한 높이 적용
+            difference <= 1 -> minHeight // 시간 차이가 1시간 미만인 경우 최소 높이 적용
+            difference == 2 -> Height2
+            difference == 3 -> Height3
+            difference == 4 -> Height4 // 시간 차이가 5시간 이상인 경우 최대 높이 적용
+            else -> maxHeight // 그 외의 경우, 시간 차이에 비례한 높이 적용
         }
 
         return calculatedHeight
@@ -80,6 +83,8 @@ class Homeadapter(private val itemList: List<ItemData>) :
         val firstTimeMin: TextView = itemView.findViewById(R.id.first_time_Min)
         val lastTimeHour : TextView = itemView.findViewById(R.id.last_time_Hour)
         val lastTimeMin: TextView = itemView.findViewById(R.id.last_time_Min)
+        val emptyView: View = itemView.findViewById(R.id.emptyView)
+        val linearLayoutContainer: LinearLayout = itemView.findViewById(R.id.textViewContainer) // 새로 추가한 LinearLayout 참조
     }
 }
 
