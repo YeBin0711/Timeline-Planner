@@ -123,15 +123,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        binding.weekCalendarView.weekHeaderBinder =
-            object : WeekHeaderFooterBinder<MonthHeaderViewContainer> {
-                override fun create(view: View) = MonthHeaderViewContainer(view)
-
-                override fun bind(container: MonthHeaderViewContainer, data: Week) {
-                    container.calendarMonthTitle.text = calendarHeaderTitle
-                }
-            }
-
         //val currentDate = LocalDate.now()
         val currentYear = Year.now()
         val currentMonth = YearMonth.now()

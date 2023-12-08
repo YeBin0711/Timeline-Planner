@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.core.WeekDay
-import com.example.timelineplanner.databinding.CalendarMonthHeaderBinding
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import java.time.LocalDate
@@ -91,9 +90,7 @@ class DayViewContainer(view: View) : ViewContainer(view) {
     }
 }
 
-class MonthHeaderViewContainer(view: View) : ViewContainer(view) {
-    val calendarMonthTitle = CalendarMonthHeaderBinding.bind(view).monthTitle
-}
+
 
 class DatePickerDialog2(context: Context, val activity: HomeActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
