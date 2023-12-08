@@ -6,7 +6,6 @@
     android:layout_margin="20dp"
     android:orientation="vertical">
 
-
     <TextView
         android:id="@+id/yearMonthDate"
         android:layout_width="match_parent"
@@ -16,23 +15,31 @@
         android:textStyle="bold"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="30sp" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/todoListOfDialog"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="330dp"
+        android:orientation="vertical">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/todoListOfDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/addTodoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
+        app:layout_anchor="@id/todoListOfDialog"
+        app:layout_anchorGravity="bottom|right"
         android:backgroundTint="@color/gray"
-        app:tint="@color/black"
-        app:elevation="0dp"
-        app:shapeAppearance="@style/FloatingButtonShape"
-        app:srcCompat="@drawable/plus_icon"/>
+        app:iconTint="@color/black"
+        app:icon="@drawable/plus_icon"
+        app:shapeAppearance="@style/FloatingButtonShape"/>
+
+
 </LinearLayout>
