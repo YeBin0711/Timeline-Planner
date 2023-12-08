@@ -135,19 +135,18 @@
             android:textStyle="bold"/>
 
         <CheckBox
-            android:id="@+id/cb1"
+            android:id="@+id/ac_join_cb1"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"/>
         <TextView
-            android:id="@+id/cb2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="동의"
             android:layout_marginLeft="10dp"/>
 
         <CheckBox
-            android:id="@+id/cb3"
+            android:id="@+id/ac_join_cb2"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"/>
@@ -165,6 +164,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="20dp">
         <CheckBox
+            android:id="@+id/ac_join_cb3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"

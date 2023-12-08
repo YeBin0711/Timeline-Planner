@@ -1,16 +1,10 @@
 package com.example.timelineplanner
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.GoogleAuthProvider
 import android.content.Intent
+import android.widget.CheckBox
 import com.example.timelineplanner.databinding.ActivityJoinBinding
 
 class JoinActivity : AppCompatActivity() {
@@ -20,10 +14,24 @@ class JoinActivity : AppCompatActivity() {
         val binding = ActivityJoinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val cb1 = findViewById<CheckBox>(R.id.ac_join_cb1)
+        val cb2 = findViewById<CheckBox>(R.id.ac_join_cb2)
 
         binding.acJoinBtnBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+
+        cb1.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                cb2.isChecked = false // cb1 선택 시 cb2 해제
+            }
+        }
+
+        cb2.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                cb1.isChecked = false // cb2 선택 시 cb1 해제
+            }
         }
 
         binding.acJoinBtnJoin.setOnClickListener {

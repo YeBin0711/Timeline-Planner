@@ -1,5 +1,6 @@
 package com.example.timelineplanner
 
+import android.widget.Toast
 import androidx.multidex.MultiDexApplication
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
