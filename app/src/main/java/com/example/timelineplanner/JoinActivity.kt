@@ -35,32 +35,39 @@ class JoinActivity : AppCompatActivity() {
         }
 
         binding.acJoinBtnJoin.setOnClickListener {
-
             //이메일,비밀번호 회원가입........................
             val email = binding.acJoinEmailId.text.toString()
-            val password = binding.acJoinPassword.text.toString()
+            val password1 = binding.acJoinPassword1.text.toString()
+            val password2 = binding.acJoinPassword2.text.toString()
             val intent = Intent(this, MainActivity::class.java)
-            MyApplication.auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this){task ->
-                    binding.acJoinEmailId.text.clear()
-                    binding.acJoinPassword.text.clear()
-                    if(task.isSuccessful){
-                        MyApplication.auth.currentUser?.sendEmailVerification()
-                            ?.addOnCompleteListener{ sendTask ->
-                                if(sendTask.isSuccessful){
-                                    intent
-                                    Toast.makeText(baseContext, "회원가입에서 성공, 전송된 메일을 확인해 주세요",
-                                        Toast.LENGTH_SHORT).show()
-                                    startActivity(intent)
-                                }else {
-                                    Toast.makeText(baseContext, "메일 발송 실패", Toast.LENGTH_SHORT).show()
+            if (password1 != password2) {
+                Toast.makeText(baseContext, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                MyApplication.auth.createUserWithEmailAndPassword(email, password1)
+                    .addOnCompleteListener(this) { task ->
+                        binding.acJoinEmailId.text.clear()
+                        binding.acJoinPassword1.text.clear()
+                        binding.acJoinPassword2.text.clear()
+                        if (task.isSuccessful) {
+                            MyApplication.auth.currentUser?.sendEmailVerification()
+                                ?.addOnCompleteListener { sendTask ->
+                                    if (sendTask.isSuccessful) {
+                                        intent
+                                        Toast.makeText(
+                                            baseContext, "회원가입에서 성공, 전송된 메일을 확인해 주세요",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        startActivity(intent)
+                                    } else {
+                                        Toast.makeText(baseContext, "메일 발송 실패", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
                                 }
-                            }
-                    }else {
-                        Toast.makeText(baseContext, "회원가입 실패", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(baseContext, "회원가입 실패", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
-
+            }
         }
     }
 }
