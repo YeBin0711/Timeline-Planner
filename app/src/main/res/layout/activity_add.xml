@@ -166,8 +166,12 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
 
-            android:btn="@drawable/switch_btn"
-            app:track="@drawable/switch_track" />
+            android:thumb="@drawable/switch_btn"
+            app:track="@drawable/switch_track"
+            app:thumbTextPadding="24dp"
+            app:switchMinWidth="0dp"
+            android:textOff=""
+            android:textOn="" />
     </LinearLayout>
 
     <LinearLayout
