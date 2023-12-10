@@ -2,11 +2,11 @@ package com.example.timelineplanner
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,10 +27,6 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.time.LocalDate
 
 
 class CalendarCellContainer(view: View) : ViewContainer(view) {
@@ -46,173 +42,20 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             container.binding.day.setTextColor(container.view.context.getColor(R.color.semi_transparent))
         }
         //Todo: 설정에 따라 휴일 표시
-        if(PreferenceManager.getDefaultSharedPreferences(container.view.context).getBoolean("holiday", false)) {
+        val isHolidayOn = PreferenceManager.getDefaultSharedPreferences(container.view.context).getBoolean("holiday", false)
+        if(isHolidayOn) {
             //휴일 표시
             val year = data.date.year.toString()
             val month : String = String.format("%02d", data.date.monthValue)
 
-            Holiday(year, month).returnCall().enqueue(object : Callback<HolidayData> {
-                override fun onResponse(call: Call<HolidayData>, response: Response<HolidayData>) {
-                    if (response.isSuccessful) {
-                        var holidayBody: HolidayBody? = response.body()?.response?.body
-                        val gson = GsonBuilder().create()
-
-                        if(response.body()?.response?.body?.totalCount == 0) {
-                            //items = strting
-                            //val itemsTypeToken: TypeToken<String> = object : TypeToken<String>() {}
-                            //gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
-                        }else if(response.body()?.response?.body?.totalCount == 1) {
-                            //items, item = object
-                            val itemsTypeToken: TypeToken<HolidayListModel> = object : TypeToken<HolidayListModel>() {}
-                            val itemTypeToken: TypeToken<HolidayModel> = object : TypeToken<HolidayModel>() {}
-                            val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
-                            val holidayList: HolidayModel = gson.fromJson(gson.toJson(holidayItems?.item), itemTypeToken.type)
-
-                            if(data.date.year == holidayList.locdate/10000
-                                && data.date.monthValue == holidayList.locdate%10000/100
-                                && data.date.dayOfMonth == holidayList.locdate%100
-                                && holidayList.isHoliday == "Y") {
-                                container.binding.day.setTextColor(Color.RED)
-                                //Log.d("holiday", "휴일 : ${holidayList[i].dateName}")
-                            }
-                        }else {
-                            //items = object, item = array
-                            val itemsTypeToken: TypeToken<HolidayListModel> = object : TypeToken<HolidayListModel>() {}
-                            val itemTypeToken: TypeToken<List<HolidayModel>> = object : TypeToken<List<HolidayModel>>() {}
-                            val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
-                            val holidayList: List<HolidayModel> = gson.fromJson(gson.toJson(holidayItems?.item), itemTypeToken.type)
-
-                            Log.d("holiday", "휴일 : ${holidayList}")
-
-                            for(holiday in holidayList!!) {
-                                Log.d("holiday", "휴일 : ${holiday.locdate}")
-                                if(data.date.year == holiday.locdate/10000
-                                    && data.date.monthValue == holiday.locdate%10000/100
-                                    && data.date.dayOfMonth == holiday.locdate%100
-                                    && holiday.isHoliday == "Y") {
-                                    container.binding.day.setTextColor(Color.RED)
-                                    Log.d("holiday", "휴일 : ${holiday.dateName}")
-                                }
-                            }
-                        }
-                    } else {
-                        // 응답 실패 시 처리
-                        val errorCode = response.code()
-                        val errorMessage = response.message()
-                        // 실패 이유를 출력하거나 로깅
-                        Log.d("holiday", "Error Code: $errorCode, Message: $errorMessage")
-                    }
-                }
-                override fun onFailure(call: Call<HolidayData>, t: Throwable) {
-                    Log.d("holiday", "Network Error: " + t.message);
-                }
-            })
+            val holidayBody: HolidayBody? = getHolidayData(year, month)
+            setDataTypeOfModelAndMarkColor(holidayBody, holidayBody?.totalCount, data, container)
         }
 
 
 
         //Todo: 데이터베이스에서 일정 정보 가져오기
-        val todo : List<Todo> = listOf(
-            Todo(
-                "일정1",
-                Color.parseColor("#FF0000"),
-                android.R.drawable.star_on,
-                Time("14", "00"),
-                LocalDate.of(2023, 12, 3),
-                "메모1",
-                true,
-                Repeat(0, 0),
-                Alarm(0, Time("12", "00"))
-            ),
-            Todo(
-                "일정2",
-                Color.parseColor("#00FF00"),
-                android.R.drawable.star_on,
-                Time("8", "00"),
-                LocalDate.of(2023, 12, 3),
-                "메모2",
-                true,
-                Repeat(0, 0),
-                Alarm(0, Time("12", "00"))
-            ),
-            Todo(
-                "일정3",
-                Color.parseColor("#0000FF"),
-                android.R.drawable.star_on,
-                Time("16", "32"),
-                LocalDate.of(2023, 12, 3),
-                "메모3",
-                true,
-                Repeat(0, 0),
-                Alarm(0, Time("12", "00"))
-            ),
-            Todo(
-                "일정4",
-                Color.parseColor("#FF0000"),
-                android.R.drawable.star_on,
-                Time("16", "15"),
-                LocalDate.of(2023, 12, 3),
-                "메모4",
-                true,
-                Repeat(0, 0),
-                Alarm(0, Time("12", "00"))
-            ),
-            Todo(
-                "일정5",
-                Color.parseColor("#00FF00"),
-                android.R.drawable.star_on,
-                Time("12", "00"),
-                LocalDate.of(2023, 12, 3),
-                "메모5",
-                false,
-                Repeat(0, 0),
-                Alarm(0, Time("12", "00"))
-            ),
-            Todo(
-                "일정6",
-                Color.parseColor("#0000FF"),
-                android.R.drawable.star_on,
-                Time("24", "00"),
-                LocalDate.of(2023, 12, 3),
-                "메모6",
-                true,
-                Repeat(0, 0),
-                Alarm(0, Time("12", "00"))
-            ),
-            Todo(
-                "일정7",
-                Color.parseColor("#0000FF"),
-                android.R.drawable.star_on,
-                Time("12", "00"),
-                LocalDate.of(2023, 12, 3),
-                "메모7",
-                true,
-                Repeat(0, 0),
-                Alarm(0, Time("12", "00"))
-            ),
-            Todo(
-                "일정8",
-                Color.parseColor("#FF0000"),
-                android.R.drawable.star_on,
-                Time("15", "00"),
-                LocalDate.of(2023, 12, 7),
-                "메모8",
-                true,
-                Repeat(0, 0),
-                Alarm(0, Time("12", "00"))
-            ),
-            Todo(
-                "일정9",
-                Color.parseColor("#FF0000"),
-                android.R.drawable.star_on,
-                Time("15", "00"),
-                LocalDate.of(2023, 12, 3),
-                "메모8",
-                true,
-                Repeat(0, 0),
-                Alarm(0, Time("12", "00"))
-            )
-        )
+        val todo = getTodoList()
         //Todo: 해당 날짜의 일정만 가져오기, 보여지도록 선택한 것만 가져오기
         var todos : MutableList<Todo> = mutableListOf()
         for(i in 0..todo.size-1) {
@@ -223,8 +66,8 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
         //Todo: 설정에 따라 todos 정렬(시간순, 제목순)
         if(PreferenceManager.getDefaultSharedPreferences(container.view.context).getString("sortingStyles", "time") == "time") {
             //시간순 정렬
-            todos.sortBy(){ it.time.minute.toInt() }
-            todos.sortBy(){ it.time.hour.toInt() }
+            todos.sortBy(){ it.firstTime.minute.toInt() }
+            todos.sortBy(){ it.firstTime.hour.toInt() }
         } else {
             //제목순 정렬
             todos.sortWith(compareBy { it.title })
@@ -244,14 +87,42 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(container.view.context, todos)
             dialogBinding.addTodoButton.setOnClickListener() {
                 //Todo: 일정 추가 이벤트
-                //val intent = Intent(this,AddActivity::class.java )
-                //startActivity(intent)
+                val intent = Intent(container.view.context, AddActivity::class.java)
+                container.view.context.startActivity(intent)
             }
 
             val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
             monthlyDialog.setView(dialogBinding.root)
             monthlyDialog.setCancelable(true)
             monthlyDialog.show()
+        }
+    }
+
+    fun setDataTypeOfModelAndMarkColor(holidayBody: HolidayBody?, totalCount: Int?, data: CalendarDay, container: CalendarCellContainer) {
+        val gson = GsonBuilder().create()
+
+        if(totalCount == 1) {
+            //items, item = object
+            val itemsTypeToken: TypeToken<HolidayListModel> = object : TypeToken<HolidayListModel>() {}
+            val itemTypeToken: TypeToken<HolidayModel> = object : TypeToken<HolidayModel>() {}
+            val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
+            val holidayList: HolidayModel = gson.fromJson(gson.toJson(holidayItems?.item), itemTypeToken.type)
+
+            if(isEqualDate(data.date, holidayList.locdate) && holidayList.isHoliday == "Y") {
+                container.binding.day.setTextColor(Color.RED)
+            }
+        }else {
+            //items = object, item = array
+            val itemsTypeToken: TypeToken<HolidayListModel> = object : TypeToken<HolidayListModel>() {}
+            val itemTypeToken: TypeToken<List<HolidayModel>> = object : TypeToken<List<HolidayModel>>() {}
+            val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
+            val holidayList: List<HolidayModel> = gson.fromJson(gson.toJson(holidayItems?.item), itemTypeToken.type)
+
+            for(holiday in holidayList!!) {
+                if(isEqualDate(data.date, holiday.locdate) && holiday.isHoliday == "Y") {
+                    container.binding.day.setTextColor(Color.RED)
+                }
+            }
         }
     }
 }
@@ -308,23 +179,15 @@ class TodoListDialogAdapter(val context: Context, val todoList: List<Todo>) : Re
         binding.title.text = todoList[position].title
 
         //Todo: 설정에 따른 시간 형식 반영 (12/24시간)
-        if(PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12") == "12") {
-            if(todoList[position].time.hour.toInt() == 12) {
-                binding.time.text = todoList[position].time.hour + ":" + todoList[position].time.minute + " PM"
-            } else if(todoList[position].time.hour.toInt() == 24) {
-                binding.time.text = "12:" + todoList[position].time.minute + " AM"
-            }else if(todoList[position].time.hour.toInt() > 12) {
-                binding.time.text = (todoList[position].time.hour.toInt() % 12).toString() + ":" + todoList[position].time.minute + " PM"
-            } else if(todoList[position].time.hour.toInt() < 12) {
-                binding.time.text = (todoList[position].time.hour.toInt() % 12).toString() + ":" + todoList[position].time.minute + " AM"
-            }
-        } else {
-            binding.time.text = todoList[position].time.hour + ":" + todoList[position].time.minute
-        }
+        val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
+        val firstTime = transIntoTimeForm(todoList[position].firstTime.hour, timeForm) + ":" + todoList[position].firstTime.minute
+        val lastTime = transIntoTimeForm(todoList[position].lastTime.hour, timeForm) + ":" + todoList[position].lastTime.minute
+        binding.time.text = "$firstTime ~ $lastTime"
     }
 }
 
 class DatePickerDialog(context: Context, val activity: MonthlyActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int): Dialog(context) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DatePickerBinding.inflate(layoutInflater, null, false)

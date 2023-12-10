@@ -3,25 +3,25 @@ package com.example.timelineplanner
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.timelineplanner.databinding.DayRecyclerviewBinding
-import com.kizitonwose.calendar.view.ViewContainer
-import com.kizitonwose.calendar.core.WeekDay
 import com.example.timelineplanner.databinding.DatePickerBinding
+import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
+import com.kizitonwose.calendar.core.WeekDay
+import com.kizitonwose.calendar.view.ViewContainer
 
 class HomeViewHolder(val binding: DayRecyclerviewBinding):
     RecyclerView.ViewHolder(binding.root)
 
-class Homeadapter(private val itemList: List<ItemData>) :
+class Homeadapter(val context: Context, val itemList: List<ItemData>) :
     RecyclerView.Adapter<Homeadapter.ItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -35,10 +35,13 @@ class Homeadapter(private val itemList: List<ItemData>) :
 
         holder.textViewTitle.text = currentItem.dayTitle
         holder.textViewMemo.text = currentItem.dayMemo
-        holder.firstTimeHour.text = currentItem.firstTimeHour
-        holder.firstTimeMin.text = currentItem.firstTimeMin
-        holder.lastTimeHour.text = currentItem.lastTimeHour
-        holder.lastTimeMin.text = currentItem.lastTimeMin
+
+        //Todo: 시간 형식 설정 반영
+        val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
+        holder.firstTimeHour.text = transIntoTimeForm(currentItem.firstTimeHour, timeForm)
+        holder.firstTimeMin.text = transIntoTimeForm(currentItem.firstTimeMin, timeForm)
+        holder.lastTimeHour.text = transIntoTimeForm(currentItem.lastTimeHour, timeForm)
+        holder.lastTimeMin.text = transIntoTimeForm(currentItem.lastTimeMin, timeForm)
 
         //이미지뷰 크기 조절
         val imageViewHeight = calculateImageViewHeight(
@@ -49,37 +52,6 @@ class Homeadapter(private val itemList: List<ItemData>) :
 
         // 해당 TextView의 layoutparams를 가져와서 설정
         holder.emptyView.layoutParams.height=imageViewHeight - 100
-
-
-        //Todo: 시간 형식 설정 반영
-        /*
-        if(PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12") == "12") {
-            if(stime[position].hour.toInt() == 12) {
-                binding.sTime.text = stime[position].hour + ":" + stime[position].minute + " PM"
-            } else if(stime[position].hour.toInt() == 24) {
-                binding.sTime.text = "12:" + stime[position].minute + " AM"
-            }else if(stime[position].hour.toInt() > 12) {
-                binding.sTime.text = (stime[position].hour.toInt() % 12).toString() + ":" + stime[position].minute + " PM"
-            } else if(stime[position].hour.toInt() < 12) {
-                binding.sTime.text = (stime[position].hour.toInt() % 12).toString() + ":" + stime[position].minute + " AM"
-            }
-        } else {
-            binding.sTime.text = stime[position].hour + ":" + stime[position].minute
-        }
-        if(PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12") == "12") {
-            if(ltime[position].hour.toInt() == 12) {
-                binding.lTime.text = ltime[position].hour + ":" + ltime[position].minute + " PM"
-            } else if(ltime[position].hour.toInt() == 24) {
-                binding.lTime.text = "12:" + ltime[position].minute + " AM"
-            }else if(ltime[position].hour.toInt() > 12) {
-                binding.lTime.text = (ltime[position].hour.toInt() % 12).toString() + ":" + ltime[position].minute + " PM"
-            } else if(ltime[position].hour.toInt() < 12) {
-                binding.lTime.text = (ltime[position].hour.toInt() % 12).toString() + ":" + ltime[position].minute + " AM"
-            }
-        } else {
-            binding.sTime.text = ltime[position].hour + ":" + ltime[position].minute
-        }
-         */
     }
     private fun calculateImageViewHeight(firstTimeHour: String, lastTimeHour: String): Int {
         val minHeight = 200 // 최소 높이

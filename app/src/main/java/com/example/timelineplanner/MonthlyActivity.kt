@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.example.timelineplanner.databinding.ActivityMonthlyBinding
 import com.example.timelineplanner.databinding.CalendarCellBinding
@@ -26,6 +25,7 @@ class MonthlyActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //테마 적용
+        /*
         PreferenceManager.getDefaultSharedPreferences(this).getString("themes", "light")?.let {
             when(it) {
                 "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -33,6 +33,7 @@ class MonthlyActivity : AppCompatActivity() {
                 "default" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
         }
+        */
 
         //툴바 메뉴 설정
         setSupportActionBar(binding.toolbar)
@@ -69,9 +70,7 @@ class MonthlyActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
-        //menu?.findItem(R.id.daily)?.isChecked = true
         menu?.findItem(R.id.monthly)?.isChecked = true
-        //menu?.findItem(R.id.settings)?.isChecked = true
         for (i in 0 until menu!!.size()) {
             val item = menu.getItem(i)
             if(!item.isChecked) item.iconTintList = getColorStateList(R.color.semi_transparent)
@@ -82,8 +81,8 @@ class MonthlyActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.daily -> {
-            //val intent = Intent(this,HomeActivity::class.java )
-            //startActivity(intent)
+            val intent = Intent(this,HomeActivity::class.java )
+            startActivity(intent)
             true
         }
         R.id.monthly -> {
