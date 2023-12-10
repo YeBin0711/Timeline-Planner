@@ -25,7 +25,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/game"
-            android:tint="?attr/colorOnPrimary"
+            app:tint="?attr/colorOnPrimary"
             android:padding="10dp"
             android:layout_marginLeft="10dp"/>
         <ImageView
@@ -167,6 +167,8 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
 
+            app:thumbTint="@color/thumb"
+            app:trackTint="@color/track"
             android:thumb="@drawable/switch_btn"
             app:track="@drawable/switch_track"
             app:thumbTextPadding="24dp"

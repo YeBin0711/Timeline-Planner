@@ -24,4 +24,5 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
+
 </resources>

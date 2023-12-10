@@ -48,8 +48,8 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             val year = data.date.year.toString()
             val month : String = String.format("%02d", data.date.monthValue)
 
-            val holidayBody: HolidayBody? = getHolidayData(year, month)
-            setDataTypeOfModelAndMarkColor(holidayBody, holidayBody?.totalCount, data, container)
+            val holidayBody: HolidayBody = getHolidayData(year, month)
+            setDataTypeOfModelAndMarkColor(holidayBody, holidayBody.totalCount, data, container)
         }
 
 
@@ -57,7 +57,7 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
         //Todo: 데이터베이스에서 일정 정보 가져오기
         val todo = getTodoList()
         //Todo: 해당 날짜의 일정만 가져오기, 보여지도록 선택한 것만 가져오기
-        var todos : MutableList<Todo> = mutableListOf()
+        val todos : MutableList<Todo> = mutableListOf()
         for(i in 0..todo.size-1) {
             if(data.date == todo[i].date && todo[i].show) {
                 todos.add(todo[i])
@@ -106,7 +106,7 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             val itemsTypeToken: TypeToken<HolidayListModel> = object : TypeToken<HolidayListModel>() {}
             val itemTypeToken: TypeToken<HolidayModel> = object : TypeToken<HolidayModel>() {}
             val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
-            val holidayList: HolidayModel = gson.fromJson(gson.toJson(holidayItems?.item), itemTypeToken.type)
+            val holidayList: HolidayModel = gson.fromJson(gson.toJson(holidayItems.item), itemTypeToken.type)
 
             if(isEqualDate(data.date, holidayList.locdate) && holidayList.isHoliday == "Y") {
                 container.binding.day.setTextColor(Color.RED)
@@ -116,9 +116,9 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             val itemsTypeToken: TypeToken<HolidayListModel> = object : TypeToken<HolidayListModel>() {}
             val itemTypeToken: TypeToken<List<HolidayModel>> = object : TypeToken<List<HolidayModel>>() {}
             val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
-            val holidayList: List<HolidayModel> = gson.fromJson(gson.toJson(holidayItems?.item), itemTypeToken.type)
+            val holidayList: List<HolidayModel> = gson.fromJson(gson.toJson(holidayItems.item), itemTypeToken.type)
 
-            for(holiday in holidayList!!) {
+            for(holiday in holidayList) {
                 if(isEqualDate(data.date, holiday.locdate) && holiday.isHoliday == "Y") {
                     container.binding.day.setTextColor(Color.RED)
                 }
