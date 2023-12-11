@@ -37,13 +37,14 @@
             android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/email_id"
+            android:id="@+id/ac_join_email_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:background="@drawable/edittext_background_line"
             android:layout_marginRight="40dp"
-            android:text=" "
+            android:text=""
+            android:textSize="14sp"
             android:maxLength="25"/>
     </LinearLayout>
 
@@ -61,12 +62,14 @@
             android:textStyle="bold"/>
 
         <EditText
+            android:id="@+id/ac_join_password1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:background="@drawable/edittext_background_line"
             android:layout_marginRight="40dp"
-            android:text=" "
+            android:text=""
+            android:textSize="14sp"
             android:maxLength="15"/>
     </LinearLayout>
 
@@ -84,12 +87,14 @@
             android:textStyle="bold"/>
 
         <EditText
+            android:id="@+id/ac_join_password2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:background="@drawable/edittext_background_line"
             android:layout_marginRight="40dp"
-            android:text=" "
+            android:text=""
+            android:textSize="14sp"
             android:maxLength="15"/>
     </LinearLayout>
 
@@ -111,9 +116,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:background="@drawable/edittext_background_line"
-            android:text=" "
+            android:text=""
+            android:textSize="14sp"
             android:layout_marginRight="40dp"
-            android:maxLength="10"/>
+            android:maxLength="10"
+            android:privateImeOptions="defaultInputmode=korean"/>
     </LinearLayout>
 
     <LinearLayout
@@ -129,7 +136,7 @@
             android:textStyle="bold"/>
 
         <CheckBox
-            android:id="@+id/cb1"
+            android:id="@+id/ac_join_cb1"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"/>
@@ -141,7 +148,7 @@
             android:layout_marginLeft="10dp"/>
 
         <CheckBox
-            android:id="@+id/cb3"
+            android:id="@+id/ac_join_cb2"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"/>
@@ -159,6 +166,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="20dp">
         <CheckBox
+            android:id="@+id/ac_join_cb3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
@@ -178,12 +186,12 @@
         android:layout_marginTop="70dp"
         android:gravity="center">
         <Button
-            android:id="@+id/btn_back"
+            android:id="@+id/ac_join_btn_back"
             style="@style/DefaultButton"
             android:text="뒤로가기"
             android:layout_marginRight="20dp"/>
         <Button
-            android:id="@+id/btn_join2"
+            android:id="@+id/ac_join_btn_join"
             style="@style/DefaultButton"
             android:text="회원가입"
             android:layout_marginLeft="20dp"/>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "118992029356",
+    "project_id": "timeline-planner-31f9f",
+    "storage_bucket": "timeline-planner-31f9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118992029356:android:3ce26132c09952c1730109",
+        "android_client_info": {
+          "package_name": "com.example.timelineplanner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmcWka0ZEL46vgIIPiGy20IWdCdqB_19U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

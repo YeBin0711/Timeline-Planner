@@ -37,7 +37,6 @@ class MonthlyActivity : AppCompatActivity() {
         binding.calendarView.scrollToMonth(currentMonth)
         binding.calendarView.dayBinder = MonthlyCellBinder()
         binding.calendarView.monthHeaderBinder = MonthlyHeaderBinder()
-
         binding.calendarView.monthScrollListener = { month ->
             selectedDate = LocalDate.of(month.yearMonth.year, month.yearMonth.monthValue, selectedDate.dayOfMonth)
             binding.monthText.text = "${month.yearMonth.year}년 ${month.yearMonth.monthValue}월"

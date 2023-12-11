@@ -7,32 +7,34 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="60dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp">
+        <LinearLayout
+            android:id="@+id/monthSelector2"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:gravity="center">
 
             <TextView
-                android:id="@+id/month"
+                android:id="@+id/monthText2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="2023년 11월"
-                android:textSize="25sp"
+                android:text="2023년 12월"
+                android:textSize="21sp"
                 android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginHorizontal="5dp"
-                android:layout_toRightOf="@id/month"
-                android:src="@android:drawable/arrow_down_float" />
-
-        </RelativeLayout>
+                android:src="@drawable/toggle" />
+        </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
