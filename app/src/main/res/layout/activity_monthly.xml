@@ -21,7 +21,6 @@
 
             <TextView
                 android:id="@+id/monthText"
-                android:text="2023년 11월"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="21sp"
@@ -40,9 +39,9 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:cv_scrollPaged="true"
         app:cv_daySize="rectangle"
-        app:cv_dayViewResource="@layout/calendar_cell"
-        app:cv_monthHeaderResource="@layout/monthly_header"
         app:cv_outDateStyle="endOfRow"
-        app:cv_scrollPaged="true" />
+        app:cv_dayViewResource="@layout/calendar_cell"
+        app:cv_monthHeaderResource="@layout/monthly_header"/>
 </LinearLayout>

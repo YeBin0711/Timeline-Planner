@@ -2,6 +2,23 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.TimelinePlanner" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/lightgray</item>
+        <item name="colorSecondary">@color/gray</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
+
+    <style name="Theme.TimelinePlanner" parent="Base.Theme.TimelinePlanner" />
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>
+    </style>
+
+
+
 </resources>

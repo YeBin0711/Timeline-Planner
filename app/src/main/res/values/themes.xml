@@ -2,8 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.TimelinePlanner" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/lightgray</item>
+        <item name="colorSecondary">@color/darkgray</item>
+        <item name="colorOnSecondary">@color/black</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.TimelinePlanner" parent="Base.Theme.TimelinePlanner" />
@@ -14,25 +19,5 @@
         <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>
     </style>
 
-    <style name="settingName">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="settingItem">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#AEAEAE</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="dayofweek">
-        <item name="android:layout_width">0sp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
 
 </resources>

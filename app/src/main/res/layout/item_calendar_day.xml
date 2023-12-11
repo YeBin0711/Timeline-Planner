@@ -19,6 +19,7 @@
             android:layout_gravity="center"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:textColor="?attr/colorOnPrimary"
             tools:text="Tuesday" />
 
         <TextView
@@ -29,6 +30,7 @@
             android:layout_marginTop="10dp"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:textColor="?attr/colorOnPrimary"
             tools:text="40" />
 
     </LinearLayout>

@@ -29,9 +29,9 @@ class AddActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         editTitle = findViewById(R.id.todo_title)
         editMemo = findViewById(R.id.todo_memo)
         editFirstTimeHour = findViewById(R.id.hour1)
@@ -39,6 +39,14 @@ class AddActivity : AppCompatActivity() {
         editLastTimeHour = findViewById(R.id.hour2)
         editLastTimeMin = findViewById(R.id.minute2)
         buttonSave = findViewById(R.id.btn_save)
+
+        buttonSave.setOnClickListener {
+            addDataToFirestore()
+        }
+        binding.btnCancel.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+        }
 
         //스위치 on/off
         val switchView: SwitchCompat = findViewById(R.id.cswitch)

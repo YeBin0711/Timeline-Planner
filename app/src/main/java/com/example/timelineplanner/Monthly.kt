@@ -2,6 +2,7 @@ package com.example.timelineplanner
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -9,7 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.CalendarCellBinding
@@ -18,13 +19,14 @@ import com.example.timelineplanner.databinding.MonthlyEventListItemBinding
 import com.example.timelineplanner.databinding.TodoListDialogBinding
 import com.example.timelineplanner.databinding.TodoListDialogItemBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
-import java.time.LocalDate
 
 
 class CalendarCellContainer(view: View) : ViewContainer(view) {
@@ -36,22 +38,42 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
     override fun bind(container: CalendarCellContainer, data: CalendarDay) {
         container.day = data
         container.binding.day.text = data.date.dayOfMonth.toString()
-        if (data.position == DayPosition.MonthDate) {
-            container.binding.day.setTextColor(Color.BLACK)
-        } else {
-            container.binding.day.setTextColor(ContextCompat.getColor(container.view.context, R.color.gray))
+        if (data.position != DayPosition.MonthDate) {
+            container.binding.day.setTextColor(container.view.context.getColor(R.color.semi_transparent))
         }
+        //Todo: 설정에 따라 휴일 표시
+        val isHolidayOn = PreferenceManager.getDefaultSharedPreferences(container.view.context).getBoolean("holiday", false)
+        if(isHolidayOn) {
+            //휴일 표시
+            val year = data.date.year.toString()
+            val month : String = String.format("%02d", data.date.monthValue)
+
+            val holidayBody: HolidayBody = getHolidayData(year, month)
+            setDataTypeOfModelAndMarkColor(holidayBody, holidayBody.totalCount, data, container)
+        }
+
 
 
         //Todo: 데이터베이스에서 일정 정보 가져오기
-        val todo : List<Todo> = listOf(Todo("test1", "12:00", Color.RED, LocalDate.of(2023, 11, 10)), Todo("test2", "13:00", Color.BLUE, LocalDate.of(2023, 11, 10)), Todo("test3", "14:00", Color.GREEN, LocalDate.of(2023, 11, 10)))
-        //Todo: 해당 날짜의 일정만 가져오기
+        val todo = getTodoList()
+        //Todo: 해당 날짜의 일정만 가져오기, 보여지도록 선택한 것만 가져오기
         val todos : MutableList<Todo> = mutableListOf()
         for(i in 0..todo.size-1) {
-            if(data.date == todo[i].date) {
+            if(data.date == todo[i].date && todo[i].show) {
                 todos.add(todo[i])
             }
         }
+        //Todo: 설정에 따라 todos 정렬(시간순, 제목순)
+        if(PreferenceManager.getDefaultSharedPreferences(container.view.context).getString("sortingStyles", "time") == "time") {
+            //시간순 정렬
+            todos.sortBy(){ it.firstTime.minute.toInt() }
+            todos.sortBy(){ it.firstTime.hour.toInt() }
+        } else {
+            //제목순 정렬
+            todos.sortWith(compareBy { it.title })
+        }
+
+
         //일정 정보를 리사이클러뷰에 넣기
         container.binding.eventList.layoutManager = LinearLayoutManager(container.view.context)
         container.binding.eventList.adapter = MonthlyEventListAdapter(todos)
@@ -59,19 +81,48 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
         //todolist 다이얼로그
         container.binding.calendarCell.setOnClickListener {
             val dialogBinding = TodoListDialogBinding.inflate(LayoutInflater.from(container.view.context), null, false)
+            dialogBinding.addTodoButton.elevation = 0f
             dialogBinding.yearMonthDate.text = "${container.day.date.year}년 ${container.day.date.monthValue}월 ${container.day.date.dayOfMonth}일"
             dialogBinding.todoListOfDialog.layoutManager = LinearLayoutManager(container.view.context)
-            dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(todos)
+            dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(container.view.context, todos)
             dialogBinding.addTodoButton.setOnClickListener() {
                 //Todo: 일정 추가 이벤트
-                //val intent = Intent(this,AddActivity::class.java )
-                //startActivity(intent)
+                val intent = Intent(container.view.context, AddActivity::class.java)
+                container.view.context.startActivity(intent)
             }
 
             val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
             monthlyDialog.setView(dialogBinding.root)
             monthlyDialog.setCancelable(true)
             monthlyDialog.show()
+        }
+    }
+
+    fun setDataTypeOfModelAndMarkColor(holidayBody: HolidayBody?, totalCount: Int?, data: CalendarDay, container: CalendarCellContainer) {
+        val gson = GsonBuilder().create()
+
+        if(totalCount == 1) {
+            //items, item = object
+            val itemsTypeToken: TypeToken<HolidayListModel> = object : TypeToken<HolidayListModel>() {}
+            val itemTypeToken: TypeToken<HolidayModel> = object : TypeToken<HolidayModel>() {}
+            val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
+            val holidayList: HolidayModel = gson.fromJson(gson.toJson(holidayItems.item), itemTypeToken.type)
+
+            if(isEqualDate(data.date, holidayList.locdate) && holidayList.isHoliday == "Y") {
+                container.binding.day.setTextColor(Color.RED)
+            }
+        }else {
+            //items = object, item = array
+            val itemsTypeToken: TypeToken<HolidayListModel> = object : TypeToken<HolidayListModel>() {}
+            val itemTypeToken: TypeToken<List<HolidayModel>> = object : TypeToken<List<HolidayModel>>() {}
+            val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
+            val holidayList: List<HolidayModel> = gson.fromJson(gson.toJson(holidayItems.item), itemTypeToken.type)
+
+            for(holiday in holidayList) {
+                if(isEqualDate(data.date, holiday.locdate) && holiday.isHoliday == "Y") {
+                    container.binding.day.setTextColor(Color.RED)
+                }
+            }
         }
     }
 }
@@ -109,7 +160,7 @@ class MonthlyHeaderBinder : MonthHeaderFooterBinder<MonthlyHeaderContainer> {
 
 class TodoListDialogViewHolder(val binding: TodoListDialogItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-class TodoListDialogAdapter(private val todoList: List<Todo>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TodoListDialogAdapter(val context: Context, val todoList: List<Todo>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemCount(): Int {
         return todoList.size
     }
@@ -126,19 +177,17 @@ class TodoListDialogAdapter(private val todoList: List<Todo>) : RecyclerView.Ada
         }
         binding.square.setCardBackgroundColor(ColorStateList.valueOf(todoList[position].color))
         binding.title.text = todoList[position].title
-        binding.time.text = todoList[position].time
+
+        //Todo: 설정에 따른 시간 형식 반영 (12/24시간)
+        val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
+        val firstTime = transIntoTimeForm(todoList[position].firstTime.hour, timeForm) + ":" + todoList[position].firstTime.minute
+        val lastTime = transIntoTimeForm(todoList[position].lastTime.hour, timeForm) + ":" + todoList[position].lastTime.minute
+        binding.time.text = "$firstTime ~ $lastTime"
     }
 }
 
-class Todo (
-    val title: String,
-    val time: String,
-    val color: Int,
-    val date: LocalDate
-)
-
-
 class DatePickerDialog(context: Context, val activity: MonthlyActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int): Dialog(context) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DatePickerBinding.inflate(layoutInflater, null, false)
@@ -163,3 +212,5 @@ class DatePickerDialog(context: Context, val activity: MonthlyActivity, val minY
         }
     }
 }
+
+

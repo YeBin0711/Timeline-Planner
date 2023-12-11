@@ -5,13 +5,15 @@
         app:title="테마"
         app:summary="테마를 선택하세요"
         app:entries="@array/themes"
-        app:entryValues="@array/themes_values" />
+        app:entryValues="@array/themes_values"
+        app:defaultValue="default"/>
     <ListPreference
         app:key="timeStyles"
         app:title="시간 표시 방식"
         app:summary="시간 표시 방식을 12시간 또는 24시간으로 선택하실 수 있습니다."
-        app:entries="@array/timeSyles"
-        app:entryValues="@array/timeSyles_values"/>
+        app:entries="@array/timeStyles"
+        app:entryValues="@array/timeStyles_values"
+        app:defaultValue="12"/>
     <SwitchPreference
         app:key="holiday"
         app:title="공휴일 설정"
@@ -21,7 +23,8 @@
         app:title="달력 일정 정렬 방식"
         app:summary="달력 일정 정렬 방식을 선택하세요"
         app:entries="@array/sortingStyles"
-        app:entryValues="@array/sortingStyles_values"/>
+        app:entryValues="@array/sortingStyles_values"
+        app:defaultValue="time"/>
     <Preference
         app:key="sync"
         app:title="동기화"/>
