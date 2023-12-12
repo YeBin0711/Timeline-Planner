@@ -1,11 +1,11 @@
 package com.example.timelineplanner
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceManager
 import com.example.timelineplanner.databinding.ActivityMonthlyBinding
 import com.example.timelineplanner.databinding.CalendarCellBinding
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
@@ -73,8 +73,10 @@ class MonthlyActivity : AppCompatActivity() {
         menu?.findItem(R.id.monthly)?.isChecked = true
         for (i in 0 until menu!!.size()) {
             val item = menu.getItem(i)
-            if(!item.isChecked) item.iconTintList = getColorStateList(R.color.semi_transparent)
-            else if(PreferenceManager.getDefaultSharedPreferences(this).getString("themes", "light") == "dark") item.iconTintList = getColorStateList(R.color.white)
+            if(!item.isChecked)
+                item.iconTintList = getColorStateList(R.color.semi_transparent)
+            else if(this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+                item.iconTintList = getColorStateList(R.color.white)
         }
         return super.onCreateOptionsMenu(menu)
     }

@@ -36,7 +36,7 @@
         android:layout_marginBottom="30dp"
         app:layout_anchor="@id/todoListOfDialog"
         app:layout_anchorGravity="bottom|right"
-        android:backgroundTint="@color/gray"
+        android:backgroundTint="@color/lightgray"
         app:iconTint="@color/black"
         app:icon="@drawable/plus_icon"
         app:shapeAppearance="@style/FloatingButtonShape"/>

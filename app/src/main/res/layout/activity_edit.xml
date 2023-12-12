@@ -27,7 +27,8 @@
             android:layout_height="50dp"
             android:src="@drawable/muscle"
             android:padding="10dp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            app:tint="?attr/colorOnPrimary"/>
         <ImageView
             android:id="@+id/color_btn"
             android:layout_width="35dp"
@@ -173,7 +174,9 @@
             android:thumb="@drawable/switch_btn"
             app:switchMinWidth="0dp"
             app:thumbTextPadding="24dp"
-            app:track="@drawable/switch_track" />
+            app:track="@drawable/switch_track"
+            app:thumbTint="@color/thumb"
+            app:trackTint="@color/track"/>
     </LinearLayout>
 
     <LinearLayout
@@ -232,7 +235,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:backgroundTint="@color/gray"
+            android:backgroundTint="@color/lightgray"
             android:layout_gravity="bottom"
             android:layout_marginRight="10dp" />
         <Button
@@ -243,7 +246,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:backgroundTint="@color/gray"
+            android:backgroundTint="@color/lightgray"
             android:layout_gravity="bottom"
             android:layout_marginLeft="10dp" />
     </LinearLayout>

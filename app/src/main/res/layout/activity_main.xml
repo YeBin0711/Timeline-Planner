@@ -31,6 +31,7 @@
         android:inputType="textPersonName"
         android:hint="아이디를 입력하세요"
         android:textSize="18dp"
+        android:textColor="@color/gray"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:paddingLeft="10dp"
@@ -62,7 +63,7 @@
             android:background="#00ff0000"
             android:text="회원가입"
             android:textSize="13sp"
-            android:textColor="@color/black"/>
+            android:textColor="?attr/colorOnPrimary"/>
 
         <Button
             android:id="@+id/ac_main_btn_login"
@@ -71,7 +72,7 @@
             android:background="#00ff0000"
             android:text="로그인"
             android:textSize="13sp"
-            android:textColor="@color/black"/>
+            android:textColor="?attr/colorOnPrimary"/>
 
     </LinearLayout>
 

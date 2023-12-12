@@ -233,7 +233,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:backgroundTint="@color/gray"
+            android:backgroundTint="@color/lightgray"
             android:layout_gravity="bottom"
             android:layout_marginRight="10dp" />
         <Button
@@ -244,7 +244,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:backgroundTint="@color/gray"
+            android:backgroundTint="@color/lightgray"
             android:layout_gravity="bottom"
             android:layout_marginLeft="10dp" />
     </LinearLayout>

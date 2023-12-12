@@ -1,8 +1,5 @@
 package com.example.timelineplanner
 
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.time.LocalDate
 
 class Todo(
@@ -33,30 +30,7 @@ class Alarm (
     val time: Time
 )
 
-fun getHolidayData(year: String, month: String) : HolidayBody{
-    lateinit var holidayBody : HolidayBody
-    Holiday(year, month).returnCall().enqueue(object : Callback<HolidayData> {
-        override fun onResponse(call: Call<HolidayData>, response: Response<HolidayData>) {
-            if (response.isSuccessful) {
-                holidayBody = response.body()?.response?.body!!
-            } else {
-                // 응답 실패 시 처리
-            }
-        }
-        override fun onFailure(call: Call<HolidayData>, t: Throwable) {
-            // 네트워크 문제
-        }
-    })
-    return holidayBody
-}
 
-
-
-fun isEqualDate(date: LocalDate, holiday: Int): Boolean {
-    if(date.year == holiday/10000 && date.monthValue == holiday%10000/100 && date.dayOfMonth == holiday%100)
-        return true
-    return false
-}
 
 fun transIntoTimeForm(originTime: String?, timeForm: String?): String {
     val originHour = originTime?.toInt()?: 0

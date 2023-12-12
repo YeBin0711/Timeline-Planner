@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -22,7 +23,8 @@
         android:background="@drawable/background_circle"
         android:padding="13dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/user"/>
+        android:src="@drawable/user"
+        app:tint="?attr/colorOnPrimary"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -190,7 +192,7 @@
             android:layout_height="wrap_content"
             android:text="뒤로가기"
             android:textColor="@color/black"
-            android:backgroundTint="@color/gray"
+            android:backgroundTint="@color/lightgray"
             android:layout_marginRight="60dp"/>
 
         <Button
@@ -199,7 +201,7 @@
             android:layout_height="wrap_content"
             android:text="회원가입"
             android:textColor="@color/black"
-            android:backgroundTint="@color/gray"/>
+            android:backgroundTint="@color/lightgray"/>
     </LinearLayout>
   
 </LinearLayout>
