@@ -1,6 +1,7 @@
 package com.example.timelineplanner
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -20,6 +21,13 @@ class SettingActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
+        menu?.findItem(R.id.settings)?.isChecked = true
+        for (i in 0 until menu!!.size()) {
+            val item = menu.getItem(i)
+            if(!item.isChecked) item.iconTintList = getColorStateList(R.color.semi_transparent)
+            else if(this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+                item.iconTintList = getColorStateList(R.color.white)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 

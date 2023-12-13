@@ -4,11 +4,12 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="20dp">
+    android:layout_marginHorizontal="20dp"
+    android:id="@+id/todo_list_dialog_item">
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center_horizontal">
@@ -39,7 +40,7 @@
             android:layout_height="30dp"
             android:gravity="center_vertical"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="18sp"/>
         <TextView
             android:id="@+id/time"
@@ -47,6 +48,6 @@
             android:layout_height="40dp"
             android:textStyle="bold"
             android:textSize="13sp"
-            android:textColor="#878787"/>
+            android:textColor="?attr/colorPrimaryVariant"/>
     </LinearLayout>
 </LinearLayout>

@@ -1,44 +1,30 @@
 package com.example.timelineplanner
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.icu.util.Calendar
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import java.time.LocalDate
-import java.util.Locale
-import java.time.YearMonth
-
-import com.kizitonwose.calendar.core.atStartOfMonth
-import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
-
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kizitonwose.calendar.core.Week
-import com.kizitonwose.calendar.core.WeekDay
-import com.kizitonwose.calendar.view.WeekDayBinder
-import com.kizitonwose.calendar.view.WeekHeaderFooterBinder
-import java.time.format.DateTimeFormatter
-
-import com.example.timelineplanner.R
-import com.example.timelineplanner.DayViewContainer
+import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.ActivityHomeBinding
-import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
-import com.kizitonwose.calendar.core.daysOfWeek
-import org.w3c.dom.Text
+import com.kizitonwose.calendar.core.WeekDay
+import com.kizitonwose.calendar.core.atStartOfMonth
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import com.kizitonwose.calendar.view.WeekDayBinder
 import java.text.SimpleDateFormat
-import java.time.LocalTime
-import java.time.Month
-import java.time.MonthDay
+import java.time.LocalDate
 import java.time.Year
+import java.time.YearMonth
 import java.util.Date
+import java.util.Locale
 
 
 class HomeActivity : AppCompatActivity() {
@@ -67,7 +53,7 @@ class HomeActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.weekday_recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        Homeadapter = Homeadapter(itemList)
+        Homeadapter = Homeadapter(this, itemList)
         recyclerView.adapter = Homeadapter
 
         fetchDataFromFirestore()
@@ -95,8 +81,23 @@ class HomeActivity : AppCompatActivity() {
                 container.day = data
 
                 // Show the month dates. Remember that views are reused!
-                val colorResId: Int =
-                    if (container.day.date == selectedDate) R.color.black else R.color.gray
+                if(container.day.date != selectedDate) {
+                    container.calendarDayNumber.setTextColor(
+                        ContextCompat.getColor(
+                            this@HomeActivity,
+                            R.color.gray
+                        )
+                    )
+                    container.calendarDayName.setTextColor(
+                        ContextCompat.getColor(
+                            this@HomeActivity,
+                            R.color.gray
+                        )
+                    )
+                }
+                /*
+                val colorResId: Unit =
+                    if (container.day.date != selectedDate) R.color.gray
 
                 container.calendarDayNumber.setTextColor(
                     ContextCompat.getColor(
@@ -110,6 +111,8 @@ class HomeActivity : AppCompatActivity() {
                         colorResId
                     )
                 )
+                */
+
                 weekyear = data.date.year.toString()
                 weekmonth = data.date.month.toString() // for use outside (in header)
                 weekday = data.date.dayOfMonth.toString()
@@ -153,7 +156,7 @@ class HomeActivity : AppCompatActivity() {
 
                 // RecyclerView에 데이터 설정
                 val recyclerView = findViewById<RecyclerView>(R.id.weekday_recyclerView)
-                val adapter = Homeadapter(itemList)
+                val adapter = Homeadapter(this, itemList)
                 recyclerView.adapter = adapter
             }
             .addOnFailureListener { exception ->
@@ -181,12 +184,11 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         menu?.findItem(R.id.daily)?.isChecked = true
-        //menu?.findItem(R.id.monthly)?.isChecked = true
-        //menu?.findItem(R.id.settings)?.isChecked = true
         for (i in 0 until menu!!.size()) {
             val item = menu.getItem(i)
-            if(item.isChecked) item.iconTintList = getColorStateList(R.color.black)
-            else item.iconTintList = getColorStateList(R.color.darkgray)
+            if(!item.isChecked) item.iconTintList = getColorStateList(R.color.semi_transparent)
+            else if(this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+                item.iconTintList = getColorStateList(R.color.white)
         }
         return super.onCreateOptionsMenu(menu)
     }

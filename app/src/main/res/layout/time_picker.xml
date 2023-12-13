@@ -8,70 +8,68 @@
     android:paddingHorizontal="20dp">
 
     <LinearLayout
-        android:id="@+id/datePicker"
+        android:id="@+id/timePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <NumberPicker
-            android:id="@+id/yearPicker"
+            android:id="@+id/hourPicker1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_gravity="center"
-            android:backgroundTint="#00000000"
+            android:backgroundTint="?attr/colorPrimary"
             android:textColor="?attr/colorOnPrimary"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#00000000"
-            android:gravity="center"
+            android:backgroundTint="?attr/colorPrimary"
             android:layout_gravity="center"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="14dp"
-            android:text="년"/>
+            android:layout_marginHorizontal="5dp"
+            android:text=":" />
         <NumberPicker
-            android:id="@+id/monthPicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#00000000"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textColor="?attr/colorOnPrimary"
-            android:textSize="20sp"/>
-        <TextView
+            android:id="@+id/minPicker1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="14dp"
-            android:backgroundTint="#00000000"
+            android:backgroundTint="?attr/colorPrimary"
             android:textColor="?attr/colorOnPrimary"
-            android:textSize="17sp"
-            android:text="월"/>
+            android:textSize="20sp"
+            android:layout_marginRight="10dp" />
+
         <NumberPicker
-            android:id="@+id/dayPicker"
+            android:id="@+id/hourPicker2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#00000000"
             android:gravity="center"
             android:layout_gravity="center"
+            android:backgroundTint="?attr/colorPrimary"
             android:textColor="?attr/colorOnPrimary"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:backgroundTint="?attr/colorPrimary"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
-            android:backgroundTint="#00000000"
-            android:text="일"/>
+            android:layout_marginHorizontal="5dp"
+            android:text=":" />
+        <NumberPicker
+            android:id="@+id/minPicker2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp" />
     </LinearLayout>
 
 
@@ -85,7 +83,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="#00000000"
+            android:backgroundTint="?attr/colorPrimary"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             android:text="취소"/>
@@ -94,7 +92,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="#00000000"
+            android:backgroundTint="?attr/colorPrimary"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             android:text="확인"/>

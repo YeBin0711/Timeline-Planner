@@ -15,7 +15,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:text="sddsdsdsd"
+            android:textColor="?attr/colorOnPrimary"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/eventList"
@@ -27,6 +29,6 @@
         android:id="@+id/calendar_cell"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardElevation="0dp"
-        android:backgroundTint="#00000000"/>
+        android:backgroundTint="#00000000"
+        app:cardElevation="0dp" />
 </RelativeLayout>
