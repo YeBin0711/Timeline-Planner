@@ -21,16 +21,18 @@ import com.kizitonwose.calendar.view.ViewContainer
 class HomeViewHolder(val binding: DayRecyclerviewBinding):
     RecyclerView.ViewHolder(binding.root)
 
-class Homeadapter(val context: Context, val itemList: List<ItemData>) :
-    RecyclerView.Adapter<Homeadapter.ItemViewHolder>() {
-
+class Homeadapter(
+    private val context: Context,
+    private val itemList: List<ItemData>,
+    private val itemClickListener: DayViewContainer.RecyclerViewClickListener
+) : RecyclerView.Adapter<Homeadapter.ItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.day_recyclerview, parent, false)
         return ItemViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder,position: Int) {
         val currentItem = itemList[position]
 
         holder.textViewTitle.text = currentItem.dayTitle
@@ -52,6 +54,10 @@ class Homeadapter(val context: Context, val itemList: List<ItemData>) :
 
         // 해당 TextView의 layoutparams를 가져와서 설정
         holder.emptyView.layoutParams.height=imageViewHeight - 100
+
+        holder.itemView.setOnClickListener {
+            itemClickListener.onItemClick(position)
+        }
     }
     private fun calculateImageViewHeight(firstTimeHour: String, lastTimeHour: String): Int {
         val minHeight = 200 // 최소 높이
@@ -77,7 +83,7 @@ class Homeadapter(val context: Context, val itemList: List<ItemData>) :
 
     override fun getItemCount() = itemList.size
 
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewTitle: TextView = itemView.findViewById(R.id.item_name)
         val textViewMemo: TextView = itemView.findViewById(R.id.item_memo)
         val imageViewBox: ImageView = itemView.findViewById(R.id.ticon)
@@ -87,6 +93,12 @@ class Homeadapter(val context: Context, val itemList: List<ItemData>) :
         val lastTimeMin: TextView = itemView.findViewById(R.id.last_time_Min)
         val emptyView: View = itemView.findViewById(R.id.emptyView)
         val linearLayoutContainer: LinearLayout = itemView.findViewById(R.id.textViewContainer) // 새로 추가한 LinearLayout 참조
+        // 아이템 클릭 리스너 설정
+        init {
+            itemView.setOnClickListener {
+                itemClickListener.onItemClick(adapterPosition)
+            }
+        }
     }
 }
 
@@ -107,6 +119,10 @@ class DayViewContainer(view: View) : ViewContainer(view) {
     lateinit var onDayClickListener: OnDayClickListener
     fun interface OnDayClickListener {
         fun onDayClicked(date: String)
+    }
+
+    interface RecyclerViewClickListener {
+        fun onItemClick(position: Int)
     }
 }
 

@@ -15,7 +15,7 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
-            android:text="@string/todo_title"
+            android:hint="@string/todo_title"
             android:textSize="25sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -142,9 +142,8 @@
             android:id="@+id/todo_memo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/todo_memo"
+            android:hint="@string/todo_memo"
             android:textSize="20sp"
-            android:textColor="#808080"
             android:background="@android:color/transparent" />
 
     </LinearLayout>

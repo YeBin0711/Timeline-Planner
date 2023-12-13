@@ -27,7 +27,7 @@ import java.util.Date
 import java.util.Locale
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: Homeadapter
     lateinit var binding: ActivityHomeBinding
@@ -53,10 +53,23 @@ class HomeActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.weekday_recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        Homeadapter = Homeadapter(this, itemList)
-        recyclerView.adapter = Homeadapter
 
         fetchDataFromFirestore()
+
+        val itemList: List<ItemData> = listOf (
+            ItemData().apply {
+                dayTitle = "Title 1"
+                dayMemo = "Memo 1"
+                firstTimeHour = "10"
+                firstTimeMin = "30"
+                lastTimeHour = "12"
+                lastTimeMin = "15"
+                currentDate = "2023-12-14" // 특정 날짜 정보 추가
+            }
+        )
+
+        adapter = Homeadapter(this,itemList, this)
+        recyclerView.adapter = adapter
 
         //action bar
         setSupportActionBar(binding.toolbar)
@@ -95,23 +108,6 @@ class HomeActivity : AppCompatActivity() {
                         )
                     )
                 }
-                /*
-                val colorResId: Unit =
-                    if (container.day.date != selectedDate) R.color.gray
-
-                container.calendarDayNumber.setTextColor(
-                    ContextCompat.getColor(
-                        this@HomeActivity,
-                        colorResId
-                    )
-                )
-                container.calendarDayName.setTextColor(
-                    ContextCompat.getColor(
-                        this@HomeActivity,
-                        colorResId
-                    )
-                )
-                */
 
                 weekyear = data.date.year.toString()
                 weekmonth = data.date.month.toString() // for use outside (in header)
@@ -141,6 +137,13 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
+    override fun onItemClick(position: Int) {
+        // 아이템 클릭 시 동작할 내용을 여기에 구현
+        // position을 사용하여 클릭된 아이템의 위치를 확인할 수 있음
+        val intent = Intent(this, EditActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun fetchDataFromFirestore() {
         db.collection("users")
             .get()
@@ -154,9 +157,8 @@ class HomeActivity : AppCompatActivity() {
                 // itemList의 시간 데이터를 LocalTime으로 변환하여 정렬
                 itemList.sortBy { it.firstTimeHour?.toInt() ?: 0 }
 
-                // RecyclerView에 데이터 설정
-                val recyclerView = findViewById<RecyclerView>(R.id.weekday_recyclerView)
-                val adapter = Homeadapter(this, itemList)
+                // Firestore에서 가져온 데이터를 기존의 RecyclerView에 설정
+                adapter = Homeadapter(this,itemList, this)
                 recyclerView.adapter = adapter
             }
             .addOnFailureListener { exception ->
