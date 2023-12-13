@@ -17,14 +17,14 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, JoinActivity::class.java)
             startActivity(intent)
         }
-
+        /*
         //이 부분을 키면 로그인만 누르면 넘어가짐 대신 밑에 acMainBtnLogin은 주석 처리해야함!
         binding.acMainBtnLogin.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
-        /*
+
         //아이디랑 비밀번호가 일치해야지만 로그인 가능 기능
         binding.acMainBtnLogin.setOnClickListener {
             //이메일, 비밀번호 로그인.......................
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
             }
-        }*/
+        }
 
     }
 }
