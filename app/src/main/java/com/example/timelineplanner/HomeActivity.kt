@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
@@ -27,11 +26,8 @@ import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.WeekDayBinder
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.time.Year
-import java.time.YearMonth
 import java.util.Date
-import java.util.Locale
 
 
 class HomeActivity : AppCompatActivity() {
