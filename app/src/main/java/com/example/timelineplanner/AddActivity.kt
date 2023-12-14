@@ -3,61 +3,43 @@ package com.example.timelineplanner
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.SwitchCompat
-import androidx.fragment.app.DialogFragment
 import com.example.timelineplanner.databinding.ActivityAddBinding
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import com.example.timelineplanner.databinding.ActivityHomeBinding
-import com.example.timelineplanner.databinding.AlarmDialogBinding
-import com.example.timelineplanner.databinding.ColorDialogBinding
-import com.example.timelineplanner.databinding.IconDialogBinding
-import com.example.timelineplanner.databinding.RepeatDialogBinding
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
-import java.text.SimpleDateFormat;
 import java.time.LocalDate
-import java.time.YearMonth
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
     private lateinit var editTitle: EditText
     private lateinit var editMemo: EditText
-    private lateinit var editFirstTimeHour: EditText
-    private lateinit var editFirstTimeMin: EditText
-    private lateinit var editLastTimeHour: EditText
-    private lateinit var editLastTimeMin: EditText
+    //private lateinit var editFirstTimeHour: EditText //addData함수까지 수정 필요
+    //private lateinit var editFirstTimeMin: EditText
+    private lateinit var editFirstTime: EditText
+    //private lateinit var editLastTimeHour: EditText
+    //private lateinit var editLastTimeMin: EditText
+    private lateinit var editLastTIme: EditText
     private lateinit var buttonSave: Button
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         editTitle = findViewById(R.id.todo_title)
         editMemo = findViewById(R.id.todo_memo)
-        editFirstTimeHour = findViewById(R.id.hour1)
-        editFirstTimeMin = findViewById(R.id.minute1)
-        editLastTimeHour = findViewById(R.id.hour2)
-        editLastTimeMin = findViewById(R.id.minute2)
+        //editFirstTimeHour = findViewById(R.id.hour1)
+        //editFirstTimeMin = findViewById(R.id.minute1)
+        editFirstTime = findViewById(R.id.start_time)
+        editLastTIme = findViewById(R.id.end_time)
+        //editLastTimeHour = findViewById(R.id.hour2)
+        //editLastTimeMin = findViewById(R.id.minute2)
         buttonSave = findViewById(R.id.btn_save)
-
-        buttonSave.setOnClickListener {
-            addDataToFirestore()
-        }
-        binding.btnCancel.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-        }
 
         //아이콘
         binding.iconBtn.setOnClickListener {
@@ -73,6 +55,14 @@ class AddActivity : AppCompatActivity() {
         //날짜
 
         //시간
+        binding.startTime.setOnClickListener() {
+            val timePickerDialog = TimePickerDialog(this, this, 8, 0, 0)
+            timePickerDialog.show()
+        }
+        binding.endTime.setOnClickListener() {
+            val timePickerDialog = TimePickerDialog(this, this, 9, 0, 1)
+            timePickerDialog.show()
+        }
 
         //메모
 
@@ -102,28 +92,36 @@ class AddActivity : AppCompatActivity() {
             startActivity(intent)
         }
         //저장 버튼
-        binding.btnSave.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-
-            //
+        buttonSave.setOnClickListener {
+            addDataToFirestore()
         }
     }
+
+    fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
+        if(flag==0) binding.startTime.setText("$hour : $minute")
+        else if(flag==1) binding.endTime.setText("$hour : $minute")
+        //endTime이 startTime보다 빠르면 날짜 넘어가게 설정 필요
+    }
+
     private fun addDataToFirestore() {
         val title = editTitle.text.toString()
         val memo = editMemo.text.toString()
-        val firstTimeHour = editFirstTimeHour.text.toString()
+        /*val firstTimeHour = editFirstTimeHour.text.toString()
         val firstTimeMin = editFirstTimeMin.text.toString()
         val lastTimeHour = editLastTimeHour.text.toString()
         val lastTimeMin = editLastTimeMin.text.toString()
 
+         */
+
         val newItemData = ItemData()
         newItemData.dayTitle = title
         newItemData.dayMemo = memo
-        newItemData.firstTimeHour = firstTimeHour
+        /*newItemData.firstTimeHour = firstTimeHour
         newItemData.firstTimeMin = firstTimeMin
         newItemData.lastTimeHour = lastTimeHour
         newItemData.lastTimeMin = lastTimeMin
+
+         */
 
         db.collection("users")
             .add(newItemData)
@@ -136,47 +134,5 @@ class AddActivity : AppCompatActivity() {
                 Toast.makeText(this, "저장이 안됐습니다", Toast.LENGTH_SHORT).show()
                 // 실패했을 때 처리
             }
-    }
-}
-
-//다이얼로그 클래스
-class IconDialog: DialogFragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = IconDialogBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-}
-class ColorDialog: DialogFragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = ColorDialogBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-}
-class RepeatDialog: DialogFragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = RepeatDialogBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-}
-class AlarmDialog: DialogFragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = AlarmDialogBinding.inflate(inflater, container, false)
-        return binding.root
     }
 }
