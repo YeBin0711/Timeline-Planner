@@ -56,13 +56,10 @@ class AddActivity : AppCompatActivity() {
 
         //날짜
 
+
         //시간
-        binding.startTime.setOnClickListener() {
-            val timePickerDialog = TimePickerDialog(this, this, 8, 0, 0)
-            timePickerDialog.show()
-        }
-        binding.endTime.setOnClickListener() {
-            val timePickerDialog = TimePickerDialog(this, this, 9, 0, 1)
+        binding.timeSelector.setOnClickListener {
+            val timePickerDialog = TimePickerDialog(this, this, 8, 0, 24,0)
             timePickerDialog.show()
         }
 
@@ -99,9 +96,9 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
-    fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
-        if(flag==0) binding.startTime.setText("$hour : $minute")
-        else if(flag==1) binding.endTime.setText("$hour : $minute")
+    fun onClickOkButton3(hour: Int, minute: Int, lasthour: Int, lastmin: Int) {
+        binding.startTime.text = String.format("%02d:%02d", hour, minute)
+        binding.endTime.text = String.format("%02d:%02d", lasthour, lastmin)
         //endTime이 startTime보다 빠르면 날짜 넘어가게 설정 필요
     }
 
