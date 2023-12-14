@@ -7,9 +7,11 @@ import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
+import org.w3c.dom.Text
 import java.time.LocalDate
 
 class AddActivity : AppCompatActivity() {
@@ -18,10 +20,10 @@ class AddActivity : AppCompatActivity() {
     private lateinit var editMemo: EditText
     //private lateinit var editFirstTimeHour: EditText //addData함수까지 수정 필요
     //private lateinit var editFirstTimeMin: EditText
-    private lateinit var editFirstTime: EditText
+    private lateinit var editFirstTime: TextView
     //private lateinit var editLastTimeHour: EditText
     //private lateinit var editLastTimeMin: EditText
-    private lateinit var editLastTIme: EditText
+    private lateinit var editLastTIme: TextView
     private lateinit var buttonSave: Button
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
@@ -106,11 +108,9 @@ class AddActivity : AppCompatActivity() {
     private fun addDataToFirestore() {
         val title = editTitle.text.toString()
         val memo = editMemo.text.toString()
-        /*val firstTimeHour = editFirstTimeHour.text.toString()
-        val firstTimeMin = editFirstTimeMin.text.toString()
-        val lastTimeHour = editLastTimeHour.text.toString()
-        val lastTimeMin = editLastTimeMin.text.toString()
-
+        /*
+        val firstTime = editFirstTimeHour.text.toString()
+        val lastTime= editLastTimeHour.text.toString()
          */
 
         val newItemData = ItemData()

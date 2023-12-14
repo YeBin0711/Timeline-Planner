@@ -41,18 +41,24 @@ class TimePickerDialog(context: Context, val activity: AddActivity, var hour: In
         val binding = TimePickerBinding.inflate(layoutInflater, null, false)
         setContentView(binding.root)
 
-        binding.hourPicker.minValue = 0
-        binding.hourPicker.maxValue = 24
-        binding.hourPicker.value = hour
-        binding.minPicker.minValue = 0
-        binding.minPicker.maxValue = 59
-        binding.minPicker.value = minute
+        binding.hourPicker1.minValue = 0
+        binding.hourPicker1.maxValue = 24
+        binding.hourPicker1.value = hour
+        binding.hourPicker2.minValue = 0
+        binding.hourPicker2.maxValue = 24
+        binding.hourPicker2.value = hour
+        binding.minPicker1.minValue = 0
+        binding.minPicker1.maxValue = 59
+        binding.minPicker1.value = minute
+        binding.minPicker2.minValue = 0
+        binding.minPicker2.maxValue = 59
+        binding.minPicker2.value = minute
 
         binding.cancel.setOnClickListener() {
             dismiss()
         }
         binding.ok.setOnClickListener() {
-            activity.onClickOkButton3(binding.hourPicker.value, binding.minPicker.value, flag)
+            activity.onClickOkButton3(binding.hourPicker1.value, binding.minPicker1.value,flag)
             dismiss()
         }
     }

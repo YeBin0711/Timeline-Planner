@@ -63,10 +63,8 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
             ItemData().apply {
                 dayTitle = "Title 1"
                 dayMemo = "Memo 1"
-                firstTimeHour = "10"
-                firstTimeMin = "30"
-                lastTimeHour = "12"
-                lastTimeMin = "15"
+                firstTime = "10"
+                lastTime = "12"
                 currentDate = "2023-12-14" // 특정 날짜 정보 추가
             }
         )
@@ -164,7 +162,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     itemList.add(item)
                 }
                 // itemList의 시간 데이터를 LocalTime으로 변환하여 정렬
-                itemList.sortBy { it.firstTimeHour?.toInt() ?: 0 }
+                itemList.sortBy { it.firstTime?.toInt() ?: 0 }
 
                 // Firestore에서 가져온 데이터를 기존의 RecyclerView에 설정
                 adapter = Homeadapter(this,itemList, this)
