@@ -74,26 +74,11 @@
         android:paddingTop="10dp"
         android:paddingBottom="40dp"
         android:gravity="center">
-        <EditText
-            android:id="@+id/hour1"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background_line"
-            android:text="08"
-            android:gravity="center"
-            android:textSize="20sp" />
         <TextView
-            android:layout_width="20dp"
+            android:id="@+id/start_time"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text=":"
-            android:gravity="center"
-            android:textSize="20sp" />
-        <EditText
-            android:id="@+id/minute1"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background_line"
-            android:text="00"
+            android:text="08 : 00"
             android:gravity="center"
             android:textSize="20sp" />
         <TextView
@@ -102,26 +87,11 @@
             android:text="~"
             android:gravity="center"
             android:textSize="20sp" />
-        <EditText
-            android:id="@+id/hour2"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background_line"
-            android:text="09"
-            android:gravity="center"
-            android:textSize="20sp" />
         <TextView
-            android:layout_width="20dp"
+            android:id="@+id/end_time"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text=":"
-            android:gravity="center"
-            android:textSize="20sp" />
-        <EditText
-            android:id="@+id/minute2"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background_line"
-            android:text="00"
+            android:text="09 : 00"
             android:gravity="center"
             android:textSize="20sp" />
     </LinearLayout>

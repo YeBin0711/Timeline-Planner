@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:rowCount="3"
+    android:columnCount="4"
+    android:padding="10dp" >
     android:columnCount="4">
 
     <ImageView

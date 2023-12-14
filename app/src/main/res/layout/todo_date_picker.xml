@@ -8,68 +8,69 @@
     android:paddingHorizontal="20dp">
 
     <LinearLayout
-        android:id="@+id/timePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <NumberPicker
-            android:id="@+id/hourPicker1"
+            android:id="@+id/todo_month_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_gravity="center"
             android:backgroundTint="#00000000"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#00000000"
+            android:gravity="center"
             android:layout_gravity="center"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
-            android:layout_marginHorizontal="5dp"
-            android:text=":" />
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="14dp"
+            android:text="월"/>
         <NumberPicker
-            android:id="@+id/minPicker1"
+            android:id="@+id/todo_day_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#00000000"
             android:gravity="center"
             android:layout_gravity="center"
-            android:backgroundTint="?attr/colorPrimary"
             android:textColor="?attr/colorOnPrimary"
-            android:textSize="20sp"
-            android:layout_marginRight="10dp" />
-
-        <NumberPicker
-            android:id="@+id/hourPicker2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:backgroundTint="?attr/colorPrimary"
-            android:textColor="?attr/colorOnPrimary"
-            android:textSize="20sp"
-            android:layout_marginLeft="10dp" />
+            android:textSize="20sp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="?attr/colorPrimary"
+            android:gravity="center"
             android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="14dp"
+            android:backgroundTint="#00000000"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
-            android:layout_marginHorizontal="5dp"
-            android:text=":" />
+            android:text="일"/>
         <NumberPicker
-            android:id="@+id/minPicker2"
+            android:id="@+id/todo_dayofweek_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00000000"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="17sp"
             android:backgroundTint="#00000000"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:text="요일"/>
     </LinearLayout>
 
 
@@ -84,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#00000000"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             android:text="취소"/>
         <Button
@@ -93,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#00000000"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="17sp"
             android:text="확인"/>
     </LinearLayout>

@@ -8,11 +8,17 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import java.time.LocalDate
+import java.util.Locale
+import java.time.YearMonth
+import com.kizitonwose.calendar.core.atStartOfMonth
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.ActivityHomeBinding
+import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kizitonwose.calendar.core.WeekDay
@@ -20,11 +26,8 @@ import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.WeekDayBinder
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.time.Year
-import java.time.YearMonth
 import java.util.Date
-import java.util.Locale
 
 
 class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickListener {
@@ -77,11 +80,17 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
         monthText2TextView = binding.monthSelector2.findViewById(R.id.monthText2)
 
-        //수정창 뜨게하는 버튼 이벤트
+        //추가창 뜨게 하는 버튼 이벤트
         binding.btnPlus.setOnClickListener{
-            val intent = Intent(this,AddActivity::class.java)
+            val intent = Intent(this, AddActivity::class.java)
             startActivity(intent)
         }
+
+        /* 날짜 뜨게하는 버튼 이벤트
+        binding.ca.setOnClickListener{
+            val intent = Intent(this, 날짜창:class.java)
+            startActivity(intent)
+        }*/
 
         //달력 출력
         val currentDate = LocalDate.now()
