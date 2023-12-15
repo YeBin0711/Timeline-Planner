@@ -32,9 +32,11 @@
         app:key="versionInfo"
         app:title="버전 정보"
         app:summary="android 34"/>
+    <!--
     <Preference
         app:key="help"
         app:title="도움말"/>
+    -->
     <Preference
         app:key="logout"
         app:title="로그아웃"/>

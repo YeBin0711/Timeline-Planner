@@ -7,10 +7,10 @@ import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.selects.select
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -22,10 +22,10 @@ class AddActivity : AppCompatActivity() {
     private lateinit var editMemo: EditText
     //private lateinit var editFirstTimeHour: EditText //addData함수까지 수정 필요
     //private lateinit var editFirstTimeMin: EditText
-    private lateinit var editFirstTime: EditText
-    private lateinit var editLastTIme: EditText
+    private lateinit var editFirstTime: TextView
     //private lateinit var editLastTimeHour: EditText
     //private lateinit var editLastTimeMin: EditText
+    private lateinit var editLastTIme: TextView
     private lateinit var buttonSave: Button
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
@@ -37,11 +37,10 @@ class AddActivity : AppCompatActivity() {
 
         editTitle = findViewById(R.id.todo_title)
         editMemo = findViewById(R.id.todo_memo)
-
         //editFirstTimeHour = findViewById(R.id.hour1)
         //editFirstTimeMin = findViewById(R.id.minute1)
-        //editFirstTime = findViewById(R.id.start_time)
-        //editLastTIme = findViewById(R.id.end_time)
+        editFirstTime = findViewById(R.id.start_time)
+        editLastTIme = findViewById(R.id.end_time)
         //editLastTimeHour = findViewById(R.id.hour2)
         //editLastTimeMin = findViewById(R.id.minute2)
         buttonSave = findViewById(R.id.btn_save)
@@ -138,10 +137,9 @@ class AddActivity : AppCompatActivity() {
     private fun addDataToFirestore() {
         val title = editTitle.text.toString()
         val memo = editMemo.text.toString()
-        /*val firstTimeHour = editFirstTimeHour.text.toString()
-        val firstTimeMin = editFirstTimeMin.text.toString()
-        val lastTimeHour = editLastTimeHour.text.toString()
-        val lastTimeMin = editLastTimeMin.text.toString()
+        /*
+        val firstTime = editFirstTimeHour.text.toString()
+        val lastTime= editLastTimeHour.text.toString()
          */
 
         val newItemData = ItemData()
@@ -151,6 +149,7 @@ class AddActivity : AppCompatActivity() {
         newItemData.firstTimeMin = firstTimeMin
         newItemData.lastTimeHour = lastTimeHour
         newItemData.lastTimeMin = lastTimeMin
+
          */
 
         db.collection("users")

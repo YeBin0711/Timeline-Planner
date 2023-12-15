@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,11 +36,12 @@ class CalendarCellContainer(view: View) : ViewContainer(view) {
 }
 class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
     override fun create(view: View) = CalendarCellContainer(view)
+
     override fun bind(container: CalendarCellContainer, data: CalendarDay) {
         container.day = data
         container.binding.day.text = data.date.dayOfMonth.toString()
         if (data.position != DayPosition.MonthDate) {
-            container.binding.day.setTextColor(container.view.context.getColor(R.color.semi_transparent))
+            container.binding.day.setTextColor(Color.GRAY)
         }
         //Todo: 설정에 따라 휴일 표시
         val isHolidayOn = PreferenceManager.getDefaultSharedPreferences(container.view.context).getBoolean("holiday", false)
@@ -47,9 +49,18 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             //휴일 표시
             val year = data.date.year.toString()
             val month : String = String.format("%02d", data.date.monthValue)
+            val holidayBody: HolidayBody
 
-            val holidayBody: HolidayBody = getHolidayData(year, month)
-            setDataTypeOfModelAndMarkColor(holidayBody, holidayBody.totalCount, data, container)
+            Holiday(year, month).getHolidayData { holidayBody ->
+                if (holidayBody != null) {
+                    // 성공적으로 결과를 받았을 때의 처리
+                    setDataTypeOfModelAndMarkColor(holidayBody, holidayBody.totalCount, data, container)
+                    Log.d("Holiday", "콜백으로 응답 성공 : $holidayBody")
+                } else {
+                    // 실패 또는 null일 때의 처리
+                    Log.d("Holiday", "콜백으로 응답 실패")
+                }
+            }
         }
 
 
@@ -108,19 +119,26 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
             val holidayList: HolidayModel = gson.fromJson(gson.toJson(holidayItems.item), itemTypeToken.type)
 
-            if(isEqualDate(data.date, holidayList.locdate) && holidayList.isHoliday == "Y") {
-                container.binding.day.setTextColor(Color.RED)
+            if(Holiday.compareLocalDateAndHoliday(data.date, holidayList.locdate) && holidayList.isHoliday == "Y") {
+                if (data.position != DayPosition.MonthDate) {
+                    container.binding.day.setTextColor(0x80FF0000.toInt())
+                } else
+                    container.binding.day.setTextColor(Color.RED)
             }
-        }else {
+        }else if(totalCount != 0){
             //items = object, item = array
             val itemsTypeToken: TypeToken<HolidayListModel> = object : TypeToken<HolidayListModel>() {}
             val itemTypeToken: TypeToken<List<HolidayModel>> = object : TypeToken<List<HolidayModel>>() {}
             val holidayItems: HolidayListModel = gson.fromJson(gson.toJson(holidayBody?.items), itemsTypeToken.type)
+            Log.d("Holiday", holidayBody.toString() + holidayItems.toString())
             val holidayList: List<HolidayModel> = gson.fromJson(gson.toJson(holidayItems.item), itemTypeToken.type)
 
             for(holiday in holidayList) {
-                if(isEqualDate(data.date, holiday.locdate) && holiday.isHoliday == "Y") {
-                    container.binding.day.setTextColor(Color.RED)
+                if(Holiday.compareLocalDateAndHoliday(data.date, holiday.locdate) && holiday.isHoliday == "Y") {
+                    if (data.position != DayPosition.MonthDate) {
+                        container.binding.day.setTextColor(0x80FF0000.toInt())
+                    } else
+                        container.binding.day.setTextColor(Color.RED)
                 }
             }
         }
@@ -183,6 +201,13 @@ class TodoListDialogAdapter(val context: Context, val todoList: List<Todo>) : Re
         val firstTime = transIntoTimeForm(todoList[position].firstTime.hour, timeForm) + ":" + todoList[position].firstTime.minute
         val lastTime = transIntoTimeForm(todoList[position].lastTime.hour, timeForm) + ":" + todoList[position].lastTime.minute
         binding.time.text = "$firstTime ~ $lastTime"
+
+        //Todo: 월별 다이얼로그 일정 클릭 시 수정창 이동
+        binding.todoListDialogItem.setOnClickListener() {
+            val intent = Intent(context, EditActivity::class.java)
+            //intent.putExtra("todo", todoList[position])
+            context.startActivity(intent)
+        }
     }
 }
 

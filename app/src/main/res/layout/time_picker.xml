@@ -11,11 +11,10 @@
         android:id="@+id/timePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center" >
+        android:orientation="horizontal">
 
         <NumberPicker
-            android:id="@+id/hourPicker"
+            android:id="@+id/hourPicker1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -33,7 +32,37 @@
             android:layout_marginHorizontal="5dp"
             android:text=":" />
         <NumberPicker
-            android:id="@+id/minPicker"
+            android:id="@+id/minPicker1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp"
+            android:layout_marginRight="10dp" />
+
+        <NumberPicker
+            android:id="@+id/hourPicker2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?attr/colorPrimary"
+            android:layout_gravity="center"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="17sp"
+            android:layout_marginHorizontal="5dp"
+            android:text=":" />
+        <NumberPicker
+            android:id="@+id/minPicker2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"

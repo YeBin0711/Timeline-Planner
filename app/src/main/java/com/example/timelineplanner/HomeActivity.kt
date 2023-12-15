@@ -1,6 +1,7 @@
 package com.example.timelineplanner
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.Menu
@@ -15,7 +16,6 @@ import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
@@ -30,7 +30,7 @@ import java.time.Year
 import java.util.Date
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: Homeadapter
     lateinit var binding: ActivityHomeBinding
@@ -56,10 +56,21 @@ class HomeActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.weekday_recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        Homeadapter = Homeadapter(this, itemList)
-        recyclerView.adapter = Homeadapter
 
         fetchDataFromFirestore()
+
+        val itemList: List<ItemData> = listOf (
+            ItemData().apply {
+                dayTitle = "Title 1"
+                dayMemo = "Memo 1"
+                firstTime = "10"
+                lastTime = "12"
+                currentDate = "2023-12-14" // 특정 날짜 정보 추가
+            }
+        )
+
+        adapter = Homeadapter(this,itemList, this)
+        recyclerView.adapter = adapter
 
         //action bar
         setSupportActionBar(binding.toolbar)
@@ -104,23 +115,6 @@ class HomeActivity : AppCompatActivity() {
                         )
                     )
                 }
-                /*
-                val colorResId: Unit =
-                    if (container.day.date != selectedDate) R.color.gray
-
-                container.calendarDayNumber.setTextColor(
-                    ContextCompat.getColor(
-                        this@HomeActivity,
-                        colorResId
-                    )
-                )
-                container.calendarDayName.setTextColor(
-                    ContextCompat.getColor(
-                        this@HomeActivity,
-                        colorResId
-                    )
-                )
-                */
 
                 weekyear = data.date.year.toString()
                 weekmonth = data.date.month.toString() // for use outside (in header)
@@ -150,6 +144,13 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
+    override fun onItemClick(position: Int) {
+        // 아이템 클릭 시 동작할 내용을 여기에 구현
+        // position을 사용하여 클릭된 아이템의 위치를 확인할 수 있음
+        val intent = Intent(this, EditActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun fetchDataFromFirestore() {
         db.collection("users")
             .get()
@@ -161,11 +162,10 @@ class HomeActivity : AppCompatActivity() {
                     itemList.add(item)
                 }
                 // itemList의 시간 데이터를 LocalTime으로 변환하여 정렬
-                itemList.sortBy { it.firstTimeHour?.toInt() ?: 0 }
+                itemList.sortBy { it.firstTime?.toInt() ?: 0 }
 
-                // RecyclerView에 데이터 설정
-                val recyclerView = findViewById<RecyclerView>(R.id.weekday_recyclerView)
-                val adapter = Homeadapter(this, itemList)
+                // Firestore에서 가져온 데이터를 기존의 RecyclerView에 설정
+                adapter = Homeadapter(this,itemList, this)
                 recyclerView.adapter = adapter
             }
             .addOnFailureListener { exception ->
@@ -193,12 +193,11 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         menu?.findItem(R.id.daily)?.isChecked = true
-        //menu?.findItem(R.id.monthly)?.isChecked = true
-        //menu?.findItem(R.id.settings)?.isChecked = true
         for (i in 0 until menu!!.size()) {
             val item = menu.getItem(i)
             if(!item.isChecked) item.iconTintList = getColorStateList(R.color.semi_transparent)
-            else if(PreferenceManager.getDefaultSharedPreferences(this).getString("themes", "light") == "dark") item.iconTintList = getColorStateList(R.color.white)
+            else if(this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+                item.iconTintList = getColorStateList(R.color.white)
         }
         return super.onCreateOptionsMenu(menu)
     }

@@ -18,21 +18,11 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/first_time_Hour"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"/>
-
-            <TextView
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:text=":"
+                android:id="@+id/first_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/first_time_Min"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"/>
 
         </LinearLayout>
         <View
@@ -47,21 +37,12 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/last_time_Hour"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_width="20dp"
+                android:id="@+id/last_time"
+                android:layout_width="65dp"
                 android:layout_height="wrap_content"
-                android:text=":"
+                android:text="09 : 00"
                 android:gravity="center"
                 android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/last_time_Min"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"/>
 
 
         </LinearLayout>
@@ -70,9 +51,9 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="5dp">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/ticon"
@@ -84,7 +65,7 @@
             android:id="@+id/day_line"
             android:layout_width="4dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/todo_dialog_line"/>
+            android:background="@drawable/todo_dialog_line" />
 
     </LinearLayout>
 

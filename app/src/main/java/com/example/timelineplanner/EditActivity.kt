@@ -7,13 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SwitchCompat
+import com.example.timelineplanner.databinding.ActivityEditBinding
+
 import androidx.fragment.app.DialogFragment
 import com.example.timelineplanner.databinding.ActivityAddBinding
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.example.timelineplanner.databinding.ActivityEditBinding
 import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.example.timelineplanner.databinding.AlarmDialogBinding
 import com.example.timelineplanner.databinding.ColorDialogBinding
@@ -29,5 +30,21 @@ import java.util.Date
 import java.util.Locale
 
 class EditActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val binding = ActivityEditBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        binding.btnDelete.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+        }
+        //스위치 on/off
+        val switchView: SwitchCompat = findViewById(R.id.cswitch)
+        switchView.setOnCheckedChangeListener {buttonView, isChecked ->
+            if (isChecked) {
+                switchView.isChecked = true
+            }
+        }
+    }
 }

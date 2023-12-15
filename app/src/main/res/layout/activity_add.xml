@@ -73,6 +73,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="40dp"
         android:gravity="center">
+
         <TextView
             android:id="@+id/start_time"
             android:layout_width="100dp"
@@ -80,6 +81,7 @@
             android:text="08 : 00"
             android:gravity="center"
             android:textSize="20sp" />
+
         <TextView
             android:layout_width="95dp"
             android:layout_height="wrap_content"
