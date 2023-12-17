@@ -7,6 +7,7 @@ import java.security.Timestamp
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+
 /*
 class ItemData {
     var dayTitle: String ? =null
@@ -23,8 +24,8 @@ class ItemData {
 
 class ItemData(
     val daytitle: String = "",
+    val daycolor: String = "",
     val dayicon: Int = 0,
-    val daycolor: Int = 0,
     val firstTime: Time = Time("", ""),
     val lastTime: Time = Time("", ""),
     val daymemo: String = ""

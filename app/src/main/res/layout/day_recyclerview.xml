@@ -46,20 +46,25 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/ticon_background"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
 
         <ImageView
-            android:id="@+id/ticon"
+            android:id="@+id/ticon_icon"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background"
-            android:scaleType="fitCenter"/>
+            android:layout_height="50dp"
+            android:padding="5sp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/game" />
 
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="218dp"
@@ -83,9 +88,9 @@
     </LinearLayout>
 
     <CheckBox
+        android:id="@+id/home_cb"
         android:layout_width="25dp"
         android:layout_height="25dp"
-
         android:button="@color/gray"
         android:background="@drawable/checkbox_custom"/>
 </LinearLayout>

@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageButton
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,15 +31,19 @@ import kotlin.properties.Delegates
 class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
     private lateinit var editTitle: EditText
-    private lateinit var editMemo: EditText
+    private lateinit var editColor: ImageView
     private lateinit var editIcon: ImageView
     private lateinit var date: TextView
     private lateinit var editFirstTime: TextView
     private lateinit var editLastTIme: TextView
+
+    private lateinit var editMemo: EditText
+
     private lateinit var buttonSave: Button
 
     var color = "" //색상 코드
     var icon = 0 //아이콘 ID
+
     // selectedTime을 클래스의 멤버 변수로 선언// 기본값 설정
     var selectedTime: LocalTime = LocalTime.now()
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
@@ -50,6 +55,7 @@ class AddActivity : AppCompatActivity() {
 
         editTitle = findViewById(R.id.todo_title)
         editIcon = findViewById(R.id.icon_btn)
+        editColor = findViewById(R.id.color_btn)
         editFirstTime = findViewById(R.id.start_time)
         editLastTIme = findViewById(R.id.end_time)
         editMemo = findViewById(R.id.todo_memo)
@@ -72,7 +78,7 @@ class AddActivity : AppCompatActivity() {
                     R.drawable.muscle -> binding.iconBtn.setImageResource(R.drawable.muscle)
                     R.drawable.rest -> binding.iconBtn.setImageResource(R.drawable.rest)
                     R.drawable.shower -> binding.iconBtn.setImageResource(R.drawable.shower)
-                    R.drawable.game-> binding.iconBtn.setImageResource(R.drawable.game)
+                    R.drawable.game -> binding.iconBtn.setImageResource(R.drawable.game)
                     else -> {
                         // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
                     }
@@ -87,10 +93,28 @@ class AddActivity : AppCompatActivity() {
         }
         //색상
         binding.colorBtn.setOnClickListener {
-            val colordialog = ColorDialog(this, this)
-            colordialog.show()
-        }
+            val colorDialog = ColorSelectionDialog()
+            colorDialog.setColorSelectedListener { selectedColorId ->
+                binding.colorBtn.tag = selectedColorId
+                when (selectedColorId) {
+                    "#FFD5D5" -> binding.colorBtn.setImageResource(R.color.lightred)
+                    "#FAFFBD" -> binding.colorBtn.setImageResource(R.color.lightyellow)
+                    "#ADFFAC" -> binding.colorBtn.setImageResource(R.color.lightgreen)
+                    "#D9D9D9" -> binding.colorBtn.setImageResource(R.color.lightgray)
+                    "#F2D5FF" -> binding.colorBtn.setImageResource(R.color.phvink)
+                    "#7FE8FF" -> binding.colorBtn.setImageResource(R.color.skyblue)
+                    else -> {
+                        // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
+                    }
+                }
+                // 선택된 아이콘 ID를 로그에 출력하는 부분을 람다식 바깥으로 빼냅니다.
+                Log.d("Selected Icon", "Icon ID: $selectedColorId")
+            }
 
+            // 이 부분은 람다식 밖에서 실행되도록 수정합니다.
+            Log.d("bin", "됐냐")
+            colorDialog.show(supportFragmentManager, "color_dialog_tag")
+        }
 
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
@@ -216,9 +240,9 @@ class AddActivity : AppCompatActivity() {
 
     private fun addDataToFirestore() {
         val title = editTitle.text.toString()
-        val memo = editMemo.text.toString()
 
-        val iconResourceId = binding.iconBtn.tag as? Int
+        val icon = binding.iconBtn.tag as? Int
+        val color = binding.colorBtn.tag as? String
 
         val firstTime = editFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
         val firstTimeParts = firstTime.split(":")
@@ -230,12 +254,12 @@ class AddActivity : AppCompatActivity() {
         val lastTimeHour = lastTimeParts[0]
         val lastTimeMinute = lastTimeParts[1]
 
+        val memo = editMemo.text.toString()
 
         val newItemData = hashMapOf(
             "daytitle" to title,
-            "daymemo" to memo,
-            "daycolor" to color.toInt(),
-            "dayicon" to iconResourceId,
+            "daycolor" to color,
+            "dayicon" to icon,
             "firstTime" to hashMapOf(
                 "hour" to firstTimeHour,
                 "minute" to firstTimeMinute
@@ -243,7 +267,8 @@ class AddActivity : AppCompatActivity() {
             "lastTime" to hashMapOf(
                 "hour" to lastTimeHour,
                 "minute" to lastTimeMinute
-            )
+            ),
+            "daymemo" to memo,
         )
         db.collection("users")
             .add(newItemData)

@@ -11,4 +11,7 @@
     <color name="phvink">#F2D5FF</color>
     <color name="skyblue">#7FE8FF</color>
     <color name="semi_transparent">#8A939393</color>
+    <color name="lightred">#FFD5D5</color>
+    <color name="lightyellow">#FAFFBD</color>
+    <color name="lightgreen">#ADFFAC</color>
 </resources>

@@ -51,7 +51,7 @@ fun transIntoTimeForm(originTime: String?, timeForm: String?): String {
 
 fun getTodoList(): MutableList<Todo> {
     val todo = mutableListOf<Todo>()
-    MyApplication.db.collection("users")
+    MyApplication.db.collection("Todo")
         .get()
         .addOnSuccessListener { result ->
             for (document in result) {

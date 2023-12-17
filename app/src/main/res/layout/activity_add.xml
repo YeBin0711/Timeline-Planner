@@ -30,7 +30,7 @@
             android:background="@android:color/transparent"
             android:src="@drawable/game"
             android:scaleType="fitCenter"/>
-        <ImageView
+        <ImageButton
             android:id="@+id/color_btn"
             android:layout_width="35dp"
             android:layout_height="35dp"

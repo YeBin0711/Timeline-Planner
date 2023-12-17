@@ -2,13 +2,16 @@ package com.example.timelineplanner
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DatePickerBinding
@@ -39,11 +42,17 @@ class Homeadapter(
         val currentItem = itemList[position]
 
         holder.textViewTitle.text = currentItem.daytitle
-        holder.textViewMemo.text = currentItem.daymemo
-        holder.imageViewBox.setImageResource(currentItem.dayicon)
+        // 배경색을 적용할 뷰의 ID에 접근하여 배경색 설정
+        holder.imageViewColor.setBackgroundColor(Color.parseColor(currentItem.daycolor))
+
+        holder.imageViewIcon.setImageResource(currentItem.dayicon)
+
         holder.firstTime.text = "${currentItem.firstTime.hour}:${currentItem.firstTime.minute}"
         holder.lastTime.text = "${currentItem.lastTime.hour}:${currentItem.lastTime.minute}"
 
+        holder.textViewMemo.text = currentItem.daymemo
+
+        holder.checkBox.setBackgroundColor(Color.parseColor(currentItem.daycolor))
         /*
         //Todo: 시간 형식 설정 반영
         val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
@@ -57,7 +66,7 @@ class Homeadapter(
             currentItem.lastTime
         )
 
-        holder.imageViewBox.layoutParams.height = imageViewHeight
+        holder.imageViewColor.layoutParams.height = imageViewHeight
 
         // 해당 TextView의 layoutparams를 가져와서 설정
         holder.emptyView.layoutParams.height=imageViewHeight - 100
@@ -100,11 +109,13 @@ class Homeadapter(
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewTitle: TextView = itemView.findViewById(R.id.item_name)
-        val textViewMemo: TextView = itemView.findViewById(R.id.item_memo)
-        val imageViewBox: ImageView = itemView.findViewById(R.id.ticon)
+        val imageViewColor: View = itemView.findViewById(R.id.ticon_background)
+        val imageViewIcon: ImageView = itemView.findViewById(R.id.ticon_icon)
         val firstTime: TextView = itemView.findViewById(R.id.first_time)
         val lastTime : TextView = itemView.findViewById(R.id.last_time)
+        val textViewMemo: TextView = itemView.findViewById(R.id.item_memo)
         val emptyView: View = itemView.findViewById(R.id.emptyView)
+        val checkBox: CheckBox = itemView.findViewById(R.id.home_cb)
         val linearLayoutContainer: LinearLayout = itemView.findViewById(R.id.textViewContainer) // 새로 추가한 LinearLayout 참조
         // 아이템 클릭 리스너 설정
         init {
