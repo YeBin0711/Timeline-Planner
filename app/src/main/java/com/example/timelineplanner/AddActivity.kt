@@ -2,11 +2,13 @@ package com.example.timelineplanner
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
+import com.example.timelineplanner.databinding.IconDialogBinding
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -23,6 +25,7 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.properties.Delegates
 
 class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
@@ -52,8 +55,9 @@ class AddActivity : AppCompatActivity() {
 
         //아이콘
         binding.iconBtn.setOnClickListener {
-            val icondialog = IconSelectionDialog()
-            icondialog.setIconSelectedListener { selectedIconId ->
+            val iconDialog = IconSelectionDialog()
+            iconDialog.setIconSelectedListener { selectedIconId ->
+                binding.iconBtn.tag = selectedIconId
                 when (selectedIconId) {
                     R.drawable.wakeup -> binding.iconBtn.setImageResource(R.drawable.wakeup)
                     R.drawable.sleeping -> binding.iconBtn.setImageResource(R.drawable.sleeping)
@@ -77,7 +81,7 @@ class AddActivity : AppCompatActivity() {
 
             // 이 부분은 람다식 밖에서 실행되도록 수정합니다.
             Log.d("bin", "됐냐")
-            icondialog.show(supportFragmentManager, "icon_dialog_tag")
+            iconDialog.show(supportFragmentManager, "icon_dialog_tag")
         }
         //색상
         binding.colorBtn.setOnClickListener {
@@ -211,7 +215,7 @@ class AddActivity : AppCompatActivity() {
         val title = editTitle.text.toString()
         val memo = editMemo.text.toString()
 
-        val iconResourceId: Int = editIcon.tag?.toString()?.toIntOrNull() ?: R.drawable.game
+        val iconResourceId = binding.iconBtn.tag as? Int
 
         val firstTime = editFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
         val firstTimeParts = firstTime.split(":")

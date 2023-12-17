@@ -56,13 +56,8 @@
             android:id="@+id/ticon"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background" />
-
-        <View
-            android:id="@+id/day_line"
-            android:layout_width="4dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/todo_dialog_line" />
+            android:background="@drawable/edittext_background"
+            android:scaleType="fitCenter"/>
 
     </LinearLayout>
 
