@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
@@ -58,16 +59,6 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         fetchDataFromFirestore()
-
-        val itemList: List<ItemData> = listOf (
-            ItemData().apply {
-                dayTitle = "Title 1"
-                dayMemo = "Memo 1"
-                firstTime = "10"
-                lastTime = "12"
-                currentDate = "2023-12-14" // 특정 날짜 정보 추가
-            }
-        )
 
         adapter = Homeadapter(this,itemList, this)
         recyclerView.adapter = adapter
@@ -159,13 +150,20 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
                 for (document in result) {
                     val item = document.toObject(ItemData::class.java)
-                    itemList.add(item)
+
+                    // Timestamp를 원하는 형식의 텍스트로 변환
+                    val formattedFirstTime = item.firstTime?.toDate()?.toString() ?: ""
+                    val formattedLastTime = item.lastTime?.toDate()?.toString() ?: ""
+
+                    // 변환된 문자열을 사용하여 RecyclerView의 각 아이템에 바인딩
+                    itemList.add(item.apply {
+                        firstTimeAsString = formattedFirstTime // firstTimeAsString: String 타입의 새로운 필드 추가
+                        lastTimeAsString = formattedLastTime // lastTimeAsString: String 타입의 새로운 필드 추가
+                    })
                 }
-                // itemList의 시간 데이터를 LocalTime으로 변환하여 정렬
-                itemList.sortBy { it.firstTime?.toInt() ?: 0 }
 
                 // Firestore에서 가져온 데이터를 기존의 RecyclerView에 설정
-                adapter = Homeadapter(this,itemList, this)
+                adapter = Homeadapter(this, itemList, this)
                 recyclerView.adapter = adapter
             }
             .addOnFailureListener { exception ->
@@ -173,6 +171,14 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
             }
     }
 
+    // 이 메서드는 Timestamp를 받아서 "HH:mm" 형식으로 변환해 반환합니다.
+    fun convertTimestampToTime(timestamp: Timestamp): String {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timestamp.toDate().time
+
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return sdf.format(calendar.time)
+    }
     //날짜 변경
     fun onClickOkButton2(year: Int, month: Int, day: Int) {
         selectedDate = LocalDate.of(year, month, day)

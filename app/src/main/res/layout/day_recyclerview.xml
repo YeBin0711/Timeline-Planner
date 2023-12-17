@@ -40,7 +40,6 @@
                 android:id="@+id/last_time"
                 android:layout_width="65dp"
                 android:layout_height="wrap_content"
-                android:text="09 : 00"
                 android:gravity="center"
                 android:textSize="20sp" />
 

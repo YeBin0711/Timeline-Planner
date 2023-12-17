@@ -66,7 +66,6 @@ class TodoDatePickerDialog(context: Context, val activity: AddActivity, val minY
 }
 
 class TimePickerDialog(context: Context, val activity: AddActivity, var hour: Int, var minute: Int, var flag: Int): Dialog(context) {
-class TimePickerDialog(context: Context, val activity: AddActivity, var hour: Int, var minute: Int, var last_hour: Int, var last_min: Int): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = TimePickerBinding.inflate(layoutInflater, null, false)
@@ -75,9 +74,6 @@ class TimePickerDialog(context: Context, val activity: AddActivity, var hour: In
         binding.hourPicker1.minValue = 0
         binding.hourPicker1.maxValue = 24
         binding.hourPicker1.value = hour
-        binding.hourPicker2.minValue = 0
-        binding.hourPicker2.maxValue = 24
-        binding.hourPicker2.value = hour
         binding.minPicker1.minValue = 0
         binding.minPicker1.maxValue = 59
         binding.minPicker1.value = minute
@@ -86,20 +82,11 @@ class TimePickerDialog(context: Context, val activity: AddActivity, var hour: In
         binding.hourPicker1.setFormatter { hour -> String.format("%02d", hour) }
         binding.minPicker1.setFormatter { minute -> String.format("%02d", minute) }
 
-        binding.hourPicker2.minValue = 0
-        binding.hourPicker2.maxValue = 24
-        binding.hourPicker2.value = last_hour
-        binding.minPicker2.minValue = 0
-        binding.minPicker2.maxValue = 59
-        binding.minPicker2.value = last_min
-
-
         binding.cancel.setOnClickListener() {
             dismiss()
         }
         binding.ok.setOnClickListener() {
             activity.onClickOkButton3(binding.hourPicker1.value, binding.minPicker1.value, flag)
-            activity.onClickOkButton3(binding.hourPicker1.value, binding.minPicker1.value, binding.hourPicker2.value, binding.minPicker2.value)
             dismiss()
         }
     }
