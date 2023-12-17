@@ -30,8 +30,6 @@ class Alarm (
     val time: Time
 )
 
-
-
 fun transIntoTimeForm(originTime: String?, timeForm: String?): String {
     val originHour = originTime?.toInt()?: 0
     var resultHour = originTime?: "0"

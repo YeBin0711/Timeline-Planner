@@ -1,9 +1,10 @@
 package com.example.timelineplanner
 
 import android.content.Intent
-import android.media.Image
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
 import android.widget.Button
@@ -11,8 +12,13 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.timelineplanner.model.ItemData
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
+import org.w3c.dom.Text
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
@@ -21,12 +27,15 @@ class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
     private lateinit var editTitle: EditText
     private lateinit var editMemo: EditText
+    private lateinit var date: TextView
     private lateinit var editFirstTime: TextView
     private lateinit var editLastTIme: TextView
     private lateinit var buttonSave: Button
 
     var color = "" //색상 코드
     var icon = 0 //아이콘 ID
+    // selectedTime을 클래스의 멤버 변수로 선언// 기본값 설정
+    var selectedTime: LocalTime = LocalTime.now()
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,19 +66,27 @@ class AddActivity : AppCompatActivity() {
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
 
         //오늘 날짜로 기본 text set
-        binding.date1.setText("${selectedDate.monthValue}월 ${selectedDate.dayOfMonth}일" +
-                " (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})")
-        binding.date2.setText("${selectedDate.monthValue}월 ${selectedDate.dayOfMonth}일" +
-                " (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})")
+        binding.date1.setText(
+            "${selectedDate.monthValue}월 ${selectedDate.dayOfMonth}일" +
+                    " (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+        )
+        binding.date2.setText(
+            "${selectedDate.monthValue}월 ${selectedDate.dayOfMonth}일" +
+                    " (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+        )
         //날짜 선택
         binding.date1.setOnClickListener() {
-            val todoDatePickerDialog = TodoDatePickerDialog(this, this, startMonth.year+1, endMonth.year-1,
-                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 0)
+            val todoDatePickerDialog = TodoDatePickerDialog(
+                this, this, startMonth.year + 1, endMonth.year - 1,
+                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 0
+            )
             todoDatePickerDialog.show()
         }
         binding.date2.setOnClickListener() {
-            val todoDatePickerDialog = TodoDatePickerDialog(this, this, startMonth.year+1, endMonth.year-1,
-                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 1)
+            val todoDatePickerDialog = TodoDatePickerDialog(
+                this, this, startMonth.year + 1, endMonth.year - 1,
+                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 1
+            )
             todoDatePickerDialog.show()
         }
 
@@ -118,56 +135,94 @@ class AddActivity : AppCompatActivity() {
 
     //timePicker OkButton 함수
     fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
-        if(flag==0) binding.startTime.setText("%02d : %02d".format(hour, minute))
-        else if(flag==1) {
-            binding.endTime.setText("%02d : %02d".format(hour, minute))
-
+        if (flag == 0){
+            binding.startTime.setText("%02d:%02d".format(hour, minute))}
+        else if (flag == 1) {
+            binding.endTime.setText("%02d:%02d".format(hour, minute))
             //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
             val startDate = binding.date1.text.toString()
             val endDate = binding.date2.text.toString()
             val startTime = binding.startTime.text.toString()
             val endTime = binding.endTime.text.toString()
 
-            if(startDate==endDate && (startTime.compareTo(endTime) > 0)) {
+            if (startDate == endDate && (startTime.compareTo(endTime) > 0)) {
                 val dateString = endDate.split(" ")
                 val endDay = dateString[1].substring(0, 2).toInt()
-                val endDate = LocalDate.of(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth+1)
-                binding.date2.setText("${dateString[0]} ${endDay + 1}일 (${endDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})")
+                val endDate =
+                    LocalDate.of(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth + 1)
+                binding.date2.setText(
+                    "${dateString[0]} ${endDay + 1}일 (${
+                        endDate.dayOfWeek.getDisplayName(
+                            TextStyle.SHORT,
+                            Locale.KOREAN
+                        )
+                    })"
+                )
             }
         }
-
-
     }
+
     //todoDatePicker OkButton 함수
     fun onClickOkButton4(year: Int, month: Int, day: Int, flag: Int) {
         selectedDate = LocalDate.of(year, month, day)
-        if(flag==0) binding.date1.setText("${month}월 ${day}일 (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})")
-        else if(flag==1) binding.date2.setText("${month}월 ${day}일 (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})")
+        if (flag == 0) binding.date1.setText(
+            "${month}월 ${day}일 (${
+                selectedDate.dayOfWeek.getDisplayName(
+                    TextStyle.SHORT,
+                    Locale.KOREAN
+                )
+            })"
+        )
+        else if (flag == 1) binding.date2.setText(
+            "${month}월 ${day}일 (${
+                selectedDate.dayOfWeek.getDisplayName(
+                    TextStyle.SHORT,
+                    Locale.KOREAN
+                )
+            })"
+        )
     }
 
     private fun addDataToFirestore() {
         val title = editTitle.text.toString()
         val memo = editMemo.text.toString()
-        val firstTime = editFirstTime.text.toString()
+
+        val firstTime = editFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
+        val firstTimeParts = firstTime.split(":")
+        val firstTimeHour = firstTimeParts[0]
+        val firstTimeMinute = firstTimeParts[1]
+
         val lastTime= editLastTIme.text.toString()
+        val lastTimeParts = lastTime.split(":")
+        val lastTimeHour = lastTimeParts[0]
+        val lastTimeMinute = lastTimeParts[1]
 
-        val newItemData = ItemData()
-        newItemData.dayTitle = title
-        newItemData.todocolor = color.toInt()
-        newItemData.icon = icon
-        newItemData.dayMemo = memo
-        newItemData.firstTime = firstTime
-        newItemData.lastTime = lastTime
 
+        val newItemData = hashMapOf(
+            "daytitle" to title,
+            "daymemo" to memo,
+            "todocolor" to color.toInt(),
+            "icon" to icon,
+            "firstTime" to hashMapOf(
+                "hour" to firstTimeHour,
+                "minute" to firstTimeMinute
+            ),
+            "lastTime" to hashMapOf(
+                "hour" to lastTimeHour,
+                "minute" to lastTimeMinute
+            )
+        )
         db.collection("users")
             .add(newItemData)
             .addOnSuccessListener { documentReference ->
                 // 성공적으로 추가됐을 때 처리
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
+                Log.d("bin","데이터 저장됨")
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "저장이 안됐습니다", Toast.LENGTH_SHORT).show()
+                Log.d("bin","되긴 개뿔")
                 // 실패했을 때 처리
             }
     }

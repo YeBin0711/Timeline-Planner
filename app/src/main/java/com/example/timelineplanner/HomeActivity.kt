@@ -2,8 +2,10 @@ package com.example.timelineplanner
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -27,6 +29,7 @@ import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.WeekDayBinder
 import java.text.SimpleDateFormat
 import java.time.Year
+import java.time.ZoneId
 import java.util.Date
 
 
@@ -58,16 +61,6 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         fetchDataFromFirestore()
-
-        val itemList: List<ItemData> = listOf (
-            ItemData().apply {
-                dayTitle = "Title 1"
-                dayMemo = "Memo 1"
-                firstTime = "10"
-                lastTime = "12"
-                currentDate = "2023-12-14" // 특정 날짜 정보 추가
-            }
-        )
 
         adapter = Homeadapter(this,itemList, this)
         recyclerView.adapter = adapter
@@ -153,26 +146,43 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
     private fun fetchDataFromFirestore() {
         db.collection("users")
+            .orderBy("firstTime.hour")
+            .orderBy("firstTime.minute")
             .get()
             .addOnSuccessListener { result ->
                 val itemList = mutableListOf<ItemData>()
 
                 for (document in result) {
-                    val item = document.toObject(ItemData::class.java)
-                    itemList.add(item)
-                }
-                // itemList의 시간 데이터를 LocalTime으로 변환하여 정렬
-                itemList.sortBy { it.firstTime?.toInt() ?: 0 }
+                    val daytitle = document.getString("daytitle") ?: ""
+                    val daymemo = document.getString("daymemo") ?: ""
 
-                // Firestore에서 가져온 데이터를 기존의 RecyclerView에 설정
-                adapter = Homeadapter(this,itemList, this)
+                    val firstTimeMap = document.get("firstTime") as HashMap<*, *>
+                    val firstTimeHour = firstTimeMap["hour"] as String
+                    val firstTimeMinute = firstTimeMap["minute"] as String
+                    val firstTimeObj = Time(firstTimeHour, firstTimeMinute)
+
+                    val lastTimeMap = document.get("lastTime") as HashMap<*, *>
+                    val lastTimeHour = lastTimeMap["hour"] as String
+                    val lastTimeMinute = lastTimeMap["minute"] as String
+                    val lastTimeObj = Time(lastTimeHour, lastTimeMinute)
+
+                    val itemData = ItemData(daytitle, firstTimeObj, lastTimeObj, daymemo)
+                    itemList.add(itemData)
+                }
+
+                // 데이터 확인을 위해 로그로 출력
+                for (item in itemList) {
+                    Log.d("ItemData", "Day Title: ${item.daytitle}, First Time: ${item.firstTime.hour}:${item.firstTime.minute}, Last Time: ${item.lastTime.hour}:${item.lastTime.minute}")
+                }
+
+                // RecyclerView에 데이터 설정
+                adapter = Homeadapter(this@HomeActivity, itemList, this@HomeActivity)
                 recyclerView.adapter = adapter
             }
             .addOnFailureListener { exception ->
-                // 실패했을 때 처리
+                Log.e("FetchData", "Error getting documents.", exception)
             }
     }
-
     //날짜 변경
     fun onClickOkButton2(year: Int, month: Int, day: Int) {
         selectedDate = LocalDate.of(year, month, day)

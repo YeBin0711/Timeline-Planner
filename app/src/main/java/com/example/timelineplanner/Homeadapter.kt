@@ -17,6 +17,9 @@ import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.ViewContainer
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 class HomeViewHolder(val binding: DayRecyclerviewBinding):
     RecyclerView.ViewHolder(binding.root)
@@ -35,19 +38,24 @@ class Homeadapter(
     override fun onBindViewHolder(holder: ItemViewHolder,position: Int) {
         val currentItem = itemList[position]
 
-        holder.textViewTitle.text = currentItem.dayTitle
-        holder.textViewMemo.text = currentItem.dayMemo
+        holder.textViewTitle.text = currentItem.daytitle
+        holder.textViewMemo.text = currentItem.daymemo
+        holder.firstTime.text = "${currentItem.firstTime.hour}:${currentItem.firstTime.minute}"
+        holder.lastTime.text = "${currentItem.lastTime.hour}:${currentItem.lastTime.minute}"
 
+        /*
         //Todo: 시간 형식 설정 반영
         val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
         holder.firstTime.text = transIntoTimeForm(currentItem.firstTime, timeForm)
         holder.lastTime.text = transIntoTimeForm(currentItem.lastTime, timeForm)
+        */
 
         //이미지뷰 크기 조절
         val imageViewHeight = calculateImageViewHeight(
-            currentItem.firstTime ?: "0",
-            currentItem.lastTime ?: "0"
+            currentItem.firstTime,
+            currentItem.lastTime
         )
+
         holder.imageViewBox.layoutParams.height = imageViewHeight
 
         // 해당 TextView의 layoutparams를 가져와서 설정
@@ -57,26 +65,34 @@ class Homeadapter(
             itemClickListener.onItemClick(position)
         }
     }
-    private fun calculateImageViewHeight(firstTime: String, lastTime: String): Int {
-        val minHeight = 200 // 최소 높이
-        val Height2 = 250
-        val Height3 = 300
-        val Height4 = 400
-        val maxHeight = 450// 최대 높이
 
-        val firstHour = firstTime.toIntOrNull() ?: 0
-        val lastHour = lastTime.toIntOrNull() ?: 0
+    private fun calculateImageViewHeight(firstTime: Time, lastTime: Time): Int {
+        val firstHour = firstTime.hour.toInt()
+        val lastHour = lastTime.hour.toInt()
 
         val difference = lastHour - firstHour
         val calculatedHeight = when {
-            difference <= 1 -> minHeight // 시간 차이가 1시간 미만인 경우 최소 높이 적용
-            difference == 2 -> Height2
-            difference == 3 -> Height3
-            difference == 4 -> Height4 // 시간 차이가 5시간 이상인 경우 최대 높이 적용
-            else -> maxHeight // 그 외의 경우, 시간 차이에 비례한 높이 적용
+            difference <= 1 -> 200 // 시간 차이가 1시간 미만인 경우 최소 높이 적용
+            difference == 2 -> 250
+            difference == 3 -> 300
+            difference == 4 -> 400 // 시간 차이가 5시간 이상인 경우 최대 높이 적용
+            else -> 450 // 그 외의 경우, 시간 차이에 비례한 높이 적용
         }
 
         return calculatedHeight
+    }
+    private fun extractHourFromString(time: String): Int {
+        val parts = time.split(":")
+        if (parts.size == 2) {
+            val hour = parts[0]
+            return try {
+                hour.toInt()
+            } catch (e: NumberFormatException) {
+                // Handle the exception appropriately or provide a default value
+                0 // Return a default value when the conversion fails
+            }
+        }
+        return 0 // Default value or handle error appropriately
     }
 
     override fun getItemCount() = itemList.size
