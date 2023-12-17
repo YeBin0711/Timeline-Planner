@@ -20,11 +20,7 @@ class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
     private lateinit var editTitle: EditText
     private lateinit var editMemo: EditText
-    //private lateinit var editFirstTimeHour: EditText //addData함수까지 수정 필요
-    //private lateinit var editFirstTimeMin: EditText
     private lateinit var editFirstTime: TextView
-    //private lateinit var editLastTimeHour: EditText
-    //private lateinit var editLastTimeMin: EditText
     private lateinit var editLastTIme: TextView
     private lateinit var buttonSave: Button
 
@@ -37,12 +33,8 @@ class AddActivity : AppCompatActivity() {
 
         editTitle = findViewById(R.id.todo_title)
         editMemo = findViewById(R.id.todo_memo)
-        //editFirstTimeHour = findViewById(R.id.hour1)
-        //editFirstTimeMin = findViewById(R.id.minute1)
         editFirstTime = findViewById(R.id.start_time)
         editLastTIme = findViewById(R.id.end_time)
-        //editLastTimeHour = findViewById(R.id.hour2)
-        //editLastTimeMin = findViewById(R.id.minute2)
         buttonSave = findViewById(R.id.btn_save)
 
         //아이콘
@@ -123,9 +115,25 @@ class AddActivity : AppCompatActivity() {
 
     //timePicker OkButton 함수
     fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
-        if(flag==0) binding.startTime.setText("$hour : $minute")
-        else if(flag==1) binding.endTime.setText("$hour : $minute")
-        //endTime이 startTime보다 빠르면 날짜 넘어가게 설정 필요
+        if(flag==0) binding.startTime.setText("%02d : %02d".format(hour, minute))
+        else if(flag==1) {
+            binding.endTime.setText("%02d : %02d".format(hour, minute))
+
+            //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
+            val startDate = binding.date1.text.toString()
+            val endDate = binding.date2.text.toString()
+            val startTime = binding.startTime.text.toString()
+            val endTime = binding.endTime.text.toString()
+
+            if(startDate==endDate && (startTime.compareTo(endTime) > 0)) {
+                val dateString = endDate.split(" ")
+                val endDay = dateString[1].substring(0, 2).toInt()
+                val endDate = LocalDate.of(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth+1)
+                binding.date2.setText("${dateString[0]} ${endDay + 1}일 (${endDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})")
+            }
+        }
+
+
     }
     //todoDatePicker OkButton 함수
     fun onClickOkButton4(year: Int, month: Int, day: Int, flag: Int) {
@@ -137,10 +145,8 @@ class AddActivity : AppCompatActivity() {
     private fun addDataToFirestore() {
         val title = editTitle.text.toString()
         val memo = editMemo.text.toString()
-        /*
-        val firstTime = editFirstTimeHour.text.toString()
-        val lastTime= editLastTimeHour.text.toString()
-         */
+        val firstTime = editFirstTime.text.toString()
+        val lastTime= editLastTIme.text.toString()
 
         val newItemData = ItemData()
         newItemData.dayTitle = title

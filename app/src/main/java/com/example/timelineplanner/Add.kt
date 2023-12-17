@@ -28,6 +28,7 @@ class IconDialog: DialogFragment() {
     }
 }
 class ColorDialog: DialogFragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,8 +39,7 @@ class ColorDialog: DialogFragment() {
     }
 }
 
-class TodoDatePickerDialog(context: Context, val activity: AddActivity, val minYear: Int, val maxYear: Int,
-                           var year: Int, var month: Int, var day: Int, var flag: Int): Dialog(context) {
+class TodoDatePickerDialog(context: Context, val activity: AddActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int, var flag: Int): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DatePickerBinding.inflate(layoutInflater, null, false)
@@ -65,7 +65,6 @@ class TodoDatePickerDialog(context: Context, val activity: AddActivity, val minY
     }
 }
 
-
 class TimePickerDialog(context: Context, val activity: AddActivity, var hour: Int, var minute: Int, var flag: Int): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,21 +74,19 @@ class TimePickerDialog(context: Context, val activity: AddActivity, var hour: In
         binding.hourPicker1.minValue = 0
         binding.hourPicker1.maxValue = 24
         binding.hourPicker1.value = hour
-        binding.hourPicker2.minValue = 0
-        binding.hourPicker2.maxValue = 24
-        binding.hourPicker2.value = hour
         binding.minPicker1.minValue = 0
         binding.minPicker1.maxValue = 59
         binding.minPicker1.value = minute
-        binding.minPicker2.minValue = 0
-        binding.minPicker2.maxValue = 59
-        binding.minPicker2.value = minute
+
+        //항상 두 글자로 출력
+        binding.hourPicker1.setFormatter { hour -> String.format("%02d", hour) }
+        binding.minPicker1.setFormatter { minute -> String.format("%02d", minute) }
 
         binding.cancel.setOnClickListener() {
             dismiss()
         }
         binding.ok.setOnClickListener() {
-            activity.onClickOkButton3(binding.hourPicker1.value, binding.minPicker1.value,flag)
+            activity.onClickOkButton3(binding.hourPicker1.value, binding.minPicker1.value, flag)
             dismiss()
         }
     }
