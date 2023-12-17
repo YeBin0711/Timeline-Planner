@@ -1,6 +1,7 @@
 package com.example.timelineplanner
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,18 +12,14 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.timelineplanner.model.ItemData
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.YearMonth
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -30,12 +27,13 @@ class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
     private lateinit var editTitle: EditText
     private lateinit var editMemo: EditText
+    private lateinit var date: TextView
     private lateinit var editFirstTime: TextView
     private lateinit var editLastTIme: TextView
     private lateinit var buttonSave: Button
-    // selectedTime을 클래스의 멤버 변수로 선언
-    var selectedTime: LocalTime = LocalTime.now() // 기본값 설정
 
+    // selectedTime을 클래스의 멤버 변수로 선언// 기본값 설정
+    var selectedTime: LocalTime = LocalTime.now()
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,8 +132,8 @@ class AddActivity : AppCompatActivity() {
 
     //timePicker OkButton 함수
     fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
-        val selectedTime = LocalTime.of(hour, minute)
-        if (flag == 0) binding.startTime.setText("%02d:%02d".format(hour, minute))
+        if (flag == 0){
+            binding.startTime.setText("%02d:%02d".format(hour, minute))}
         else if (flag == 1) {
             binding.endTime.setText("%02d:%02d".format(hour, minute))
                         //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
@@ -158,26 +156,6 @@ class AddActivity : AppCompatActivity() {
                     })"
                 )
             }
-
-            // Firebase에 저장할 Timestamp 객체 생성
-            val selectedDateTime = LocalDateTime.of(selectedDate, selectedTime)
-            val timestamp = Timestamp(selectedDateTime.atZone(ZoneId.systemDefault()).toEpochSecond(), 0)
-
-            // Firestore에 저장하는 코드 추가
-            val db = FirebaseFirestore.getInstance()
-            val newItemData = hashMapOf(
-                "start_time" to timestamp
-                // 다른 필요한 필드도 함께 추가할 수 있습니다.
-            )
-
-            db.collection("your_collection_name")
-                .add(newItemData)
-                .addOnSuccessListener { documentReference ->
-                    Log.d("Firestore", "DocumentSnapshot added with ID: ${documentReference.id}")
-                }
-                .addOnFailureListener { e ->
-                    Log.w("Firestore", "Error adding document", e)
-                }
         }
     }
 
@@ -203,44 +181,44 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun addDataToFirestore() {
-
         val title = editTitle.text.toString()
         val memo = editMemo.text.toString()
-        // 데이터 추가 및 업데이트
-        val selectedDateTime = LocalDateTime.of(selectedDate, selectedTime)
-        val firstTime = Timestamp(selectedDateTime.atZone(ZoneId.systemDefault()).toEpochSecond(), 0)
-        val lastTime = Timestamp(selectedDateTime.atZone(ZoneId.systemDefault()).toEpochSecond(), 0)
 
-        // ItemData 객체 생성 및 데이터 설정
+        val firstTime = editFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
+        val firstTimeParts = firstTime.split(":")
+        val firstTimeHour = firstTimeParts[0]
+        val firstTimeMinute = firstTimeParts[1]
+
+        val lastTime= editLastTIme.text.toString()
+        val lastTimeParts = lastTime.split(":")
+        val lastTimeHour = lastTimeParts[0]
+        val lastTimeMinute = lastTimeParts[1]
+
+
         val newItemData = hashMapOf(
-            "dayTitle" to title,
-            "dayMemo" to memo,
-            "firstTime" to Timestamp(selectedTime.atDate(LocalDate.now()).toEpochSecond(ZoneOffset.UTC), 0),
-            "lastTime" to Timestamp(selectedTime.atDate(LocalDate.now()).toEpochSecond(ZoneOffset.UTC), 0)
-            // 다른 필드도 필요한 대로 추가하세요
+            "daytitle" to title,
+            "daymemo" to memo,
+            "firstTime" to hashMapOf(
+                "hour" to firstTimeHour,
+                "minute" to firstTimeMinute
+            ),
+            "lastTime" to hashMapOf(
+                "hour" to lastTimeHour,
+                "minute" to lastTimeMinute
+            )
         )
-
-        /*
-        val newItemData = ItemData()
-        newItemData.dayTitle = title
-        newItemData.dayMemo = memo
-        newItemData.firstTime = firstTime
-        newItemData.lastTime = lastTime
-        */
-
         db.collection("users")
             .add(newItemData)
-            .addOnSuccessListener {documentReference ->
-                // 화면 전환 코드
+            .addOnSuccessListener { documentReference ->
+                // 성공적으로 추가됐을 때 처리
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
-                finish()
-                Log.d("bin", "잘 됐다")
+                Log.d("bin","데이터 저장됨")
             }
-
-            .addOnFailureListener { exception ->
-                // 데이터 가져오기 실패 시 처리
-                Log.d("bin", "데이터를 못 가져왔음")
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "저장이 안됐습니다", Toast.LENGTH_SHORT).show()
+                Log.d("bin","되긴 개뿔")
+                // 실패했을 때 처리
             }
     }
 }

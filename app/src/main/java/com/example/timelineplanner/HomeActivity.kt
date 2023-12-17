@@ -2,8 +2,10 @@ package com.example.timelineplanner
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
@@ -28,6 +29,7 @@ import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.WeekDayBinder
 import java.text.SimpleDateFormat
 import java.time.Year
+import java.time.ZoneId
 import java.util.Date
 
 
@@ -144,40 +146,42 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
     private fun fetchDataFromFirestore() {
         db.collection("users")
+            .orderBy("firstTime.hour")
+            .orderBy("firstTime.minute")
             .get()
             .addOnSuccessListener { result ->
                 val itemList = mutableListOf<ItemData>()
 
                 for (document in result) {
-                    val item = document.toObject(ItemData::class.java)
+                    val daytitle = document.getString("daytitle") ?: ""
+                    val daymemo = document.getString("daymemo") ?: ""
 
-                    // Timestamp를 원하는 형식의 텍스트로 변환
-                    val formattedFirstTime = item.firstTime?.toDate()?.toString() ?: ""
-                    val formattedLastTime = item.lastTime?.toDate()?.toString() ?: ""
+                    val firstTimeMap = document.get("firstTime") as HashMap<*, *>
+                    val firstTimeHour = firstTimeMap["hour"] as String
+                    val firstTimeMinute = firstTimeMap["minute"] as String
+                    val firstTimeObj = Time(firstTimeHour, firstTimeMinute)
 
-                    // 변환된 문자열을 사용하여 RecyclerView의 각 아이템에 바인딩
-                    itemList.add(item.apply {
-                        firstTimeAsString = formattedFirstTime // firstTimeAsString: String 타입의 새로운 필드 추가
-                        lastTimeAsString = formattedLastTime // lastTimeAsString: String 타입의 새로운 필드 추가
-                    })
+                    val lastTimeMap = document.get("lastTime") as HashMap<*, *>
+                    val lastTimeHour = lastTimeMap["hour"] as String
+                    val lastTimeMinute = lastTimeMap["minute"] as String
+                    val lastTimeObj = Time(lastTimeHour, lastTimeMinute)
+
+                    val itemData = ItemData(daytitle, firstTimeObj, lastTimeObj, daymemo)
+                    itemList.add(itemData)
                 }
 
-                // Firestore에서 가져온 데이터를 기존의 RecyclerView에 설정
-                adapter = Homeadapter(this, itemList, this)
+                // 데이터 확인을 위해 로그로 출력
+                for (item in itemList) {
+                    Log.d("ItemData", "Day Title: ${item.daytitle}, First Time: ${item.firstTime.hour}:${item.firstTime.minute}, Last Time: ${item.lastTime.hour}:${item.lastTime.minute}")
+                }
+
+                // RecyclerView에 데이터 설정
+                adapter = Homeadapter(this@HomeActivity, itemList, this@HomeActivity)
                 recyclerView.adapter = adapter
             }
             .addOnFailureListener { exception ->
-                // 실패했을 때 처리
+                Log.e("FetchData", "Error getting documents.", exception)
             }
-    }
-
-    // 이 메서드는 Timestamp를 받아서 "HH:mm" 형식으로 변환해 반환합니다.
-    fun convertTimestampToTime(timestamp: Timestamp): String {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = timestamp.toDate().time
-
-        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-        return sdf.format(calendar.time)
     }
     //날짜 변경
     fun onClickOkButton2(year: Int, month: Int, day: Int) {

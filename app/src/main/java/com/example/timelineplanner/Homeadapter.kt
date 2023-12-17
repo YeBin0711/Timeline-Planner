@@ -29,10 +29,6 @@ class Homeadapter(
     private val itemList: List<ItemData>,
     private val itemClickListener: DayViewContainer.RecyclerViewClickListener
 ) : RecyclerView.Adapter<Homeadapter.ItemViewHolder>() {
-
-    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-    private val timeFormat = sharedPreferences.getString("timeStyles", "12") ?: "12" // 기본값은 12시간 형식으로 설정
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.day_recyclerview, parent, false)
@@ -42,37 +38,37 @@ class Homeadapter(
     override fun onBindViewHolder(holder: ItemViewHolder,position: Int) {
         val currentItem = itemList[position]
 
-        holder.textViewTitle.text = currentItem.dayTitle
-        holder.textViewMemo.text = currentItem.dayMemo
-        holder.firstTime.text = transIntoTimeForm(currentItem.firstTimeAsString)
-        holder.lastTime.text = transIntoTimeForm(currentItem.lastTimeAsString)
+        holder.textViewTitle.text = currentItem.daytitle
+        holder.textViewMemo.text = currentItem.daymemo
+        holder.firstTime.text = "${currentItem.firstTime.hour}:${currentItem.firstTime.minute}"
+        holder.lastTime.text = "${currentItem.lastTime.hour}:${currentItem.lastTime.minute}"
 
         /*
-                //Todo: 시간 형식 설정 반영
-                val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
-                holder.firstTime.text = transIntoTimeForm(currentItem.firstTime, timeForm)
-                holder.lastTime.text = transIntoTimeForm(currentItem.lastTime, timeForm)
+        //Todo: 시간 형식 설정 반영
+        val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
+        holder.firstTime.text = transIntoTimeForm(currentItem.firstTime, timeForm)
+        holder.lastTime.text = transIntoTimeForm(currentItem.lastTime, timeForm)
+        */
 
+        //이미지뷰 크기 조절
+        val imageViewHeight = calculateImageViewHeight(
+            currentItem.firstTime,
+            currentItem.lastTime
+        )
 
-                //이미지뷰 크기 조절
-                val imageViewHeight = calculateImageViewHeight(
-                    currentItem.firstTime ?: "0",
-                    currentItem.lastTime ?: "0"
-                )
+        holder.imageViewBox.layoutParams.height = imageViewHeight
 
-                holder.imageViewBox.layoutParams.height = imageViewHeight
+        // 해당 TextView의 layoutparams를 가져와서 설정
+        holder.emptyView.layoutParams.height=imageViewHeight - 100
 
-                // 해당 TextView의 layoutparams를 가져와서 설정
-                holder.emptyView.layoutParams.height=imageViewHeight - 100
-                */
         holder.itemView.setOnClickListener {
             itemClickListener.onItemClick(position)
         }
     }
 
-    private fun calculateImageViewHeight(firstTime: String, lastTime: String): Int {
-        val firstHour = extractHourFromString(firstTime)
-        val lastHour = extractHourFromString(lastTime)
+    private fun calculateImageViewHeight(firstTime: Time, lastTime: Time): Int {
+        val firstHour = firstTime.hour.toInt()
+        val lastHour = lastTime.hour.toInt()
 
         val difference = lastHour - firstHour
         val calculatedHeight = when {
@@ -97,23 +93,6 @@ class Homeadapter(
             }
         }
         return 0 // Default value or handle error appropriately
-    }
-
-
-    fun transIntoTimeForm(timeString: String?): String {
-        if (timeString.isNullOrEmpty()) {
-            return "" // 값이 없으면 빈 문자열을 반환하거나 다른 기본값을 반환할 수 있습니다.
-        }
-
-        val formatter24 = DateTimeFormatter.ofPattern("HH:mm")
-
-        val time = try {
-            LocalTime.parse(timeString, formatter24)
-        } catch (e: DateTimeParseException) {
-            LocalTime.MIN
-        }
-
-        return time.format(formatter24)
     }
 
     override fun getItemCount() = itemList.size

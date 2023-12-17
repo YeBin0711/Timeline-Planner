@@ -21,11 +21,14 @@ class ItemData {
     //var dayAlarm: Alarm ?= null
 }*/
 
-class ItemData {
-    var dayTitle: String? = null
-    var firstTime: com.google.firebase.Timestamp? = null
-    var lastTime: com.google.firebase.Timestamp? = null
-    var dayMemo: String? = null
-    var firstTimeAsString: String? = null // Timestamp를 변환한 문자열 필드
-    var lastTimeAsString: String? = null // Timestamp를 변환한 문자열 필드
-}
+class ItemData(
+    val daytitle: String = "",
+    val firstTime: Time = Time("", ""),
+    val lastTime: Time = Time("", ""),
+    val daymemo: String = ""
+)
+
+class Time(
+    val hour: String = "",
+    val minute: String = ""
+)
