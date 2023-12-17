@@ -40,6 +40,7 @@ class Homeadapter(
 
         holder.textViewTitle.text = currentItem.daytitle
         holder.textViewMemo.text = currentItem.daymemo
+        holder.imageViewBox.setImageResource(currentItem.dayicon)
         holder.firstTime.text = "${currentItem.firstTime.hour}:${currentItem.firstTime.minute}"
         holder.lastTime.text = "${currentItem.lastTime.hour}:${currentItem.lastTime.minute}"
 

@@ -2,13 +2,16 @@ package com.example.timelineplanner
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
+import com.example.timelineplanner.databinding.IconDialogBinding
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.timelineplanner.model.ItemData
@@ -22,18 +25,18 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.properties.Delegates
 
 class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
     private lateinit var editTitle: EditText
     private lateinit var editMemo: EditText
+    private lateinit var editIcon: ImageView
     private lateinit var date: TextView
     private lateinit var editFirstTime: TextView
     private lateinit var editLastTIme: TextView
     private lateinit var buttonSave: Button
 
-    var color = "" //색상 코드
-    var icon = 0 //아이콘 ID
     // selectedTime을 클래스의 멤버 변수로 선언// 기본값 설정
     var selectedTime: LocalTime = LocalTime.now()
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
@@ -44,15 +47,41 @@ class AddActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         editTitle = findViewById(R.id.todo_title)
-        editMemo = findViewById(R.id.todo_memo)
+        editIcon = findViewById(R.id.icon_btn)
         editFirstTime = findViewById(R.id.start_time)
         editLastTIme = findViewById(R.id.end_time)
+        editMemo = findViewById(R.id.todo_memo)
         buttonSave = findViewById(R.id.btn_save)
 
         //아이콘
         binding.iconBtn.setOnClickListener {
-            val icondialog = IconDialog(this, this)
-            icondialog.show()
+            val iconDialog = IconSelectionDialog()
+            iconDialog.setIconSelectedListener { selectedIconId ->
+                binding.iconBtn.tag = selectedIconId
+                when (selectedIconId) {
+                    R.drawable.wakeup -> binding.iconBtn.setImageResource(R.drawable.wakeup)
+                    R.drawable.sleeping -> binding.iconBtn.setImageResource(R.drawable.sleeping)
+                    R.drawable.train -> binding.iconBtn.setImageResource(R.drawable.train)
+                    R.drawable.car -> binding.iconBtn.setImageResource(R.drawable.car)
+                    R.drawable.computer -> binding.iconBtn.setImageResource(R.drawable.computer)
+                    R.drawable.book -> binding.iconBtn.setImageResource(R.drawable.book)
+                    R.drawable.food -> binding.iconBtn.setImageResource(R.drawable.food)
+                    R.drawable.cleaning -> binding.iconBtn.setImageResource(R.drawable.cleaning)
+                    R.drawable.muscle -> binding.iconBtn.setImageResource(R.drawable.muscle)
+                    R.drawable.rest -> binding.iconBtn.setImageResource(R.drawable.rest)
+                    R.drawable.shower -> binding.iconBtn.setImageResource(R.drawable.shower)
+                    R.drawable.game-> binding.iconBtn.setImageResource(R.drawable.game)
+                    else -> {
+                        // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
+                    }
+                }
+                // 선택된 아이콘 ID를 로그에 출력하는 부분을 람다식 바깥으로 빼냅니다.
+                Log.d("Selected Icon", "Icon ID: $selectedIconId")
+            }
+
+            // 이 부분은 람다식 밖에서 실행되도록 수정합니다.
+            Log.d("bin", "됐냐")
+            iconDialog.show(supportFragmentManager, "icon_dialog_tag")
         }
         //색상
         binding.colorBtn.setOnClickListener {
@@ -104,7 +133,7 @@ class AddActivity : AppCompatActivity() {
 
         //스위치 on/off
         val switchView: SwitchCompat = findViewById(R.id.cswitch)
-        switchView.setOnCheckedChangeListener {buttonView, isChecked ->
+        switchView.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 switchView.isChecked = true
             }
@@ -139,7 +168,7 @@ class AddActivity : AppCompatActivity() {
             binding.startTime.setText("%02d:%02d".format(hour, minute))}
         else if (flag == 1) {
             binding.endTime.setText("%02d:%02d".format(hour, minute))
-            //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
+                        //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
             val startDate = binding.date1.text.toString()
             val endDate = binding.date2.text.toString()
             val startTime = binding.startTime.text.toString()
@@ -187,6 +216,8 @@ class AddActivity : AppCompatActivity() {
         val title = editTitle.text.toString()
         val memo = editMemo.text.toString()
 
+        val iconResourceId = binding.iconBtn.tag as? Int
+
         val firstTime = editFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
         val firstTimeParts = firstTime.split(":")
         val firstTimeHour = firstTimeParts[0]
@@ -201,8 +232,8 @@ class AddActivity : AppCompatActivity() {
         val newItemData = hashMapOf(
             "daytitle" to title,
             "daymemo" to memo,
+            "dayicon" to iconResourceId,
             "todocolor" to color.toInt(),
-            "icon" to icon,
             "firstTime" to hashMapOf(
                 "hour" to firstTimeHour,
                 "minute" to firstTimeMinute
