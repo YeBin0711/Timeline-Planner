@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.example.timelineplanner.databinding.TodoDatePickerBinding
 import com.google.type.DayOfWeek
 
 //다이얼로그 클래스
+/*
 class IconDialog(context: Context, val activity: AddActivity): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,7 @@ class ColorDialog(context: Context, val activity: AddActivity): Dialog(context) 
         }
     }
 }
+ */
 
 class TodoDatePickerDialog(context: Context, val activity: AddActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int, var flag: Int): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,23 +112,90 @@ class TimePickerDialog(context: Context, val activity: AddActivity, var hour: In
     }
 }
 
-class RepeatDialog: DialogFragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = RepeatDialogBinding.inflate(inflater, container, false)
-        return binding.root
+class RepeatDialog(context: Context, val activity: AddActivity): Dialog(context) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val binding = RepeatDialogBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
+
+        var repeatType = 0
+        var repeatDays = Array(7, {1})
+        var dayofWeeks = arrayOf(binding.mon, binding.tue, binding.wed, binding.thu, binding.fri, binding.sat, binding.sun)
+        binding.repeatGroup.setOnCheckedChangeListener{ group, checkedId ->
+            when(checkedId) {
+                R.id.repeat_no -> {
+                    activity.binding.todoRepeat.setText("안 함")
+                    repeatType = 0
+                }
+                R.id.repeat_day -> {
+                    activity.binding.todoRepeat.setText("매일")
+                    repeatType = 1
+                }
+                R.id.repeat_week -> {
+                    repeatType = 2
+                    for(i in 0..6) { //요일별 onClickLister 등록
+                        dayofWeeks[i].setOnClickListener {
+                            dayofWeeks[i].setTextColor(Color.BLUE)
+                            repeatDays[i] = 0
+                        }
+                    }
+                    activity.binding.todoRepeat.setText("매주")
+                }
+                R.id.repeat_month -> {
+                    activity.binding.todoRepeat.setText("매월")
+                    repeatType = 3
+                }
+                R.id.repeat_year -> {
+                    activity.binding.todoRepeat.setText("매년")
+                    repeatType = 4
+                }
+            }
+        }
+
+        binding.repeatCancel.setOnClickListener() {
+            dismiss()
+        }
+        binding.repeatOk.setOnClickListener() {
+            activity.repeatType = repeatType
+            activity.repeatDays = repeatDays
+            dismiss()
+        }
     }
 }
-class AlarmDialog: DialogFragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = AlarmDialogBinding.inflate(inflater, container, false)
-        return binding.root
+
+class AlarmDialog(context: Context, val activity: AddActivity): Dialog(context) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val binding = AlarmDialogBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
+
+        var alarmType = 0
+        lateinit var alarmTime : Time
+        binding.alarmNumberPicker.minValue = 0
+        binding.alarmNumberPicker.maxValue = 100
+        binding.alarmNumberPicker.value = 10
+        binding.alarmPeriodPicker.setDisplayedValues(arrayOf("분", "시간", "일", "주"))
+
+        binding.alarmGroup.setOnCheckedChangeListener{ group, checkedId ->
+            when(checkedId) {
+                R.id.alarm_no -> {
+                    activity.binding.todoRepeat.setText("안 함")
+                    alarmType = 0
+                }
+                R.id.alarm_yes -> {
+                    //alarmType = 1
+                    //activity.binding.todoRepeat.setText("매일")
+                }
+            }
+        }
+
+        binding.alarmCancel.setOnClickListener() {
+            dismiss()
+        }
+        binding.alarmOk.setOnClickListener() {
+            activity.alarmType = alarmType
+            activity.alarmTime = alarmTime
+            dismiss()
+        }
     }
 }
