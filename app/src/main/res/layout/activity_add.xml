@@ -20,14 +20,16 @@
             android:textStyle="bold"
             android:background="@android:color/transparent"
             android:layout_gravity="center_vertical"/>
-        <ImageView
+        <ImageButton
             android:id="@+id/icon_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/game"
             app:tint="?attr/colorOnPrimary"
             android:padding="10dp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/game"
+            android:scaleType="fitCenter"/>
         <ImageView
             android:id="@+id/color_btn"
             android:layout_width="35dp"

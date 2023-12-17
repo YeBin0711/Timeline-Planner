@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.timelineplanner.model.ItemData
@@ -27,6 +28,7 @@ class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
     private lateinit var editTitle: EditText
     private lateinit var editMemo: EditText
+    private lateinit var editIcon: ImageView
     private lateinit var date: TextView
     private lateinit var editFirstTime: TextView
     private lateinit var editLastTIme: TextView
@@ -42,15 +44,40 @@ class AddActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         editTitle = findViewById(R.id.todo_title)
-        editMemo = findViewById(R.id.todo_memo)
+        editIcon = findViewById(R.id.icon_btn)
         editFirstTime = findViewById(R.id.start_time)
         editLastTIme = findViewById(R.id.end_time)
+        editMemo = findViewById(R.id.todo_memo)
         buttonSave = findViewById(R.id.btn_save)
 
         //아이콘
         binding.iconBtn.setOnClickListener {
-            val icondialog = IconDialog()
-            icondialog.show(supportFragmentManager, "")
+            val icondialog = IconSelectionDialog()
+            icondialog.setIconSelectedListener { selectedIconId ->
+                when (selectedIconId) {
+                    R.drawable.wakeup -> binding.iconBtn.setImageResource(R.drawable.wakeup)
+                    R.drawable.sleeping -> binding.iconBtn.setImageResource(R.drawable.sleeping)
+                    R.drawable.train -> binding.iconBtn.setImageResource(R.drawable.train)
+                    R.drawable.car -> binding.iconBtn.setImageResource(R.drawable.car)
+                    R.drawable.computer -> binding.iconBtn.setImageResource(R.drawable.computer)
+                    R.drawable.book -> binding.iconBtn.setImageResource(R.drawable.book)
+                    R.drawable.food -> binding.iconBtn.setImageResource(R.drawable.food)
+                    R.drawable.cleaning -> binding.iconBtn.setImageResource(R.drawable.cleaning)
+                    R.drawable.muscle -> binding.iconBtn.setImageResource(R.drawable.muscle)
+                    R.drawable.rest -> binding.iconBtn.setImageResource(R.drawable.rest)
+                    R.drawable.shower -> binding.iconBtn.setImageResource(R.drawable.shower)
+                    R.drawable.game-> binding.iconBtn.setImageResource(R.drawable.game)
+                    else -> {
+                        // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
+                    }
+                }
+                // 선택된 아이콘 ID를 로그에 출력하는 부분을 람다식 바깥으로 빼냅니다.
+                Log.d("Selected Icon", "Icon ID: $selectedIconId")
+            }
+
+            // 이 부분은 람다식 밖에서 실행되도록 수정합니다.
+            Log.d("bin", "됐냐")
+            icondialog.show(supportFragmentManager, "icon_dialog_tag")
         }
         //색상
         binding.colorBtn.setOnClickListener {
@@ -184,6 +211,8 @@ class AddActivity : AppCompatActivity() {
         val title = editTitle.text.toString()
         val memo = editMemo.text.toString()
 
+        val iconResourceId: Int = editIcon.tag?.toString()?.toIntOrNull() ?: R.drawable.game
+
         val firstTime = editFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
         val firstTimeParts = firstTime.split(":")
         val firstTimeHour = firstTimeParts[0]
@@ -198,6 +227,7 @@ class AddActivity : AppCompatActivity() {
         val newItemData = hashMapOf(
             "daytitle" to title,
             "daymemo" to memo,
+            "dayicon" to iconResourceId,
             "firstTime" to hashMapOf(
                 "hour" to firstTimeHour,
                 "minute" to firstTimeMinute

@@ -23,6 +23,7 @@ class ItemData {
 
 class ItemData(
     val daytitle: String = "",
+    val dayicon: Int = 0,
     val firstTime: Time = Time("", ""),
     val lastTime: Time = Time("", ""),
     val daymemo: String = ""
