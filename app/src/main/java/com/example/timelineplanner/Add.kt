@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import com.example.timelineplanner.databinding.AlarmDialogBinding
 import com.example.timelineplanner.databinding.ColorDialogBinding
@@ -17,25 +18,39 @@ import com.example.timelineplanner.databinding.TodoDatePickerBinding
 import com.google.type.DayOfWeek
 
 //다이얼로그 클래스
-class IconDialog: DialogFragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = IconDialogBinding.inflate(inflater, container, false)
-        return binding.root
+class IconDialog(context: Context, val activity: AddActivity): Dialog(context) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val binding = IconDialogBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
+
+        var iconImageViews = arrayOf(binding.wakeup, binding.sleeping, binding.train, binding.car,
+            binding.computer, binding.book, binding.food, binding.cleaning,
+            binding.muscle, binding.rest, binding.shower, binding.game)
+
+        for (iconImage in iconImageViews) {
+            iconImage.setOnClickListener() {
+                activity.icon = iconImage.id //선택한 색상 코드 저장
+                dismiss()
+            }
+        }
     }
 }
-class ColorDialog: DialogFragment() {
+class ColorDialog(context: Context, val activity: AddActivity): Dialog(context) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val binding = ColorDialogBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = ColorDialogBinding.inflate(inflater, container, false)
-        return binding.root
+        var colorImageViews = arrayOf(binding.color1, binding.color2, binding.color3, binding.color4, binding.color5, binding.color6)
+        var colors = arrayOf("#FFD5D5", "#FAFFBD", "#ADFFAC", "#D9D9D9", "#F2D5FF", "#7FE8FF")
+
+        for (i in 0 until colorImageViews.size) {
+            colorImageViews[i].setOnClickListener() {
+                activity.color = colors[i] //선택한 색상 코드 저장
+                dismiss()
+            }
+        }
     }
 }
 

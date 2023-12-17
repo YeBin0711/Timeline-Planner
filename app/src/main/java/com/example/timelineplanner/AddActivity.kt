@@ -1,6 +1,7 @@
 package com.example.timelineplanner
 
 import android.content.Intent
+import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.SwitchCompat
@@ -24,6 +25,8 @@ class AddActivity : AppCompatActivity() {
     private lateinit var editLastTIme: TextView
     private lateinit var buttonSave: Button
 
+    var color = "" //색상 코드
+    var icon = 0 //아이콘 ID
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,13 +42,13 @@ class AddActivity : AppCompatActivity() {
 
         //아이콘
         binding.iconBtn.setOnClickListener {
-            val icondialog = IconDialog()
-            icondialog.show(supportFragmentManager, "")
+            val icondialog = IconDialog(this, this)
+            icondialog.show()
         }
         //색상
         binding.colorBtn.setOnClickListener {
-            val colordialog = ColorDialog()
-            colordialog.show(supportFragmentManager, "")
+            val colordialog = ColorDialog(this, this)
+            colordialog.show()
         }
 
 
@@ -150,13 +153,11 @@ class AddActivity : AppCompatActivity() {
 
         val newItemData = ItemData()
         newItemData.dayTitle = title
+        newItemData.todocolor = color.toInt()
+        newItemData.icon = icon
         newItemData.dayMemo = memo
-        /*newItemData.firstTimeHour = firstTimeHour
-        newItemData.firstTimeMin = firstTimeMin
-        newItemData.lastTimeHour = lastTimeHour
-        newItemData.lastTimeMin = lastTimeMin
-
-         */
+        newItemData.firstTime = firstTime
+        newItemData.lastTime = lastTime
 
         db.collection("users")
             .add(newItemData)

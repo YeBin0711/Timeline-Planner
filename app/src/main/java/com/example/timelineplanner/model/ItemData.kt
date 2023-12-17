@@ -1,9 +1,9 @@
 package com.example.timelineplanner.model
 
-import java.time.LocalTime
-
 class ItemData {
     var dayTitle: String? = null
+    var icon : Int? = null
+    var todocolor: Int? = null
     var dayMemo: String? = null
     var firstTime: String? = null
     var lastTime: String? = null
