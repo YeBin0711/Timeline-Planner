@@ -26,6 +26,7 @@ class ItemData(
     val daytitle: String = "",
     val daycolor: String = "",
     val dayicon: Int = 0,
+    val selectedDate: LocalDate,
     val firstTime: Time = Time("", ""),
     val lastTime: Time = Time("", ""),
     val daymemo: String = ""

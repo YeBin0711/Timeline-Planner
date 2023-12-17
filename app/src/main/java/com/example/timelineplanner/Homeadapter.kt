@@ -3,11 +3,15 @@ package com.example.timelineplanner
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -52,7 +56,11 @@ class Homeadapter(
 
         holder.textViewMemo.text = currentItem.daymemo
 
-        holder.checkBox.setBackgroundColor(Color.parseColor(currentItem.daycolor))
+        // currentDayColor는 currentItem.daycolor와 같은 값이라고 가정합니다.
+
+        //holder.checkBoxColor.setBackgroundColor(Color.parseColor(currentItem.daycolor))
+        //holder.checkBoxIcon.setImageResource(R.drawable.check)
+
         /*
         //Todo: 시간 형식 설정 반영
         val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
@@ -68,6 +76,51 @@ class Homeadapter(
 
         holder.imageViewColor.layoutParams.height = imageViewHeight
 
+        var isChecked = false // 초기 상태
+
+        holder.checkBox.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    isChecked = !isChecked // 상태를 토글합니다.
+
+                    if (isChecked) {
+                        // CheckBox가 체크되면 원하는 작업을 실행합니다.
+                        when(currentItem.daycolor) {
+                            "#FFD5D5" -> {
+                                holder.checkBoxColor.setBackgroundResource(R.color.lightred)
+                                holder.checkBoxIcon.setImageResource(R.drawable.check)
+                            }
+                            "#FAFFBD" -> {
+                                holder.checkBoxColor.setBackgroundResource(R.color.lightyellow)
+                                holder.checkBoxIcon.setImageResource(R.drawable.check)
+                            }
+                            "#ADFFAC" -> {
+                                holder.checkBoxColor.setBackgroundResource(R.color.lightgreen)
+                                holder.checkBoxIcon.setImageResource(R.drawable.check)
+                            }
+                            "#D9D9D9" -> {
+                                holder.checkBoxColor.setBackgroundResource(R.color.lightgray)
+                                holder.checkBoxIcon.setImageResource(R.drawable.check)
+                            }
+                            "#F2D5FF" -> {
+                                holder.checkBoxColor.setBackgroundResource(R.color.phvink)
+                                holder.checkBoxIcon.setImageResource(R.drawable.check)
+                            }
+                            "##7FE8FF" -> {
+                                holder.checkBoxColor.setBackgroundResource(R.color.skyblue)
+                                holder.checkBoxIcon.setImageResource(R.drawable.check)
+                            }
+                        }
+                    } else {
+                        // CheckBox가 체크 해제되면 원하는 작업을 실행합니다.
+                        holder.checkBoxColor.setBackgroundResource(R.drawable.checkbox_custom)
+                        holder.checkBoxIcon.setImageResource(R.drawable.checkbox_custom)
+                    }
+                }
+            }
+            // 이벤트가 소비되었음을 나타냅니다.
+            true
+        }
         // 해당 TextView의 layoutparams를 가져와서 설정
         holder.emptyView.layoutParams.height=imageViewHeight - 100
 
@@ -115,7 +168,9 @@ class Homeadapter(
         val lastTime : TextView = itemView.findViewById(R.id.last_time)
         val textViewMemo: TextView = itemView.findViewById(R.id.item_memo)
         val emptyView: View = itemView.findViewById(R.id.emptyView)
-        val checkBox: CheckBox = itemView.findViewById(R.id.home_cb)
+        val checkBox: FrameLayout = itemView.findViewById(R.id.home_cb)
+        val checkBoxColor : View = itemView.findViewById(R.id.checkbox_background)
+        val checkBoxIcon : ImageView = itemView.findViewById(R.id.checkbox_icon)
         val linearLayoutContainer: LinearLayout = itemView.findViewById(R.id.textViewContainer) // 새로 추가한 LinearLayout 참조
         // 아이템 클릭 리스너 설정
         init {

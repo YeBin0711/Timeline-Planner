@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import org.w3c.dom.Text
@@ -24,7 +25,9 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
+import java.time.ZoneId
 import java.time.format.TextStyle
+import java.util.Date
 import java.util.Locale
 import kotlin.properties.Delegates
 
@@ -44,9 +47,8 @@ class AddActivity : AppCompatActivity() {
     var color = "" //색상 코드
     var icon = 0 //아이콘 ID
 
-    // selectedTime을 클래스의 멤버 변수로 선언// 기본값 설정
-    var selectedTime: LocalTime = LocalTime.now()
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
+    val timestamp = Timestamp(Date.from(selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -220,6 +222,7 @@ class AddActivity : AppCompatActivity() {
     //todoDatePicker OkButton 함수
     fun onClickOkButton4(year: Int, month: Int, day: Int, flag: Int) {
         selectedDate = LocalDate.of(year, month, day)
+
         if (flag == 0) binding.date1.setText(
             "${month}월 ${day}일 (${
                 selectedDate.dayOfWeek.getDisplayName(
@@ -244,6 +247,8 @@ class AddActivity : AppCompatActivity() {
         val icon = binding.iconBtn.tag as? Int
         val color = binding.colorBtn.tag as? String
 
+        val dateString = selectedDate.toString()
+
         val firstTime = editFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
         val firstTimeParts = firstTime.split(":")
         val firstTimeHour = firstTimeParts[0]
@@ -260,6 +265,7 @@ class AddActivity : AppCompatActivity() {
             "daytitle" to title,
             "daycolor" to color,
             "dayicon" to icon,
+            "daydate" to dateString,
             "firstTime" to hashMapOf(
                 "hour" to firstTimeHour,
                 "minute" to firstTimeMinute

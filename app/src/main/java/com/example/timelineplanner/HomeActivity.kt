@@ -159,6 +159,9 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
                     val dayicon = document.getLong("dayicon")?.toInt() ?: 0
 
+                    val daydateString = document.getString("daydate") ?: ""
+                    val daydate = LocalDate.parse(daydateString)
+
                     val firstTimeMap = document.get("firstTime") as HashMap<*, *>
                     val firstTimeHour = firstTimeMap["hour"] as String
                     val firstTimeMinute = firstTimeMap["minute"] as String
@@ -170,7 +173,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     val lastTimeObj = Time(lastTimeHour, lastTimeMinute)
 
                     val daymemo = document.getString("daymemo") ?: ""
-                    val itemData = ItemData(daytitle, daycolor, dayicon, firstTimeObj, lastTimeObj, daymemo)
+                    val itemData = ItemData(daytitle, daycolor, dayicon, daydate, firstTimeObj, lastTimeObj, daymemo)
                     itemList.add(itemData)
                 }
 
