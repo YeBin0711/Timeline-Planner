@@ -2,6 +2,7 @@ package com.example.timelineplanner
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,6 +49,7 @@ class ColorDialog(context: Context, val activity: AddActivity): Dialog(context) 
         for (i in 0 until colorImageViews.size) {
             colorImageViews[i].setOnClickListener() {
                 activity.color = colors[i] //선택한 색상 코드 저장
+                activity.binding.colorBtn.setBackgroundColor(Color.parseColor(colors[i]))
                 dismiss()
             }
         }

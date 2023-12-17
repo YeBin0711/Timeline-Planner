@@ -23,8 +23,8 @@ class ItemData {
 
 class ItemData(
     val daytitle: String = "",
-    val icon: Int = 0,
-    val todocolor: Int = 0
+    val dayicon: Int = 0,
+    val daycolor: Int = 0,
     val firstTime: Time = Time("", ""),
     val lastTime: Time = Time("", ""),
     val daymemo: String = ""

@@ -37,6 +37,8 @@ class AddActivity : AppCompatActivity() {
     private lateinit var editLastTIme: TextView
     private lateinit var buttonSave: Button
 
+    var color = "" //색상 코드
+    var icon = 0 //아이콘 ID
     // selectedTime을 클래스의 멤버 변수로 선언// 기본값 설정
     var selectedTime: LocalTime = LocalTime.now()
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
@@ -133,7 +135,7 @@ class AddActivity : AppCompatActivity() {
 
         //스위치 on/off
         val switchView: SwitchCompat = findViewById(R.id.cswitch)
-        switchView.setOnCheckedChangeListener { buttonView, isChecked ->
+        switchView.setOnCheckedChangeListener {buttonView, isChecked ->
             if (isChecked) {
                 switchView.isChecked = true
             }
@@ -232,8 +234,8 @@ class AddActivity : AppCompatActivity() {
         val newItemData = hashMapOf(
             "daytitle" to title,
             "daymemo" to memo,
+            "daycolor" to color.toInt(),
             "dayicon" to iconResourceId,
-            "todocolor" to color.toInt(),
             "firstTime" to hashMapOf(
                 "hour" to firstTimeHour,
                 "minute" to firstTimeMinute
