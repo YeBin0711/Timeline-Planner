@@ -46,7 +46,7 @@ class AddActivity : AppCompatActivity() {
     var repeatType = 0
     lateinit var repeatDays : Array<Int>
     var alarmType = 0
-    lateinit var alarmTime : Time
+    lateinit var alarmTime : Array<Int>
 
     // selectedTime을 클래스의 멤버 변수로 선언// 기본값 설정
     var selectedTime: LocalTime = LocalTime.now()

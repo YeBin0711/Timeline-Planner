@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.example.timelineplanner.databinding.AlarmDialogBinding
 import com.example.timelineplanner.databinding.ColorDialogBinding
@@ -170,21 +171,31 @@ class AlarmDialog(context: Context, val activity: AddActivity): Dialog(context) 
         setContentView(binding.root)
 
         var alarmType = 0
-        lateinit var alarmTime : Time
+        var alarmTime = arrayOf(0, 0, 0, 0)
+        val periodArray = arrayOf("분", "시간", "일", "주")
+
         binding.alarmNumberPicker.minValue = 0
         binding.alarmNumberPicker.maxValue = 100
         binding.alarmNumberPicker.value = 10
-        binding.alarmPeriodPicker.setDisplayedValues(arrayOf("분", "시간", "일", "주"))
+        binding.alarmPeriodPicker.minValue = 0
+        binding.alarmPeriodPicker.maxValue = 3
+        binding.alarmPeriodPicker.setDisplayedValues(periodArray)
+
+        binding.alarmNumberPicker.isVisible = false
+        binding.alarmPeriodPicker.isVisible = false
 
         binding.alarmGroup.setOnCheckedChangeListener{ group, checkedId ->
             when(checkedId) {
                 R.id.alarm_no -> {
-                    activity.binding.todoRepeat.setText("안 함")
                     alarmType = 0
+                    binding.alarmNumberPicker.isVisible = false
+                    binding.alarmPeriodPicker.isVisible = false
                 }
                 R.id.alarm_yes -> {
-                    //alarmType = 1
-                    //activity.binding.todoRepeat.setText("매일")
+                    alarmType = 1
+                    binding.alarmNumberPicker.isVisible = true
+                    binding.alarmPeriodPicker.isVisible = true
+                    binding.alarmYes.setText("${binding.alarmNumberPicker.value}${periodArray[binding.alarmPeriodPicker.value]} 전")
                 }
             }
         }
@@ -194,6 +205,13 @@ class AlarmDialog(context: Context, val activity: AddActivity): Dialog(context) 
         }
         binding.alarmOk.setOnClickListener() {
             activity.alarmType = alarmType
+            when(alarmType) {
+                0 -> activity.binding.todoAlarm.setText("안 함")
+                1 -> {
+                    alarmTime[binding.alarmPeriodPicker.value] = binding.alarmNumberPicker.value
+                    activity.binding.todoAlarm.setText("${binding.alarmNumberPicker.value}${periodArray[binding.alarmPeriodPicker.value]} 전")
+                }
+            }
             activity.alarmTime = alarmTime
             dismiss()
         }
