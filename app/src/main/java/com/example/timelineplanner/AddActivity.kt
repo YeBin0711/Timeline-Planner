@@ -33,14 +33,14 @@ import kotlin.properties.Delegates
 
 class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
-    private lateinit var editTitle: EditText
-    private lateinit var editColor: ImageView
-    private lateinit var editIcon: ImageView
+    private lateinit var addTitle: EditText
+    private lateinit var addColor: ImageView
+    private lateinit var addIcon: ImageView
     private lateinit var date: TextView
-    private lateinit var editFirstTime: TextView
-    private lateinit var editLastTIme: TextView
+    private lateinit var addFirstTime: TextView
+    private lateinit var addLastTIme: TextView
 
-    private lateinit var editMemo: EditText
+    private lateinit var addMemo: EditText
 
     private lateinit var buttonSave: Button
 
@@ -55,12 +55,12 @@ class AddActivity : AppCompatActivity() {
         binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        editTitle = findViewById(R.id.todo_title)
-        editIcon = findViewById(R.id.icon_btn)
-        editColor = findViewById(R.id.color_btn)
-        editFirstTime = findViewById(R.id.start_time)
-        editLastTIme = findViewById(R.id.end_time)
-        editMemo = findViewById(R.id.todo_memo)
+        addTitle = findViewById(R.id.todo_title)
+        addIcon = findViewById(R.id.icon_btn)
+        addColor = findViewById(R.id.color_btn)
+        addFirstTime = findViewById(R.id.start_time)
+        addLastTIme = findViewById(R.id.end_time)
+        addMemo = findViewById(R.id.todo_memo)
         buttonSave = findViewById(R.id.btn_save)
 
         //아이콘
@@ -242,24 +242,24 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun addDataToFirestore() {
-        val title = editTitle.text.toString()
+        val title = addTitle.text.toString()
 
         val icon = binding.iconBtn.tag as? Int
         val color = binding.colorBtn.tag as? String
 
         val dateString = selectedDate.toString()
 
-        val firstTime = editFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
+        val firstTime = addFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
         val firstTimeParts = firstTime.split(":")
         val firstTimeHour = firstTimeParts[0]
         val firstTimeMinute = firstTimeParts[1]
 
-        val lastTime= editLastTIme.text.toString()
+        val lastTime= addLastTIme.text.toString()
         val lastTimeParts = lastTime.split(":")
         val lastTimeHour = lastTimeParts[0]
         val lastTimeMinute = lastTimeParts[1]
 
-        val memo = editMemo.text.toString()
+        val memo = addMemo.text.toString()
 
         val newItemData = hashMapOf(
             "daytitle" to title,

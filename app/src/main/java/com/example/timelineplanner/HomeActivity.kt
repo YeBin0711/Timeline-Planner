@@ -2,14 +2,12 @@ package com.example.timelineplanner
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
@@ -21,8 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timelineplanner.databinding.ActivityHomeBinding
-import com.example.timelineplanner.databinding.DayRecyclerviewBinding
-import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kizitonwose.calendar.core.WeekDay
@@ -60,6 +56,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        fetchDataFromFirestore(selectedDate)
         recyclerView = findViewById(R.id.weekday_recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -151,10 +148,10 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
     }
     override fun onItemClick(position: Int) {
-        // 아이템 클릭 시 동작할 내용을 여기에 구현
-        // position을 사용하여 클릭된 아이템의 위치를 확인할 수 있음
+        val clickedItem = itemList[position]
+
         val intent = Intent(this, EditActivity::class.java)
-        //intent.putExtra("ItemData", ItemData[position])
+        //intent.putExtra("ItemData", clickedItem)
         startActivity(intent)
     }
 

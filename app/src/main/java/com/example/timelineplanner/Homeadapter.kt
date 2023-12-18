@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -123,7 +124,6 @@ class Homeadapter(
             true
         }
 
-
         holder.itemView.setOnClickListener {
             itemClickListener.onItemClick(position)
         }
@@ -173,11 +173,13 @@ class Homeadapter(
         val checkBoxIcon : ImageView = itemView.findViewById(R.id.checkbox_icon)
         val linearLayoutContainer: LinearLayout = itemView.findViewById(R.id.textViewContainer) // 새로 추가한 LinearLayout 참조
         // 아이템 클릭 리스너 설정
+
         init {
             itemView.setOnClickListener {
                 itemClickListener.onItemClick(adapterPosition)
             }
         }
+
     }
 }
 

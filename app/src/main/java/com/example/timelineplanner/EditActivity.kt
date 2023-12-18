@@ -9,17 +9,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityEditBinding
 
-import androidx.fragment.app.DialogFragment
-import com.example.timelineplanner.databinding.ActivityAddBinding
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
-import com.example.timelineplanner.databinding.ActivityHomeBinding
-import com.example.timelineplanner.databinding.AlarmDialogBinding
-import com.example.timelineplanner.databinding.ColorDialogBinding
-import com.example.timelineplanner.databinding.IconDialogBinding
-import com.example.timelineplanner.databinding.RepeatDialogBinding
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat;
