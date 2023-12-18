@@ -3,7 +3,8 @@ package com.example.timelineplanner
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
- import com.example.timelineplanner.databinding.ActivityMainBinding
+import android.widget.Toast
+import com.example.timelineplanner.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -17,11 +18,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
         //이 부분을 키면 로그인만 누르면 넘어가짐 대신 밑에 acMainBtnLogin은 주석 처리해야함!
         binding.acMainBtnLogin.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
+
+
 
         /*
         //아이디랑 비밀번호가 일치해야지만 로그인 가능 기능
@@ -54,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
             }
-        }
-*/
+        }*/
+
     }
 }
