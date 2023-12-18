@@ -210,7 +210,7 @@
             android:layout_gravity="bottom"
             android:layout_marginRight="10dp" />
         <Button
-            android:id="@+id/btn_save"
+            android:id="@+id/edit_btn_save"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:text="저장"

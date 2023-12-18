@@ -6,12 +6,12 @@ import android.os.Parcel
 import android.os.Parcelable
 
 
-
 data class ItemData(
     val daytitle: String = "",
     val daycolor: String = "",
     val dayicon: Int = 0,
-    val selectedDate: LocalDate,
+    val selectedDate1: LocalDate,
+    val selectedDate2: LocalDate,
     val firstTime: Time = Time("", ""),
     val lastTime: Time = Time("", ""),
     val daymemo: String = "",
@@ -21,6 +21,7 @@ data class ItemData(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readInt(),
+        parcel.readSerializable() as LocalDate,
         parcel.readSerializable() as LocalDate,
         parcel.readParcelable(Time::class.java.classLoader) ?: Time(),
         parcel.readParcelable(Time::class.java.classLoader) ?: Time(),
@@ -32,7 +33,8 @@ data class ItemData(
         parcel.writeString(daytitle)
         parcel.writeString(daycolor)
         parcel.writeInt(dayicon)
-        parcel.writeSerializable(selectedDate)
+        parcel.writeSerializable(selectedDate1)
+        parcel.writeSerializable(selectedDate2)
         parcel.writeParcelable(firstTime, flags)
         parcel.writeParcelable(lastTime, flags)
         parcel.writeString(daymemo)

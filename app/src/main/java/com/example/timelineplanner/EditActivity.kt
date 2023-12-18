@@ -6,28 +6,41 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContextCompat
 import com.example.timelineplanner.databinding.ActivityEditBinding
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
 import org.w3c.dom.Text
+import java.time.LocalDate
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import android.widget.Button
+import android.widget.Toast
+import java.time.format.TextStyle
 
 
 class EditActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityEditBinding
+    private lateinit var editTitle: EditText
+    private val db = FirebaseFirestore.getInstance()
+    var selectedDate: LocalDate = LocalDate.now()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityEditBinding.inflate(layoutInflater)
+        binding = ActivityEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //editTitle = findViewById(R.id.edit_todo_title)
         val intent = intent
         if (intent.hasExtra("selectedItem")) {
 
             val selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")!!
+
             val editTitle = findViewById<TextView>(R.id.edit_todo_title)
             editTitle.text = selectedItem.daytitle
 
@@ -38,10 +51,15 @@ class EditActivity : AppCompatActivity() {
             val editIcon = findViewById<ImageButton>(R.id.edit_icon_btn)
             editIcon.setImageResource(selectedItem.dayicon)
 
-            val editDate = findViewById<TextView>(R.id.edit_date1)
-            val dateFormatter = DateTimeFormatter.ofPattern("MM월 dd일 (E)", Locale.KOREAN)
-            val formattedDate = selectedItem.selectedDate.format(dateFormatter)
-            editDate.text = formattedDate
+            val editDate1 = findViewById<TextView>(R.id.edit_date1)
+            val dateFormatter1 = DateTimeFormatter.ofPattern("MM월 dd일 (E)", Locale.KOREAN)
+            val formattedDate1 = selectedItem.selectedDate1.format(dateFormatter1)
+            editDate1.text = formattedDate1
+
+            val editDate2 = findViewById<TextView>(R.id.edit_date2)
+            val dateFormatter2 = DateTimeFormatter.ofPattern("MM월 dd일 (E)", Locale.KOREAN)
+            val formattedDate2 = selectedItem.selectedDate2.format(dateFormatter2)
+            editDate2.text = formattedDate2
 
             val editstartTime = findViewById<TextView>(R.id.edit_start_time)
             editstartTime.text = "${selectedItem.firstTime.hour}:${selectedItem.firstTime.minute}"
@@ -55,15 +73,73 @@ class EditActivity : AppCompatActivity() {
             val documentId = findViewById<TextView>(R.id.document_id)
             documentId.text = selectedItem.firestoreDocumentId
 
-          }
+        }
+        //색상
+        binding.editColorBtn.setOnClickListener {
+            val colorDialog = ColorSelectionDialog()
+            colorDialog.setColorSelectedListener { selectedColorId ->
+                binding.editColorBtn.tag = selectedColorId
+                when (selectedColorId) {
+                    "#FFD5D5" -> {
+                        binding.editColorBtn.setImageResource(R.color.lightred)
+                    }
+                    "#FAFFBD" -> {
+                        binding.editColorBtn.setImageResource(R.color.lightyellow)
+                    }
+                    "#ADFFAC" -> {
+                        binding.editColorBtn.setImageResource(R.color.lightgreen)
+                    }
+                    "#D9D9D9" -> {
+                        binding.editColorBtn.setImageResource(R.color.lightgray)
+                    }
+                    "#F2D5FF" -> {
+                        binding.editColorBtn.setImageResource(R.color.phvink)
+                    }
+                    "#7FE8FF" -> {
+                        binding.editColorBtn.setImageResource(R.color.skyblue)
+                    }
+                    else -> {
+                        // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
+                        binding.editColorBtn.setColorFilter(ContextCompat.getColor(this, R.color.lightgray))
+                    }
+                }
+            }
+            colorDialog.show(supportFragmentManager, "color_dialog_tag")
+        }
+
+        //아이콘
+        binding.editIconBtn.setOnClickListener {
+            val iconDialog = IconSelectionDialog()
+            iconDialog.setIconSelectedListener { selectedIconId ->
+                binding.editIconBtn.tag = selectedIconId
+                when (selectedIconId) {
+                    R.drawable.wakeup -> binding.editIconBtn.setImageResource(R.drawable.wakeup)
+                    R.drawable.sleeping -> binding.editIconBtn.setImageResource(R.drawable.sleeping)
+                    R.drawable.train -> binding.editIconBtn.setImageResource(R.drawable.train)
+                    R.drawable.car -> binding.editIconBtn.setImageResource(R.drawable.car)
+                    R.drawable.computer -> binding.editIconBtn.setImageResource(R.drawable.computer)
+                    R.drawable.book -> binding.editIconBtn.setImageResource(R.drawable.book)
+                    R.drawable.food -> binding.editIconBtn.setImageResource(R.drawable.food)
+                    R.drawable.cleaning -> binding.editIconBtn.setImageResource(R.drawable.cleaning)
+                    R.drawable.muscle -> binding.editIconBtn.setImageResource(R.drawable.muscle)
+                    R.drawable.rest -> binding.editIconBtn.setImageResource(R.drawable.rest)
+                    R.drawable.shower -> binding.editIconBtn.setImageResource(R.drawable.shower)
+                    R.drawable.empty -> binding.editIconBtn.setImageResource(R.drawable.game)
+                    else -> {
+
+                    }
+                }
+            }
+
+            iconDialog.show(supportFragmentManager, "icon_dialog_tag")
+        }
         // 삭제 버튼에 대한 클릭 리스너 추가
         binding.btnDelete.setOnClickListener {
-            val db = FirebaseFirestore.getInstance()
             val selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")
 
             if (selectedItem != null) {
                 // Firestore에서 해당 문서를 삭제하는 코드를 작성하세요.
-                Log.d("id","${selectedItem.firestoreDocumentId}")
+                Log.d("id", "${selectedItem.firestoreDocumentId}")
                 db.collection("users")
                     .document(selectedItem.firestoreDocumentId) // 해당 문서 ID
                     .delete()
@@ -79,14 +155,127 @@ class EditActivity : AppCompatActivity() {
             }
         }
 
+        binding.editBtnSave.setOnClickListener {
+            editDataToFirestore()
+        }
+
+        val currentMonth = YearMonth.now()
+        val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
+        val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
+
+        //날짜 선택
+        binding.editDate1.setOnClickListener() {
+            val todoDatePickerDialog = TodoDatePickerDialog1(
+                this, this, startMonth.year + 1, endMonth.year - 1,
+                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 0
+            )
+            todoDatePickerDialog.show()
+        }
+        binding.editDate2.setOnClickListener() {
+            val todoDatePickerDialog = TodoDatePickerDialog1(
+                this, this, startMonth.year + 1, endMonth.year - 1,
+                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 1
+            )
+            todoDatePickerDialog.show()
+        }
+
+        //시간
+        binding.editStartTime.setOnClickListener() {
+            val timePickerDialog = TimePickerDialog1(this, this, 8, 0, 0)
+            timePickerDialog.show()
+        }
+        binding.editEndTime.setOnClickListener() {
+            val timePickerDialog = TimePickerDialog1(this, this, 9, 0, 1)
+            timePickerDialog.show()
+        }
+
         //스위치 on/off
         val switchView: SwitchCompat = findViewById(R.id.cswitch)
-        switchView.setOnCheckedChangeListener {buttonView, isChecked ->
+        switchView.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 switchView.isChecked = true
             }
         }
-
     }
+
+    fun onClickOkButton5(hour: Int, minute: Int, flag: Int) {
+        if (flag == 0){
+            binding.editStartTime.setText("%02d:%02d".format(hour, minute))}
+        else if (flag == 1) {
+            binding.editEndTime.setText("%02d:%02d".format(hour, minute))
+            //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
+            val startDate = binding.editDate1.text.toString()
+            val endDate = binding.editDate2.text.toString()
+            val startTime = binding.editStartTime.text.toString()
+            val endTime = binding.editEndTime.text.toString()
+
+            if (startDate == endDate && (startTime.compareTo(endTime) > 0)) {
+                val dateString = endDate.split(" ")
+                val endDay = dateString[1].substring(0, 2).toInt()
+                val endDate =
+                    LocalDate.of(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth + 1)
+                binding.editDate2.setText(
+                    "${dateString[0]} ${endDay + 1}일 (${
+                        endDate.dayOfWeek.getDisplayName(
+                            TextStyle.SHORT,
+                            Locale.KOREAN
+                        )
+                    })"
+                )
+            }
+        }
+    }
+
+    fun onClickOkButton6(year: Int, month: Int, day: Int, flag: Int) {
+        selectedDate = LocalDate.of(year, month, day)
+        selectedDate = LocalDate.of(year,month,day)
+        if (flag == 0) binding.editDate1.setText(
+            "${month}월 ${day}일 (${
+                selectedDate.dayOfWeek.getDisplayName(
+                    TextStyle.SHORT,
+                    Locale.KOREAN
+                )
+            })"
+        )
+        else if (flag == 1) binding.editDate2.setText(
+            "${month}월 ${day}일 (${
+                selectedDate.dayOfWeek.getDisplayName(
+                    TextStyle.SHORT,
+                    Locale.KOREAN
+                )
+            })"
+        )
+    }
+
+    private fun editDataToFirestore() {
+        val selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")
+
+        if (selectedItem != null) {
+            val updatedTitle = binding.editTodoTitle.text.toString()
+            val updatedMemo = binding.editTodoMemo.text.toString()
+            val updatedColor = binding.editColorBtn.tag as? String
+            val updatedIcon = binding.editIconBtn.tag as? Int
+            val updatedDate1 = binding.editDate1.text.toString()
+            val updatedDate2 = binding.editDate2.text.toString()
+
+
+            // 여기서 다른 수정 필드도 가져와야 합니다.
+            db.collection("users")
+                .document(selectedItem.firestoreDocumentId) // 해당 문서 ID
+                .update("daytitle", updatedTitle,
+                    "daycolor", updatedColor,
+                    "dayicon",updatedIcon,
+                    "selectedDate1",updatedDate1,
+                    "selectedDate2", updatedDate2,
+                    "daymemo", updatedMemo)
+                // 여기서 다른 필드에 대한 업데이트도 추가해야 합니다.
+                .addOnSuccessListener { val intent = Intent()
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
+                .addOnFailureListener { e -> }
+            }
+
+        }
 }
 

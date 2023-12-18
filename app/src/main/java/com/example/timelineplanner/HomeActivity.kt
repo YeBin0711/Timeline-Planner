@@ -43,6 +43,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     private lateinit var Homeadapter:Homeadapter
     private val db = FirebaseFirestore.getInstance()// 문서 ID를 저장할 변수
     private val itemList = ArrayList<ItemData>()
+    private var beforeDate: LocalDate ?= null    //이전 날짜 추적 변수
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     val calendar = Calendar.getInstance()
@@ -64,7 +65,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         recyclerView = findViewById(R.id.weekday_recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        fetchDataFromFirestore()
+        fetchDataFromFirestore(selectedDate)
 
         adapter = Homeadapter(this,itemList, this)
         recyclerView.adapter = adapter
@@ -83,17 +84,15 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
         //주간 달력 출력
         val currentDate = LocalDate.now()
-        var beforeDate: LocalDate ?= null    //이전 날짜 추적 변수
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
-
             // Called every time we need to reuse a container.
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 // Initialize the calendar day for this container.
                 container.day = data
 
                 // Show the month dates. Remember that views are reused!
-                if(container.day.date != selectedDate) {
+                if (container.day.date != selectedDate) {
                     container.calendarDayNumber.setTextColor(
                         ContextCompat.getColor(
                             this@HomeActivity,
@@ -119,16 +118,24 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     // 클릭한 날짜에 대한 처리
                     fetchDataFromFirestore(clickedDate)
                     /*
-                    container.calendarDayNumber.setTextColor( // 원하는 색상으로 변경할 부분
+                    container.calendarDayNumber.setTextColor(
                         ContextCompat.getColor(
                             this@HomeActivity,
-                            R.color.black// 여기에 원하는 색상 리소스를 넣어주세요
+                            if (clickedDate == selectedDate) {
+                                R.color.black // 선택된 날짜의 색상
+                            } else {
+                                R.color.gray // 선택되지 않은 날짜의 색상
+                            }
                         )
                     )
-                    container.calendarDayName.setTextColor( // 원하는 색상으로 변경할 부분
+                    container.calendarDayName.setTextColor(
                         ContextCompat.getColor(
                             this@HomeActivity,
-                            R.color.black// 여기에 원하는 색상 리소스를 넣어주세요
+                            if (clickedDate == selectedDate) {
+                                R.color.black // 선택된 날짜의 색상
+                            } else {
+                                R.color.gray // 선택되지 않은 날짜의 색상
+                            }
                         )
                     )*/
                 }
@@ -173,7 +180,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val dateString = selectedDate.format(formatter)
 
         db.collection("users")
-            .whereEqualTo("daydate", dateString) // "date_field"는 Firestore에 저장된 날짜 필드의 이름입니다.
+            .whereEqualTo("daydate1", dateString) // "date_field"는 Firestore에 저장된 날짜 필드의 이름입니다.
             .orderBy("firstTime.hour")
             .orderBy("firstTime.minute")
             .get()
@@ -186,10 +193,12 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     val daycolor = document.getString("daycolor") ?:"#D9D9D9"
 
                     val dayicon = document.getLong("dayicon")?.toInt() ?: 0
-                    val daycolor = document.getString("daycolor") ?: ""
 
-                    val daydateString = document.getString("daydate") ?: ""
-                    val daydate = LocalDate.parse(daydateString)
+                    val daydateString1 = document.getString("daydate1") ?: ""
+                    val daydate1 = LocalDate.parse(daydateString1)
+
+                    val daydateString2 = document.getString("daydate2") ?: ""
+                    val daydate2 = LocalDate.parse(daydateString2)
 
                     val firstTimeMap = document.get("firstTime") as HashMap<*, *>
                     val firstTimeHour = firstTimeMap["hour"] as String
@@ -205,17 +214,11 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
                     val documentId = document.id // 여기서 문서 ID를 가져옵니다.
 
-                    val itemData = ItemData(daytitle, daycolor, dayicon, daydate, firstTimeObj, lastTimeObj, daymemo, documentId)
+                    val itemData = ItemData(daytitle, daycolor, dayicon, daydate1, daydate2, firstTimeObj, lastTimeObj, daymemo, documentId)
                     itemData.firestoreDocumentId = documentId
                     itemList.add(itemData)
                 }
-
-                // 데이터 확인을 위해 로그로 출력
-                for (item in itemList) {
-                    Log.d("ItemData", "Day Title: ${item.daytitle}, First Time: ${item.firstTime.hour}:${item.firstTime.minute}, Last Time: ${item.lastTime.hour}:${item.lastTime.minute}")
-                }
-
-                // RecyclerView에 새로운 데이터 설정
+                                // RecyclerView에 새로운 데이터 설정
                 adapter = Homeadapter(this@HomeActivity, itemList, this@HomeActivity)
                 recyclerView.adapter = adapter
             }

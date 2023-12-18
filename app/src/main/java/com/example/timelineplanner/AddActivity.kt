@@ -1,35 +1,21 @@
 package com.example.timelineplanner
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
-import com.example.timelineplanner.databinding.IconDialogBinding
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatImageButton
-import com.example.timelineplanner.model.ItemData
-import com.google.firebase.Firebase
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
-import org.w3c.dom.Text
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.YearMonth
-import java.time.ZoneId
 import java.time.format.TextStyle
-import java.util.Date
 import java.util.Locale
-import kotlin.properties.Delegates
 
 class AddActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddBinding
@@ -39,9 +25,7 @@ class AddActivity : AppCompatActivity() {
     private lateinit var date: TextView
     private lateinit var addFirstTime: TextView
     private lateinit var addLastTIme: TextView
-
     private lateinit var addMemo: EditText
-
     private lateinit var buttonSave: Button
 
     var icon = 0 //아이콘 ID
@@ -52,7 +36,8 @@ class AddActivity : AppCompatActivity() {
     lateinit var alarmTime : Array<Int>
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
-    val timestamp = Timestamp(Date.from(selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+    var selectedDate1: LocalDate = LocalDate.now()
+    var selectedDate2: LocalDate = LocalDate.now()
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,37 +51,6 @@ class AddActivity : AppCompatActivity() {
         addLastTIme = findViewById(R.id.end_time)
         addMemo = findViewById(R.id.todo_memo)
         buttonSave = findViewById(R.id.btn_save)
-
-        //아이콘
-        binding.iconBtn.setOnClickListener {
-            val iconDialog = IconSelectionDialog()
-            iconDialog.setIconSelectedListener { selectedIconId ->
-                binding.iconBtn.tag = selectedIconId
-                when (selectedIconId) {
-                    R.drawable.wakeup -> binding.iconBtn.setImageResource(R.drawable.wakeup)
-                    R.drawable.sleeping -> binding.iconBtn.setImageResource(R.drawable.sleeping)
-                    R.drawable.train -> binding.iconBtn.setImageResource(R.drawable.train)
-                    R.drawable.car -> binding.iconBtn.setImageResource(R.drawable.car)
-                    R.drawable.computer -> binding.iconBtn.setImageResource(R.drawable.computer)
-                    R.drawable.book -> binding.iconBtn.setImageResource(R.drawable.book)
-                    R.drawable.food -> binding.iconBtn.setImageResource(R.drawable.food)
-                    R.drawable.cleaning -> binding.iconBtn.setImageResource(R.drawable.cleaning)
-                    R.drawable.muscle -> binding.iconBtn.setImageResource(R.drawable.muscle)
-                    R.drawable.rest -> binding.iconBtn.setImageResource(R.drawable.rest)
-                    R.drawable.shower -> binding.iconBtn.setImageResource(R.drawable.shower)
-                    R.drawable.empty -> binding.iconBtn.setImageResource(R.drawable.game)
-                    else -> {
-                        // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
-                    }
-                }
-                // 선택된 아이콘 ID를 로그에 출력하는 부분을 람다식 바깥으로 빼냅니다.
-                Log.d("Selected Icon", "Icon ID: $selectedIconId")
-            }
-
-            // 이 부분은 람다식 밖에서 실행되도록 수정합니다.
-            Log.d("bin", "됐냐")
-            iconDialog.show(supportFragmentManager, "icon_dialog_tag")
-        }
 
         //색상
         binding.colorBtn.setOnClickListener {
@@ -121,6 +75,37 @@ class AddActivity : AppCompatActivity() {
             // 이 부분은 람다식 밖에서 실행되도록 수정합니다.
             Log.d("bin", "됐냐")
             colorDialog.show(supportFragmentManager, "color_dialog_tag")
+        }
+
+        //아이콘
+        binding.iconBtn.setOnClickListener {
+            val iconDialog = IconSelectionDialog()
+            iconDialog.setIconSelectedListener { selectedIconId ->
+                binding.iconBtn.tag = selectedIconId
+                when (selectedIconId) {
+                    R.drawable.wakeup -> binding.iconBtn.setImageResource(R.drawable.wakeup)
+                    R.drawable.sleeping -> binding.iconBtn.setImageResource(R.drawable.sleeping)
+                    R.drawable.train -> binding.iconBtn.setImageResource(R.drawable.train)
+                    R.drawable.car -> binding.iconBtn.setImageResource(R.drawable.car)
+                    R.drawable.computer -> binding.iconBtn.setImageResource(R.drawable.computer)
+                    R.drawable.book -> binding.iconBtn.setImageResource(R.drawable.book)
+                    R.drawable.food -> binding.iconBtn.setImageResource(R.drawable.food)
+                    R.drawable.cleaning -> binding.iconBtn.setImageResource(R.drawable.cleaning)
+                    R.drawable.muscle -> binding.iconBtn.setImageResource(R.drawable.muscle)
+                    R.drawable.rest -> binding.iconBtn.setImageResource(R.drawable.rest)
+                    R.drawable.shower -> binding.iconBtn.setImageResource(R.drawable.shower)
+                    R.drawable.game -> binding.iconBtn.setImageResource(R.drawable.empty)
+                    else -> {
+                        // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
+                    }
+                }
+                // 선택된 아이콘 ID를 로그에 출력하는 부분을 람다식 바깥으로 빼냅니다.
+                Log.d("Selected Icon", "Icon ID: $selectedIconId")
+            }
+
+            // 이 부분은 람다식 밖에서 실행되도록 수정합니다.
+            Log.d("bin", "됐냐")
+            iconDialog.show(supportFragmentManager, "icon_dialog_tag")
         }
 
         val currentMonth = YearMonth.now()
@@ -176,7 +161,7 @@ class AddActivity : AppCompatActivity() {
             val repeatdialog = RepeatDialog(this, this)
             repeatdialog.show()
         }
-        
+
         //알림
         binding.todoAlarm.setOnClickListener {
             val alarmdialog = AlarmDialog(this, this)
@@ -225,7 +210,8 @@ class AddActivity : AppCompatActivity() {
 
     //todoDatePicker OkButton 함수
     fun onClickOkButton4(year: Int, month: Int, day: Int, flag: Int) {
-        selectedDate = LocalDate.of(year, month, day)
+        selectedDate1 = LocalDate.of(year, month, day)
+        selectedDate2 = LocalDate.of(year,month,day)
 
         if (flag == 0) binding.date1.setText(
             "${month}월 ${day}일 (${
@@ -251,7 +237,8 @@ class AddActivity : AppCompatActivity() {
         val icon = binding.iconBtn.tag as? Int
         val color = binding.colorBtn.tag as? String
 
-        val dateString = selectedDate.toString()
+        val dateString1 = selectedDate1.toString()
+        val dateString2 = selectedDate2.toString()
 
         val firstTime = addFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
         val firstTimeParts = firstTime.split(":")
@@ -269,7 +256,8 @@ class AddActivity : AppCompatActivity() {
             "daytitle" to title,
             "daycolor" to color,
             "dayicon" to icon,
-            "daydate" to dateString,
+            "daydate1" to dateString1,
+            "daydate2" to dateString2,
             "firstTime" to hashMapOf(
                 "hour" to firstTimeHour,
                 "minute" to firstTimeMinute
