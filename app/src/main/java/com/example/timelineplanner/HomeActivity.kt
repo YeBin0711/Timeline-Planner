@@ -46,6 +46,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     private var beforeDate: LocalDate ?= null    //이전 날짜 추적 변수
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
+    lateinit var clickedDate: LocalDate
     val calendar = Calendar.getInstance()
     val year = selectedDate.year.toString()
     val month = selectedDate.month.toString()
@@ -86,6 +87,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val currentDate = LocalDate.now()
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
+
             // Called every time we need to reuse a container.
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 // Initialize the calendar day for this container.
@@ -113,31 +115,24 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
                 container.calendarDayNumber.text = data.date.dayOfMonth.toString()
                 container.calendarDayName.text = data.date.dayOfWeek.toString().substring(0..2)
+
                 container.calendarDay.setOnClickListener {
-                    val clickedDate = container.day.date
-                    // 클릭한 날짜에 대한 처리
+                    clickedDate = container.day.date
                     fetchDataFromFirestore(clickedDate)
-                    /*
+                    //선택된 날짜 처리
                     container.calendarDayNumber.setTextColor(
                         ContextCompat.getColor(
                             this@HomeActivity,
-                            if (clickedDate == selectedDate) {
-                                R.color.black // 선택된 날짜의 색상
-                            } else {
-                                R.color.gray // 선택되지 않은 날짜의 색상
-                            }
+                            R.color.black
                         )
                     )
                     container.calendarDayName.setTextColor(
                         ContextCompat.getColor(
                             this@HomeActivity,
-                            if (clickedDate == selectedDate) {
-                                R.color.black // 선택된 날짜의 색상
-                            } else {
-                                R.color.gray // 선택되지 않은 날짜의 색상
-                            }
+                            R.color.black
                         )
-                    )*/
+                    )
+                    //ToDo: 이전 날짜 회색 처리
                 }
             }
         }
@@ -201,13 +196,13 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     val daydate2 = LocalDate.parse(daydateString2)
 
                     val firstTimeMap = document.get("firstTime") as HashMap<*, *>
-                    val firstTimeHour = firstTimeMap["hour"] as String
-                    val firstTimeMinute = firstTimeMap["minute"] as String
+                    val firstTimeHour = firstTimeMap["hour"].toString()
+                    val firstTimeMinute = firstTimeMap["minute"].toString()
                     val firstTimeObj = Time(firstTimeHour, firstTimeMinute)
 
                     val lastTimeMap = document.get("lastTime") as HashMap<*, *>
-                    val lastTimeHour = lastTimeMap["hour"] as String
-                    val lastTimeMinute = lastTimeMap["minute"] as String
+                    val lastTimeHour = lastTimeMap["hour"].toString()
+                    val lastTimeMinute = lastTimeMap["minute"].toString()
                     val lastTimeObj = Time(lastTimeHour, lastTimeMinute)
 
                     val daymemo = document.getString("daymemo") ?: ""

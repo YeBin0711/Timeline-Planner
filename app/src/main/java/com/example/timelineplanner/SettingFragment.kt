@@ -35,7 +35,7 @@ class SettingFragment : PreferenceFragmentCompat() {
 
         //Todo:로그아웃 이벤트 처리
         logoutPref?.setOnPreferenceClickListener { preference ->
-            val intent = Intent(this.context,JoinActivity::class.java )
+            val intent = Intent(this.context, MainActivity::class.java )
             startActivity(intent)
             true
         }
