@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <RadioGroup
+        android:id="@+id/alarm_group"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp" >
+        <RadioButton
+            android:id="@+id/alarm_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="안 함"
+            android:textSize="20sp"
+            android:padding="10dp" />
+        <RadioButton
+            android:id="@+id/alarm_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10분 전"
+            android:textSize="20sp"
+            android:padding="10dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="40dp"
+            android:padding="20dp"
+            android:background="@drawable/edittext_background_line" >
+            <NumberPicker
+                android:id="@+id/alarm_numberPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:backgroundTint="#00000000"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="20sp" />
+            <NumberPicker
+                android:id="@+id/alarm_periodPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:backgroundTint="#00000000"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="20sp"
+                android:layout_marginLeft="20dp"/>
+        </LinearLayout>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp" >
+
+        <Button
+            android:id="@+id/alarm_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#00000000"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:text="취소"/>
+        <Button
+            android:id="@+id/alarm_ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#00000000"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:text="확인"/>
+    </LinearLayout>
+</LinearLayout>

@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:rowCount="3"
-    android:columnCount="4">
+    android:columnCount="4"
+    android:padding="10dp" >
 
     <ImageView
         android:id="@+id/wakeup"
@@ -85,7 +86,7 @@
         android:layout_margin="5dp"
         app:tint="?attr/colorOnPrimary"/>
     <ImageView
-        android:id="@+id/game"
+        android:id="@+id/empty"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/game"

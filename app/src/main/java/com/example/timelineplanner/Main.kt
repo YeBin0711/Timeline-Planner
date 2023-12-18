@@ -22,15 +22,13 @@ class Time(
 
 class Repeat (
     val type: Int,
-    val dayOfWeek: Int
+    val dayOfWeeks: Array<Int>
 )
 
 class Alarm (
     val type: Int,
     val time: Time
 )
-
-
 
 fun transIntoTimeForm(originTime: String?, timeForm: String?): String {
     val originHour = originTime?.toInt()?: 0
@@ -53,7 +51,7 @@ fun transIntoTimeForm(originTime: String?, timeForm: String?): String {
 
 fun getTodoList(): MutableList<Todo> {
     val todo = mutableListOf<Todo>()
-    MyApplication.db.collection("users")
+    MyApplication.db.collection("Todo")
         .get()
         .addOnSuccessListener { result ->
             for (document in result) {

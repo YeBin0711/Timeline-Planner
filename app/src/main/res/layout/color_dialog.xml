@@ -4,40 +4,41 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:rowCount="2"
-    android:columnCount="3" >
+    android:columnCount="3"
+    android:padding="10dp" >
 
     <ImageView
-        android:id="@+id/wakeup"
+        android:id="@+id/color1"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="#FFD5D5"
         android:layout_margin="10dp" />
     <ImageView
-        android:id="@+id/sleeping"
+        android:id="@+id/color2"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="#FAFFBD"
         android:layout_margin="10dp" />
     <ImageView
-        android:id="@+id/train"
+        android:id="@+id/color3"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="#ADFFAC"
         android:layout_margin="10dp" />
     <ImageView
-        android:id="@+id/car"
+        android:id="@+id/color4"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="#D9D9D9"
         android:layout_margin="10dp" />
     <ImageView
-        android:id="@+id/computer"
+        android:id="@+id/color5"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="#F2D5FF"
         android:layout_margin="10dp" />
     <ImageView
-        android:id="@+id/book"
+        android:id="@+id/color6"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="#7FE8FF"

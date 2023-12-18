@@ -14,25 +14,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/first_time_Hour"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"/>
-
-            <TextView
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:text=":"
+                android:id="@+id/first_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/first_time_Min"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"/>
+                android:textSize="17sp"/>
 
         </LinearLayout>
         <View
@@ -47,46 +36,35 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/last_time_Hour"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_width="20dp"
+                android:id="@+id/last_time"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=":"
                 android:gravity="center"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/last_time_Min"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"/>
-
+                android:textSize="17sp"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="5dp">
-
-        <ImageView
-            android:id="@+id/ticon"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background" />
+        android:layout_height="wrap_content">
 
         <View
-            android:id="@+id/day_line"
-            android:layout_width="4dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/todo_dialog_line"/>
+            android:id="@+id/ticon_background"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/ticon_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5sp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/game" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="218dp"
@@ -109,10 +87,25 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-    <CheckBox
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+    <FrameLayout
+        android:id="@+id/home_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        android:button="@color/gray"
-        android:background="@drawable/checkbox_custom"/>
+        <View
+            android:id="@+id/checkbox_background"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/checkbox_custom"/>
+
+        <ImageView
+            android:id="@+id/checkbox_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:padding="5sp"
+            android:scaleType="fitCenter" />
+
+    </FrameLayout>
 </LinearLayout>
