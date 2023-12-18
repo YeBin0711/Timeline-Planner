@@ -69,6 +69,9 @@ class EditActivity : AppCompatActivity() {
             val editendTime = findViewById<TextView>(R.id.edit_end_time)
             editendTime.text = "${selectedItem.lastTime.hour}:${selectedItem.lastTime.minute}"
 
+            val editShow = findViewById<SwitchCompat>(R.id.edit_cswitch)
+            editShow.isChecked = selectedItem.dayshow
+
             val editMemo = findViewById<TextView>(R.id.edit_todo_memo)
             editMemo.text = selectedItem.daymemo
 
@@ -190,7 +193,7 @@ class EditActivity : AppCompatActivity() {
         }
 
         //스위치 on/off
-        val switchView: SwitchCompat = findViewById(R.id.cswitch)
+        val switchView: SwitchCompat = findViewById(R.id.edit_cswitch)
         switchView.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 switchView.isChecked = true
@@ -275,6 +278,8 @@ class EditActivity : AppCompatActivity() {
             val editlastTimeHour = editlastTimeParts[0]
             val editlastTimeMinute = editlastTimeParts[1]
 
+            val editShow = binding.editCswitch.isChecked
+
             db.collection("users")
                 .document(selectedItem.firestoreDocumentId)
                 .update(
@@ -291,6 +296,7 @@ class EditActivity : AppCompatActivity() {
                         "hour" to editlastTimeHour,
                         "minute" to editlastTimeMinute
                     ),
+                    "dayshow", editShow,
                     "daymemo", updatedMemo
                 )
                 .addOnSuccessListener {

@@ -29,7 +29,7 @@ class HomeViewHolder(val binding: DayRecyclerviewBinding):
 
 class Homeadapter(
     private val context: Context,
-    private val itemList: List<ItemData>,
+    val itemList: List<ItemData>,
     private val itemClickListener: DayViewContainer.RecyclerViewClickListener
 ) : RecyclerView.Adapter<Homeadapter.ItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {

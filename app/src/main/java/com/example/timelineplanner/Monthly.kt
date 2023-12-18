@@ -238,4 +238,3 @@ class DatePickerDialog(context: Context, val activity: MonthlyActivity, val minY
     }
 }
 
-

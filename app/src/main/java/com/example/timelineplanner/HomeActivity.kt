@@ -180,7 +180,8 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val dateString = selectedDate.format(formatter)
 
         db.collection("users")
-            .whereEqualTo("daydate1", dateString) // "date_field"는 Firestore에 저장된 날짜 필드의 이름입니다.
+            .whereEqualTo("daydate1", dateString)
+            .whereEqualTo("daydate2", dateString) // daydate1과 daydate2가 동일한 날짜인 경우 필터링
             .orderBy("firstTime.hour")
             .orderBy("firstTime.minute")
             .get()
@@ -210,11 +211,13 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     val lastTimeMinute = lastTimeMap["minute"] as String
                     val lastTimeObj = Time(lastTimeHour, lastTimeMinute)
 
+                    val dayshow = document.getBoolean("dayshow") ?: false // 기본값을 false로 설정
+
                     val daymemo = document.getString("daymemo") ?: ""
 
                     val documentId = document.id // 여기서 문서 ID를 가져옵니다.
 
-                    val itemData = ItemData(daytitle, daycolor, dayicon, daydate1, daydate2, firstTimeObj, lastTimeObj, daymemo, documentId)
+                    val itemData = ItemData(daytitle, daycolor, dayicon, daydate1, daydate2, firstTimeObj, lastTimeObj, dayshow, daymemo, documentId)
                     itemData.firestoreDocumentId = documentId
                     itemList.add(itemData)
                 }
