@@ -221,5 +221,8 @@
             android:layout_gravity="bottom"
             android:layout_marginLeft="10dp" />
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/document_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

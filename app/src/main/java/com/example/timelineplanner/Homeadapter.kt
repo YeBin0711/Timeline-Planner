@@ -120,8 +120,8 @@ class Homeadapter(
             // 아이템 클릭 시 처리할 내용 작성
             val selectedItem: ItemData = itemList[position]// 선택된 아이템
             val intent = Intent(context, EditActivity::class.java)
-            intent.putExtra("selectedItem", selectedItem)
             Log.d("babo","$selectedItem")
+            intent.putExtra("selectedItem", selectedItem)
             context.startActivity(intent)
             }
     }

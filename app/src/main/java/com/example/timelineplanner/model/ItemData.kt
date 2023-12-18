@@ -24,6 +24,7 @@ data class ItemData(
         parcel.readSerializable() as LocalDate,
         parcel.readParcelable(Time::class.java.classLoader) ?: Time(),
         parcel.readParcelable(Time::class.java.classLoader) ?: Time(),
+        parcel.readString() ?: "",
         parcel.readString() ?: ""
     )
 
@@ -35,6 +36,7 @@ data class ItemData(
         parcel.writeParcelable(firstTime, flags)
         parcel.writeParcelable(lastTime, flags)
         parcel.writeString(daymemo)
+        parcel.writeString(firestoreDocumentId)
     }
 
     override fun describeContents(): Int {

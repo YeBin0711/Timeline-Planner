@@ -1,5 +1,6 @@
 package com.example.timelineplanner
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ class EditActivity : AppCompatActivity() {
 
         val intent = intent
         if (intent.hasExtra("selectedItem")) {
+
             val selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")!!
             val editTitle = findViewById<TextView>(R.id.edit_todo_title)
             editTitle.text = selectedItem.daytitle
@@ -50,33 +52,31 @@ class EditActivity : AppCompatActivity() {
             val editMemo = findViewById<TextView>(R.id.edit_todo_memo)
             editMemo.text = selectedItem.daymemo
 
-        }
+            val documentId = findViewById<TextView>(R.id.document_id)
+            documentId.text = selectedItem.firestoreDocumentId
 
-        //구현 중
+          }
+        // 삭제 버튼에 대한 클릭 리스너 추가
         binding.btnDelete.setOnClickListener {
+            val db = FirebaseFirestore.getInstance()
             val selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
-            /*
+
             if (selectedItem != null) {
                 // Firestore에서 해당 문서를 삭제하는 코드를 작성하세요.
-                val db = FirebaseFirestore.getInstance()
+                Log.d("id","${selectedItem.firestoreDocumentId}")
                 db.collection("users")
-                    .document(selectedItem.firestoreDocumentId)// 해당 문서 ID
+                    .document(selectedItem.firestoreDocumentId) // 해당 문서 ID
                     .delete()
                     .addOnSuccessListener {
                         // 성공적으로 삭제되었을 때, HomeActivity로 돌아가기
-                        val intent = Intent(this, HomeActivity::class.java)
-                        startActivity(intent)
+                        val intent = Intent()
+                        setResult(Activity.RESULT_OK, intent)
                         finish() // 현재 EditActivity 종료
-                        Log.d("delete","데이터가 잘 삭제되었다")
                     }
                     .addOnFailureListener { e ->
                         // 실패 시 처리 (예: 로그 등록)
-                        Log.w("EditActivity", "Error deleting document", e)
                     }
-            }*/
+            }
         }
 
         //스위치 on/off
@@ -86,5 +86,7 @@ class EditActivity : AppCompatActivity() {
                 switchView.isChecked = true
             }
         }
+
     }
 }
+

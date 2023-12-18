@@ -39,7 +39,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     lateinit var binding: ActivityHomeBinding
     lateinit var monthText2TextView: TextView
     private lateinit var Homeadapter:Homeadapter
-    private val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()// 문서 ID를 저장할 변수
     private val itemList = ArrayList<ItemData>()
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
@@ -58,6 +58,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         setContentView(binding.root)
 
         fetchDataFromFirestore(selectedDate)
+
         recyclerView = findViewById(R.id.weekday_recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -158,6 +159,10 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
             Log.d("bin","elserecyclerview 눌렸다")
         }
     }
+    override fun onResume() {
+        super.onResume()
+        fetchDataFromFirestore(selectedDate)
+    }
 
     private fun fetchDataFromFirestore(selectedDate: LocalDate) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -193,11 +198,10 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
                     val daymemo = document.getString("daymemo") ?: ""
 
-                    val documentId = document.id
+                    val documentId = document.id // 여기서 문서 ID를 가져옵니다.
 
-                    val itemData = ItemData(daytitle, daycolor, dayicon, daydate, firstTimeObj, lastTimeObj, daymemo)
+                    val itemData = ItemData(daytitle, daycolor, dayicon, daydate, firstTimeObj, lastTimeObj, daymemo, documentId)
                     itemData.firestoreDocumentId = documentId
-
                     itemList.add(itemData)
                 }
 
@@ -206,7 +210,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     Log.d("ItemData", "Day Title: ${item.daytitle}, First Time: ${item.firstTime.hour}:${item.firstTime.minute}, Last Time: ${item.lastTime.hour}:${item.lastTime.minute}")
                 }
 
-                // RecyclerView에 데이터 설정
+                // RecyclerView에 새로운 데이터 설정
                 adapter = Homeadapter(this@HomeActivity, itemList, this@HomeActivity)
                 recyclerView.adapter = adapter
             }
