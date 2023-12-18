@@ -2,6 +2,7 @@ package com.example.timelineplanner
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timelineplanner.databinding.ActivityHomeBinding
+import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
 import com.example.timelineplanner.model.Time
 import com.google.firebase.firestore.FirebaseFirestore
@@ -61,6 +63,8 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
         recyclerView = findViewById(R.id.weekday_recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        fetchDataFromFirestore()
 
         adapter = Homeadapter(this,itemList, this)
         recyclerView.adapter = adapter
@@ -182,6 +186,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     val daycolor = document.getString("daycolor") ?:"#D9D9D9"
 
                     val dayicon = document.getLong("dayicon")?.toInt() ?: 0
+                    val daycolor = document.getString("daycolor") ?: ""
 
                     val daydateString = document.getString("daydate") ?: ""
                     val daydate = LocalDate.parse(daydateString)

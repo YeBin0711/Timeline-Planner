@@ -41,61 +41,60 @@ class IconSelectionDialog : DialogFragment() {
 
         wakeupIcon.setOnClickListener {
             Log.d("bin","기상 눌림")
-            val selectedIconId = R.drawable.wakeup // 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.wakeup
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
 
         sleepingIcon.setOnClickListener {
-            val selectedIconId = R.drawable.sleeping // 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.sleeping
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
         trainIcon.setOnClickListener{
-            val selectedIconId = R.drawable.train // 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.train
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
 
-
         carIcon.setOnClickListener{
-            val selectedIconId = R.drawable.car // 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.car
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
         computerIcon.setOnClickListener{
-            val selectedIconId = R.drawable.computer// 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.computer
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
         bookIcon.setOnClickListener{
-            val selectedIconId = R.drawable.book // 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.book
             iconSelectedListener?.invoke(selectedIconId)
 
             dismiss()
         }
         foodIcon.setOnClickListener{
-            val selectedIconId = R.drawable.food // 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.food
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
         cleaningIcon.setOnClickListener{
-            val selectedIconId = R.drawable.cleaning // 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.cleaning
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
         muscleIcon.setOnClickListener{
-            val selectedIconId = R.drawable.muscle// 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.muscle
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
         restIcon.setOnClickListener{
-            val selectedIconId = R.drawable.rest// 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.rest
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
         showerIcon.setOnClickListener{
-            val selectedIconId = R.drawable.shower // 예시: 선택한 아이콘의 리소스 ID
+            val selectedIconId = R.drawable.shower
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }

@@ -22,7 +22,7 @@ class Time(
 
 class Repeat (
     val type: Int,
-    val dayOfWeek: Int
+    val dayOfWeeks: Array<Int>
 )
 
 class Alarm (

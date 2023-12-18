@@ -44,8 +44,12 @@ class AddActivity : AppCompatActivity() {
 
     private lateinit var buttonSave: Button
 
-    var color = "" //색상 코드
     var icon = 0 //아이콘 ID
+    var color = "" //색상 코드
+    var repeatType = 0
+    lateinit var repeatDays : Array<Int>
+    var alarmType = 0
+    lateinit var alarmTime : Array<Int>
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     val timestamp = Timestamp(Date.from(selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
@@ -93,6 +97,7 @@ class AddActivity : AppCompatActivity() {
             Log.d("bin", "됐냐")
             iconDialog.show(supportFragmentManager, "icon_dialog_tag")
         }
+
         //색상
         binding.colorBtn.setOnClickListener {
             val colorDialog = ColorSelectionDialog()
@@ -157,8 +162,6 @@ class AddActivity : AppCompatActivity() {
             timePickerDialog.show()
         }
 
-        //메모
-
         //스위치 on/off
         val switchView: SwitchCompat = findViewById(R.id.cswitch)
         switchView.setOnCheckedChangeListener {buttonView, isChecked ->
@@ -170,13 +173,14 @@ class AddActivity : AppCompatActivity() {
 
         //반복
         binding.todoRepeat.setOnClickListener {
-            val repeatdialog = RepeatDialog()
-            repeatdialog.show(supportFragmentManager, "")
+            val repeatdialog = RepeatDialog(this, this)
+            repeatdialog.show()
         }
+        
         //알림
         binding.todoAlarm.setOnClickListener {
-            val alarmdialog = AlarmDialog()
-            alarmdialog.show(supportFragmentManager, "")
+            val alarmdialog = AlarmDialog(this, this)
+            alarmdialog.show()
         }
 
         //취소 버튼
