@@ -11,7 +11,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="40dp">
         <EditText
-            android:id="@+id/todo_title"
+            android:id="@+id/edit_todo_title"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
@@ -21,16 +21,18 @@
             android:textColor="@color/black"
             android:background="@android:color/transparent"
             android:layout_gravity="center_vertical" />
-        <ImageView
-            android:id="@+id/icon_btn"
+        <ImageButton
+            android:id="@+id/edit_icon_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/muscle"
+            app:tint="?attr/colorOnPrimary"
             android:padding="10dp"
             android:layout_marginLeft="10dp"
-            app:tint="?attr/colorOnPrimary"/>
-        <ImageView
-            android:id="@+id/color_btn"
+            android:background="@android:color/transparent"
+            android:src="@drawable/muscle"
+            android:scaleType="fitCenter"/>
+        <ImageButton
+            android:id="@+id/edit_color_btn"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginLeft="5dp"
@@ -44,7 +46,7 @@
         android:paddingTop="60dp"
         android:gravity="center">
         <TextView
-            android:id="@+id/date1"
+            android:id="@+id/edit_date1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="11월 28일 (화)"
@@ -59,7 +61,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
         <TextView
-            android:id="@+id/date2"
+            android:id="@+id/edit_date2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="11월 28일 (화)"
@@ -75,7 +77,7 @@
         android:paddingBottom="40dp"
         android:gravity="center">
         <TextView
-            android:id="@+id/start_time"
+            android:id="@+id/edit_start_time"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="08 : 00"
@@ -88,7 +90,7 @@
             android:gravity="center"
             android:textSize="20sp" />
         <TextView
-            android:id="@+id/end_time"
+            android:id="@+id/edit_end_time"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="09 : 00"
@@ -109,7 +111,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
         <EditText
-            android:id="@+id/todo_memo"
+            android:id="@+id/edit_todo_memo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/todo_memo"

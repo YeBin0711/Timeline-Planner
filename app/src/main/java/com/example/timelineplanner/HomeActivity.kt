@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.example.timelineplanner.model.ItemData
+import com.example.timelineplanner.model.Time
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
@@ -148,11 +149,14 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
     }
     override fun onItemClick(position: Int) {
-        val clickedItem = itemList[position]
-
-        val intent = Intent(this, EditActivity::class.java)
-        //intent.putExtra("ItemData", clickedItem)
-        startActivity(intent)
+        if (position >= 0 && position < itemList.size) {
+            val clickedItem = itemList[position]
+            // 클릭된 아이템을 처리하는 코드 작성
+            Log.d("bin","recyclerview 눌렸다")
+        } else {
+            // itemList가 비어있거나 유효하지 않은 인덱스일 때 처리하는 로직 추가
+            Log.d("bin","elserecyclerview 눌렸다")
+        }
     }
 
     private fun fetchDataFromFirestore(selectedDate: LocalDate) {
@@ -188,7 +192,12 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     val lastTimeObj = Time(lastTimeHour, lastTimeMinute)
 
                     val daymemo = document.getString("daymemo") ?: ""
+
+                    val documentId = document.id
+
                     val itemData = ItemData(daytitle, daycolor, dayicon, daydate, firstTimeObj, lastTimeObj, daymemo)
+                    itemData.firestoreDocumentId = documentId
+
                     itemList.add(itemData)
                 }
 

@@ -1,37 +1,28 @@
 package com.example.timelineplanner
 
 import android.app.Dialog
-import android.content.ClipData.Item
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.timelineplanner.model.Time
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.ViewContainer
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
+
 
 class HomeViewHolder(val binding: DayRecyclerviewBinding):
     RecyclerView.ViewHolder(binding.root)
@@ -70,9 +61,10 @@ class Homeadapter(
 
         //이미지뷰 크기 조절
         val imageViewHeight = calculateImageViewHeight(
-            currentItem.firstTime,
-            currentItem.lastTime
+            com.example.timelineplanner.model.Time(currentItem.firstTime.hour, currentItem.firstTime.minute),
+            com.example.timelineplanner.model.Time(currentItem.lastTime.hour, currentItem.lastTime.minute)
         )
+
         holder.imageViewColor.layoutParams.height = imageViewHeight
         // 해당 TextView의 layoutparams를 가져와서 설정
         holder.emptyView.layoutParams.height=imageViewHeight - 100
@@ -124,9 +116,14 @@ class Homeadapter(
             true
         }
 
-        holder.itemView.setOnClickListener {
-            itemClickListener.onItemClick(position)
-        }
+        holder.itemView.setOnClickListener { view -> // 아이템 클릭 시 처리할 내용 작성
+            // 아이템 클릭 시 처리할 내용 작성
+            val selectedItem: ItemData = itemList[position]// 선택된 아이템
+            val intent = Intent(context, EditActivity::class.java)
+            intent.putExtra("selectedItem", selectedItem)
+            Log.d("babo","$selectedItem")
+            context.startActivity(intent)
+            }
     }
 
     private fun calculateImageViewHeight(firstTime: Time, lastTime: Time): Int {
@@ -176,10 +173,12 @@ class Homeadapter(
 
         init {
             itemView.setOnClickListener {
-                itemClickListener.onItemClick(adapterPosition)
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    itemClickListener.onItemClick(position)
+                }
             }
         }
-
     }
 }
 
@@ -209,7 +208,6 @@ class DayViewContainer(view: View) : ViewContainer(view) {
         fun onItemClick(position: Int)
     }
 }
-
 
 
 class DatePickerDialog2(context: Context, val activity: HomeActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int): Dialog(context) {
