@@ -80,7 +80,7 @@ class AddActivity : AppCompatActivity() {
                     R.drawable.muscle -> binding.iconBtn.setImageResource(R.drawable.muscle)
                     R.drawable.rest -> binding.iconBtn.setImageResource(R.drawable.rest)
                     R.drawable.shower -> binding.iconBtn.setImageResource(R.drawable.shower)
-                    R.drawable.game -> binding.iconBtn.setImageResource(R.drawable.game)
+                    R.drawable.empty -> binding.iconBtn.setImageResource(R.drawable.game)
                     else -> {
                         // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
                     }
@@ -280,8 +280,8 @@ class AddActivity : AppCompatActivity() {
             .add(newItemData)
             .addOnSuccessListener { documentReference ->
                 // 성공적으로 추가됐을 때 처리
-                val intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent)
+                //val intent = Intent(this, HomeActivity::class.java)
+                //startActivity(intent)
                 Log.d("bin","데이터 저장됨")
             }
             .addOnFailureListener { e ->

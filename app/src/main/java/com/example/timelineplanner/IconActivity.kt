@@ -37,7 +37,7 @@ class IconSelectionDialog : DialogFragment() {
         val muscleIcon= view.findViewById<ImageView>(R.id.muscle)
         val restIcon= view.findViewById<ImageView>(R.id.rest)
         val showerIcon= view.findViewById<ImageView>(R.id.shower)
-        val gameIcon= view.findViewById<ImageView>(R.id.game)
+        val emptyIcon= view.findViewById<ImageView>(R.id.empty)
 
         wakeupIcon.setOnClickListener {
             Log.d("bin","기상 눌림")
@@ -99,8 +99,8 @@ class IconSelectionDialog : DialogFragment() {
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }
-        gameIcon.setOnClickListener{
-            val selectedIconId = R.drawable.game // 예시: 선택한 아이콘의 리소스 ID
+        emptyIcon.setOnClickListener{
+            val selectedIconId = R.drawable.empty // 예시: 선택한 아이콘의 리소스 ID
             iconSelectedListener?.invoke(selectedIconId)
             dismiss()
         }

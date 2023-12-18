@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat
 import java.time.Year
 import java.time.ZoneId
 import java.util.Date
+import java.time.format.DateTimeFormatter
 
 
 class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickListener {
@@ -59,8 +60,6 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
         recyclerView = findViewById(R.id.weekday_recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-        fetchDataFromFirestore()
 
         adapter = Homeadapter(this,itemList, this)
         recyclerView.adapter = adapter
@@ -144,8 +143,12 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         startActivity(intent)
     }
 
-    private fun fetchDataFromFirestore() {
+    private fun fetchDataFromFirestore(selectedDate: LocalDate) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val dateString = selectedDate.format(formatter)
+
         db.collection("users")
+            .whereEqualTo("daydate", dateString) // "date_field"는 Firestore에 저장된 날짜 필드의 이름입니다.
             .orderBy("firstTime.hour")
             .orderBy("firstTime.minute")
             .get()
@@ -155,7 +158,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                 for (document in result) {
                     val daytitle = document.getString("daytitle") ?: ""
 
-                    val daycolor = document.getString("daycolor") ?:""
+                    val daycolor = document.getString("daycolor") ?:"#D9D9D9"
 
                     val dayicon = document.getLong("dayicon")?.toInt() ?: 0
 
@@ -205,6 +208,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val monthText2TextView = binding.monthSelector2.findViewById<TextView>(R.id.monthText2)
         monthText2TextView.text = koreanDateString
 
+        fetchDataFromFirestore(selectedDate)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
