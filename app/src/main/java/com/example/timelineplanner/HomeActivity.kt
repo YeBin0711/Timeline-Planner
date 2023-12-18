@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timelineplanner.databinding.ActivityHomeBinding
+import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
@@ -76,14 +78,9 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
             startActivity(intent)
         }
 
-        /* 날짜 뜨게하는 버튼 이벤트
-        binding.ca.setOnClickListener{
-            val intent = Intent(this, 날짜창:class.java)
-            startActivity(intent)
-        }*/
-
-        //달력 출력
+        //주간 달력 출력
         val currentDate = LocalDate.now()
+        var beforeDate: LocalDate ?= null    //이전 날짜 추적 변수
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
 
@@ -114,7 +111,24 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
                 container.calendarDayNumber.text = data.date.dayOfMonth.toString()
                 container.calendarDayName.text = data.date.dayOfWeek.toString().substring(0..2)
-
+                container.calendarDay.setOnClickListener {
+                    val clickedDate = container.day.date
+                    // 클릭한 날짜에 대한 처리
+                    fetchDataFromFirestore(clickedDate)
+                    /*
+                    container.calendarDayNumber.setTextColor( // 원하는 색상으로 변경할 부분
+                        ContextCompat.getColor(
+                            this@HomeActivity,
+                            R.color.black// 여기에 원하는 색상 리소스를 넣어주세요
+                        )
+                    )
+                    container.calendarDayName.setTextColor( // 원하는 색상으로 변경할 부분
+                        ContextCompat.getColor(
+                            this@HomeActivity,
+                            R.color.black// 여기에 원하는 색상 리소스를 넣어주세요
+                        )
+                    )*/
+                }
             }
         }
 
@@ -140,6 +154,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         // 아이템 클릭 시 동작할 내용을 여기에 구현
         // position을 사용하여 클릭된 아이템의 위치를 확인할 수 있음
         val intent = Intent(this, EditActivity::class.java)
+        //intent.putExtra("ItemData", ItemData[position])
         startActivity(intent)
     }
 

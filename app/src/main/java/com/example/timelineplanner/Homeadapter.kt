@@ -1,11 +1,13 @@
 package com.example.timelineplanner
 
 import android.app.Dialog
+import android.content.ClipData.Item
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -17,11 +19,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
+import com.google.firebase.firestore.FirebaseFirestore
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.ViewContainer
 import java.time.LocalTime
@@ -56,11 +60,6 @@ class Homeadapter(
 
         holder.textViewMemo.text = currentItem.daymemo
 
-        // currentDayColor는 currentItem.daycolor와 같은 값이라고 가정합니다.
-
-        //holder.checkBoxColor.setBackgroundColor(Color.parseColor(currentItem.daycolor))
-        //holder.checkBoxIcon.setImageResource(R.drawable.check)
-
         /*
         //Todo: 시간 형식 설정 반영
         val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
@@ -73,11 +72,13 @@ class Homeadapter(
             currentItem.firstTime,
             currentItem.lastTime
         )
-
         holder.imageViewColor.layoutParams.height = imageViewHeight
+        // 해당 TextView의 layoutparams를 가져와서 설정
+        holder.emptyView.layoutParams.height=imageViewHeight - 100
 
         var isChecked = false // 초기 상태
 
+        //checkbox 색상 변경 코드
         holder.checkBox.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -121,8 +122,7 @@ class Homeadapter(
             // 이벤트가 소비되었음을 나타냅니다.
             true
         }
-        // 해당 TextView의 layoutparams를 가져와서 설정
-        holder.emptyView.layoutParams.height=imageViewHeight - 100
+
 
         holder.itemView.setOnClickListener {
             itemClickListener.onItemClick(position)
@@ -182,6 +182,7 @@ class Homeadapter(
 }
 
 class DayViewContainer(view: View) : ViewContainer(view) {
+    val calendarDay = ItemCalendarDayBinding.bind(view).calendarDay
     val calendarDayNumber = ItemCalendarDayBinding.bind(view).calendarDayNumber
     val calendarDayName = ItemCalendarDayBinding.bind(view).calendarDayName
 
@@ -196,8 +197,10 @@ class DayViewContainer(view: View) : ViewContainer(view) {
     }
 
     lateinit var onDayClickListener: OnDayClickListener
-    fun interface OnDayClickListener {
-        fun onDayClicked(date: String)
+    interface OnDayClickListener {
+        fun onDayClicked(date: String){
+
+        }
     }
 
     interface RecyclerViewClickListener {

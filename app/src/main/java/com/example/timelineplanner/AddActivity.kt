@@ -280,8 +280,8 @@ class AddActivity : AppCompatActivity() {
             .add(newItemData)
             .addOnSuccessListener { documentReference ->
                 // 성공적으로 추가됐을 때 처리
-                //val intent = Intent(this, HomeActivity::class.java)
-                //startActivity(intent)
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
                 Log.d("bin","데이터 저장됨")
             }
             .addOnFailureListener { e ->
