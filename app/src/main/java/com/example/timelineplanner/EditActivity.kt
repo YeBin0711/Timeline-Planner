@@ -6,40 +6,42 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import com.example.timelineplanner.databinding.ActivityEditBinding
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
-import org.w3c.dom.Text
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import android.widget.Button
-import android.widget.Toast
 import java.time.format.TextStyle
 
 
 class EditActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditBinding
-    private lateinit var editTitle: EditText
+    private lateinit var selectedItem: ItemData
+    private lateinit var editfirstTime: TextView
+    private lateinit var editlastTime: TextView
+
     private val db = FirebaseFirestore.getInstance()
     var selectedDate: LocalDate = LocalDate.now()
+    var selectedDate1: LocalDate = LocalDate.now()
+    var selectedDate2: LocalDate = LocalDate.now()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        editfirstTime = findViewById(R.id.edit_start_time)
+        editlastTime = findViewById(R.id.edit_end_time)
 
         //editTitle = findViewById(R.id.edit_todo_title)
         val intent = intent
         if (intent.hasExtra("selectedItem")) {
-
-            val selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")!!
+            selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")!!
+            // ... rest of your existing code
 
             val editTitle = findViewById<TextView>(R.id.edit_todo_title)
             editTitle.text = selectedItem.daytitle
@@ -53,12 +55,12 @@ class EditActivity : AppCompatActivity() {
 
             val editDate1 = findViewById<TextView>(R.id.edit_date1)
             val dateFormatter1 = DateTimeFormatter.ofPattern("MM월 dd일 (E)", Locale.KOREAN)
-            val formattedDate1 = selectedItem.selectedDate1.format(dateFormatter1)
+            val formattedDate1 = selectedItem.dayDate1.format(dateFormatter1)
             editDate1.text = formattedDate1
 
             val editDate2 = findViewById<TextView>(R.id.edit_date2)
             val dateFormatter2 = DateTimeFormatter.ofPattern("MM월 dd일 (E)", Locale.KOREAN)
-            val formattedDate2 = selectedItem.selectedDate2.format(dateFormatter2)
+            val formattedDate2 = selectedItem.dayDate2.format(dateFormatter2)
             editDate2.text = formattedDate2
 
             val editstartTime = findViewById<TextView>(R.id.edit_start_time)
@@ -135,8 +137,6 @@ class EditActivity : AppCompatActivity() {
         }
         // 삭제 버튼에 대한 클릭 리스너 추가
         binding.btnDelete.setOnClickListener {
-            val selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")
-
             if (selectedItem != null) {
                 // Firestore에서 해당 문서를 삭제하는 코드를 작성하세요.
                 Log.d("id", "${selectedItem.firestoreDocumentId}")
@@ -227,53 +227,80 @@ class EditActivity : AppCompatActivity() {
     }
 
     fun onClickOkButton6(year: Int, month: Int, day: Int, flag: Int) {
-        selectedDate = LocalDate.of(year, month, day)
-        selectedDate = LocalDate.of(year,month,day)
-        if (flag == 0) binding.editDate1.setText(
-            "${month}월 ${day}일 (${
-                selectedDate.dayOfWeek.getDisplayName(
-                    TextStyle.SHORT,
-                    Locale.KOREAN
-                )
-            })"
-        )
-        else if (flag == 1) binding.editDate2.setText(
-            "${month}월 ${day}일 (${
-                selectedDate.dayOfWeek.getDisplayName(
-                    TextStyle.SHORT,
-                    Locale.KOREAN
-                )
-            })"
-        )
+        //selectedDate = LocalDate.of(year, month, day)
+        if (flag == 0) {
+            selectedDate1 = LocalDate.of(year, month, day)
+            binding.editDate1.setText(
+                "${month}월 ${day}일 (${
+                    selectedDate.dayOfWeek.getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.KOREAN
+                    )
+                })"
+            )
+            selectedItem?.dayDate1 = selectedDate
+        } else if (flag == 1) {
+            selectedDate2 = LocalDate.of(year, month, day)
+            binding.editDate2.setText(
+                "${month}월 ${day}일 (${
+                    selectedDate.dayOfWeek.getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.KOREAN
+                    )
+                })"
+
+            )
+            selectedItem?.dayDate2 = selectedDate
+        }
     }
 
     private fun editDataToFirestore() {
-        val selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")
 
         if (selectedItem != null) {
             val updatedTitle = binding.editTodoTitle.text.toString()
             val updatedMemo = binding.editTodoMemo.text.toString()
             val updatedColor = binding.editColorBtn.tag as? String
             val updatedIcon = binding.editIconBtn.tag as? Int
-            val updatedDate1 = binding.editDate1.text.toString()
-            val updatedDate2 = binding.editDate2.text.toString()
 
+            val updatedDateString1 = selectedDate1.toString()
+            val updatedDateString2 = selectedDate2.toString()
 
-            // 여기서 다른 수정 필드도 가져와야 합니다.
+            val editfirstTime = editfirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
+            val editfirstTimeParts = editfirstTime.split(":")
+            val editfirstTimeHour = editfirstTimeParts[0]
+            val editfirstTimeMinute = editfirstTimeParts[1]
+
+            val editlastTime= editlastTime.text.toString()
+            val editlastTimeParts = editlastTime.split(":")
+            val editlastTimeHour = editlastTimeParts[0]
+            val editlastTimeMinute = editlastTimeParts[1]
+
             db.collection("users")
-                .document(selectedItem.firestoreDocumentId) // 해당 문서 ID
-                .update("daytitle", updatedTitle,
+                .document(selectedItem.firestoreDocumentId)
+                .update(
+                    "daytitle", updatedTitle,
                     "daycolor", updatedColor,
-                    "dayicon",updatedIcon,
-                    "selectedDate1",updatedDate1,
-                    "selectedDate2", updatedDate2,
-                    "daymemo", updatedMemo)
-                // 여기서 다른 필드에 대한 업데이트도 추가해야 합니다.
-                .addOnSuccessListener { val intent = Intent()
+                    "dayicon", updatedIcon,
+                    "dayDate1", updatedDateString1,
+                    "dayDate2", updatedDateString2,
+                    "firstTime", mapOf(
+                        "hour" to editfirstTimeHour,
+                        "minute" to editfirstTimeMinute
+                    ),
+                    "lastTime", mapOf(
+                        "hour" to editlastTimeHour,
+                        "minute" to editlastTimeMinute
+                    ),
+                    "daymemo", updatedMemo
+                )
+                .addOnSuccessListener {
+                    val intent = Intent()
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
-                .addOnFailureListener { e -> }
+                .addOnFailureListener { e ->
+                    Log.e("EditActivity", "Firestore update failed: $e")
+                }
             }
 
         }

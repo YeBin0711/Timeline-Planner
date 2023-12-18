@@ -10,8 +10,8 @@ data class ItemData(
     val daytitle: String = "",
     val daycolor: String = "",
     val dayicon: Int = 0,
-    val selectedDate1: LocalDate,
-    val selectedDate2: LocalDate,
+    var dayDate1: LocalDate,
+    var dayDate2: LocalDate,
     val firstTime: Time = Time("", ""),
     val lastTime: Time = Time("", ""),
     val daymemo: String = "",
@@ -33,8 +33,8 @@ data class ItemData(
         parcel.writeString(daytitle)
         parcel.writeString(daycolor)
         parcel.writeInt(dayicon)
-        parcel.writeSerializable(selectedDate1)
-        parcel.writeSerializable(selectedDate2)
+        parcel.writeSerializable(dayDate1)
+        parcel.writeSerializable(dayDate2)
         parcel.writeParcelable(firstTime, flags)
         parcel.writeParcelable(lastTime, flags)
         parcel.writeString(daymemo)

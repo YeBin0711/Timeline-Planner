@@ -36,8 +36,8 @@ class AddActivity : AppCompatActivity() {
     lateinit var alarmTime : Array<Int>
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
-    var selectedDate1: LocalDate = LocalDate.now()
-    var selectedDate2: LocalDate = LocalDate.now()
+    var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
+    var selectedDate2: LocalDate = LocalDate.now() // 현재 날짜
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,7 +185,7 @@ class AddActivity : AppCompatActivity() {
             binding.startTime.setText("%02d:%02d".format(hour, minute))}
         else if (flag == 1) {
             binding.endTime.setText("%02d:%02d".format(hour, minute))
-                        //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
+            //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
             val startDate = binding.date1.text.toString()
             val endDate = binding.date2.text.toString()
             val startTime = binding.startTime.text.toString()
@@ -210,25 +210,29 @@ class AddActivity : AppCompatActivity() {
 
     //todoDatePicker OkButton 함수
     fun onClickOkButton4(year: Int, month: Int, day: Int, flag: Int) {
-        selectedDate1 = LocalDate.of(year, month, day)
-        selectedDate2 = LocalDate.of(year,month,day)
+        if (flag == 0) {
+            selectedDate1 = LocalDate.of(year, month, day)
+            binding.date1.setText(
+                "${month}월 ${day}일 (${
+                    selectedDate1.dayOfWeek.getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.KOREAN
+                    )
+                })"
+            )
+        }
+        else if (flag == 1){
+            selectedDate2 = LocalDate.of(year, month, day)
+            binding.date2.setText(
+                "${month}월 ${day}일 (${
+                    selectedDate2.dayOfWeek.getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.KOREAN
+                    )
+                })"
+            )
 
-        if (flag == 0) binding.date1.setText(
-            "${month}월 ${day}일 (${
-                selectedDate.dayOfWeek.getDisplayName(
-                    TextStyle.SHORT,
-                    Locale.KOREAN
-                )
-            })"
-        )
-        else if (flag == 1) binding.date2.setText(
-            "${month}월 ${day}일 (${
-                selectedDate.dayOfWeek.getDisplayName(
-                    TextStyle.SHORT,
-                    Locale.KOREAN
-                )
-            })"
-        )
+        }
     }
 
     private fun addDataToFirestore() {
