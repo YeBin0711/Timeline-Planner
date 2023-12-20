@@ -3,11 +3,11 @@ package com.example.timelineplanner
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import com.example.timelineplanner.databinding.ActivityEditBinding
@@ -16,8 +16,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 import java.time.format.TextStyle
+import java.util.Locale
 
 
 class EditActivity : AppCompatActivity() {
@@ -30,6 +30,7 @@ class EditActivity : AppCompatActivity() {
     var selectedDate: LocalDate = LocalDate.now()
     var selectedDate1: LocalDate = LocalDate.now()
     var selectedDate2: LocalDate = LocalDate.now()
+    lateinit var intentDate: LocalDate
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditBinding.inflate(layoutInflater)
@@ -149,6 +150,7 @@ class EditActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         // 성공적으로 삭제되었을 때, HomeActivity로 돌아가기
                         val intent = Intent()
+                        intent.putExtra("date", selectedItem.dayDate1.toString())
                         setResult(Activity.RESULT_OK, intent)
                         finish() // 현재 EditActivity 종료
                     }
@@ -301,6 +303,7 @@ class EditActivity : AppCompatActivity() {
                 )
                 .addOnSuccessListener {
                     val intent = Intent()
+                    intent.putExtra("date", selectedItem.dayDate1.toString())
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }

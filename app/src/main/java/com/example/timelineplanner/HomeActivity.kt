@@ -2,7 +2,6 @@ package com.example.timelineplanner
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
@@ -10,17 +9,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import java.time.LocalDate
-import java.util.Locale
-import java.time.YearMonth
-import com.kizitonwose.calendar.core.atStartOfMonth
-import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.ActivityHomeBinding
-import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
 import com.example.timelineplanner.model.Time
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,10 +24,12 @@ import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.WeekDayBinder
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.Year
-import java.time.ZoneId
-import java.util.Date
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 
 class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickListener {
@@ -52,6 +49,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     var weekyear = Calendar.getInstance().get(Calendar.YEAR).toString() // this year
     var weekmonth = Calendar.getInstance().get(Calendar.MONTH).toString()
     var weekday = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
+    var selectedDate1: LocalDate? = LocalDate.now()
 
     var calendarHeaderTitle = "$month - $year" // default header
 
@@ -77,9 +75,17 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         monthText2TextView = binding.monthSelector2.findViewById(R.id.monthText2)
 
         //추가창 뜨게 하는 버튼 이벤트
+        val requestLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult())   //Contract
+        {
+            //사후 처리
+            binding.weekCalendarView.notifyDateChanged(LocalDate.parse(it.data?.getStringExtra("date")))
+        }
         binding.btnPlus.setOnClickListener{
             val intent = Intent(this, AddActivity::class.java)
-            startActivity(intent)
+            intent.putExtra("date", selectedDate1.toString())
+            //startActivity(intent)
+            requestLauncher.launch(intent)
         }
 
         //주간 달력 출력
@@ -90,9 +96,14 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 // Initialize the calendar day for this container.
                 container.day = data
+                if(intent.getStringExtra("date") != null) {
+                    val intentDate = LocalDate.parse(intent.getStringExtra("date"))
+                    selectedDate1 = intentDate
+                    fetchDataFromFirestore(intentDate)
+                }
 
                 // Show the month dates. Remember that views are reused!
-                if (container.day.date != selectedDate) {
+                if (container.day.date != selectedDate1) {
                     container.calendarDayNumber.setTextColor(
                         ContextCompat.getColor(
                             this@HomeActivity,
@@ -106,6 +117,20 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                         )
                     )
                 }
+                else {
+                    container.calendarDayNumber.setTextColor(
+                        ContextCompat.getColor(
+                            this@HomeActivity,
+                            R.color.black
+                        )
+                    )
+                    container.calendarDayName.setTextColor(
+                        ContextCompat.getColor(
+                            this@HomeActivity,
+                            R.color.black
+                        )
+                    )
+                }
 
                 weekyear = data.date.year.toString()
                 weekmonth = data.date.month.toString() // for use outside (in header)
@@ -114,30 +139,27 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                 container.calendarDayNumber.text = data.date.dayOfMonth.toString()
                 container.calendarDayName.text = data.date.dayOfWeek.toString().substring(0..2)
                 container.calendarDay.setOnClickListener {
-                    val clickedDate = container.day.date
+                    var clickedDate = container.day.date
+                    val currentSelection = selectedDate1
+                    if (currentSelection == container.day.date) {
+                        // If the user clicks the same date, clear selection.
+                        selectedDate1 = null
+                        // Reload this date so the dayBinder is called
+                        // and we can REMOVE the selection background.
+                        binding.weekCalendarView.notifyDateChanged(currentSelection)
+                    } else {
+                        selectedDate1 = container.day.date
+                        // Reload the newly selected date so the dayBinder is
+                        // called and we can ADD the selection background.
+                        binding.weekCalendarView.notifyDateChanged(container.day.date)
+                        if (currentSelection != null) {
+                            // We need to also reload the previously selected
+                            // date so we can REMOVE the selection background.
+                            binding.weekCalendarView.notifyDateChanged(currentSelection)
+                        }
+                    }
                     // 클릭한 날짜에 대한 처리
                     fetchDataFromFirestore(clickedDate)
-                    /*
-                    container.calendarDayNumber.setTextColor(
-                        ContextCompat.getColor(
-                            this@HomeActivity,
-                            if (clickedDate == selectedDate) {
-                                R.color.black // 선택된 날짜의 색상
-                            } else {
-                                R.color.gray // 선택되지 않은 날짜의 색상
-                            }
-                        )
-                    )
-                    container.calendarDayName.setTextColor(
-                        ContextCompat.getColor(
-                            this@HomeActivity,
-                            if (clickedDate == selectedDate) {
-                                R.color.black // 선택된 날짜의 색상
-                            } else {
-                                R.color.gray // 선택되지 않은 날짜의 색상
-                            }
-                        )
-                    )*/
                 }
             }
         }
@@ -160,6 +182,18 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         }
 
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data:Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 1 && resultCode == RESULT_OK) {
+            //사후처리
+            if(data?.getStringExtra("date") != null) {
+                fetchDataFromFirestore(LocalDate.parse(data?.getStringExtra("date")))
+                //fetchDataFromFirestore(selectedDate1!!)
+            }
+        }
+    }
+
     override fun onItemClick(position: Int) {
         if (position >= 0 && position < itemList.size) {
             val clickedItem = itemList[position]

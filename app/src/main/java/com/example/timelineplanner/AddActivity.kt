@@ -1,16 +1,16 @@
 package com.example.timelineplanner
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.widget.SwitchCompat
-import com.example.timelineplanner.databinding.ActivityAddBinding
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
+import com.example.timelineplanner.databinding.ActivityAddBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
 import java.time.YearMonth
@@ -38,6 +38,7 @@ class AddActivity : AppCompatActivity() {
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate2: LocalDate = LocalDate.now() // 현재 날짜
+    lateinit var intentDate: LocalDate
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,13 +114,17 @@ class AddActivity : AppCompatActivity() {
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
 
         //오늘 날짜로 기본 text set
+        intentDate = LocalDate.parse(intent.getStringExtra("date"))
+        selectedDate = intentDate
+        selectedDate1 = intentDate
+        selectedDate2 = intentDate
         binding.date1.setText(
-            "${selectedDate.monthValue}월 ${selectedDate.dayOfMonth}일" +
-                    " (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+            "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
+                    " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
         )
         binding.date2.setText(
-            "${selectedDate.monthValue}월 ${selectedDate.dayOfMonth}일" +
-                    " (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+            "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
+                    " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
         )
         //날짜 선택
         binding.date1.setOnClickListener() {
@@ -174,6 +179,7 @@ class AddActivity : AppCompatActivity() {
         //취소 버튼
         binding.btnCancel.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("date", intentDate.toString())
             startActivity(intent)
         }
         //저장 버튼
@@ -282,7 +288,10 @@ class AddActivity : AppCompatActivity() {
             .add(newItemData)
             .addOnSuccessListener { documentReference ->
                 // 성공적으로 추가됐을 때 처리
+                //val intent = Intent(this, HomeActivity::class.java)
+                //startActivity(intent)
                 val intent = Intent(this, HomeActivity::class.java)
+                intent.putExtra("date", intentDate.toString())
                 startActivity(intent)
                 Log.d("bin","데이터 저장됨")
             }
