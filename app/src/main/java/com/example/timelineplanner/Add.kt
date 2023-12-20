@@ -240,7 +240,6 @@ class RepeatDialog(context: Context, val activity: AddActivity): Dialog(context)
             when(checkedId) {
                 R.id.repeat_no -> {
                     activity.binding.todoRepeat.setText("안 함")
-                    binding.repeatNo.setBackgroundColor(Color.RED)
                     repeatType = 0
                 }
                 R.id.repeat_day -> {
