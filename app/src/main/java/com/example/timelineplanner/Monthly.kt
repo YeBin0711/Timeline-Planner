@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.timelineplanner.MyApplication.Companion.db
 import com.example.timelineplanner.databinding.CalendarCellBinding
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.MonthlyEventListItemBinding
@@ -28,6 +29,8 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class CalendarCellContainer(view: View) : ViewContainer(view) {
@@ -66,48 +69,116 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
 
 
         //Todo: 데이터베이스에서 일정 정보 가져오기
-        val todo = getTodoList()
-        //Todo: 해당 날짜의 일정만 가져오기, 보여지도록 선택한 것만 가져오기
-        val todos : MutableList<Todo> = mutableListOf()
-        for(i in 0..todo.size-1) {
-            if(data.date == todo[i].date && todo[i].show) {
-                todos.add(todo[i])
+
+        var todos : MutableList<Todo>
+        getTodoList(data.date){todos ->
+            if(todos != null) {
+
+
+                Log.d("todo", "2: " + todos.toString())
+
+
+                //Todo: 보여지도록 선택한 것만 가져오기
+                var selectedTodos = mutableListOf<Todo>()
+                for(i in 0..todos.size-1) {
+                    if(todos[i].show) {
+                        selectedTodos.add(todos[i])
+                    }
+                }
+
+
+                Log.d("todo", "3: " + selectedTodos.toString())
+
+
+                //Todo: 설정에 따라 todos 정렬(시간순, 제목순)
+                if(PreferenceManager.getDefaultSharedPreferences(container.view.context).getString("sortingStyles", "time") == "time") {
+                    //시간순 정렬
+                    selectedTodos.sortBy(){ it.firstTime.minute.toInt() }
+                    selectedTodos.sortBy(){ it.firstTime.hour.toInt() }
+                } else {
+                    //제목순 정렬
+                    selectedTodos.sortWith(compareBy { it.title })
+                }
+
+                //일정 정보를 리사이클러뷰에 넣기
+                container.binding.eventList.layoutManager = LinearLayoutManager(container.view.context)
+                container.binding.eventList.adapter = MonthlyEventListAdapter(selectedTodos)
+
+                //todolist 다이얼로그
+                container.binding.calendarCell.setOnClickListener {
+                    val dialogBinding = TodoListDialogBinding.inflate(LayoutInflater.from(container.view.context), null, false)
+                    dialogBinding.addTodoButton.elevation = 0f
+                    dialogBinding.yearMonthDate.text = "${container.day.date.year}년 ${container.day.date.monthValue}월 ${container.day.date.dayOfMonth}일"
+                    dialogBinding.todoListOfDialog.layoutManager = LinearLayoutManager(container.view.context)
+                    dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(container.view.context, selectedTodos)
+                    dialogBinding.addTodoButton.setOnClickListener() {
+                        //Todo: 일정 추가 이벤트
+                        val intent = Intent(container.view.context, AddActivity::class.java)
+                        container.view.context.startActivity(intent)
+                    }
+
+                    val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
+                    monthlyDialog.setView(dialogBinding.root)
+                    monthlyDialog.setCancelable(true)
+                    monthlyDialog.show()
+                }
             }
-        }
-        //Todo: 설정에 따라 todos 정렬(시간순, 제목순)
-        if(PreferenceManager.getDefaultSharedPreferences(container.view.context).getString("sortingStyles", "time") == "time") {
-            //시간순 정렬
-            todos.sortBy(){ it.firstTime.minute.toInt() }
-            todos.sortBy(){ it.firstTime.hour.toInt() }
-        } else {
-            //제목순 정렬
-            todos.sortWith(compareBy { it.title })
-        }
-
-
-        //일정 정보를 리사이클러뷰에 넣기
-        container.binding.eventList.layoutManager = LinearLayoutManager(container.view.context)
-        container.binding.eventList.adapter = MonthlyEventListAdapter(todos)
-
-        //todolist 다이얼로그
-        container.binding.calendarCell.setOnClickListener {
-            val dialogBinding = TodoListDialogBinding.inflate(LayoutInflater.from(container.view.context), null, false)
-            dialogBinding.addTodoButton.elevation = 0f
-            dialogBinding.yearMonthDate.text = "${container.day.date.year}년 ${container.day.date.monthValue}월 ${container.day.date.dayOfMonth}일"
-            dialogBinding.todoListOfDialog.layoutManager = LinearLayoutManager(container.view.context)
-            dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(container.view.context, todos)
-            dialogBinding.addTodoButton.setOnClickListener() {
-                //Todo: 일정 추가 이벤트
-                val intent = Intent(container.view.context, AddActivity::class.java)
-                container.view.context.startActivity(intent)
+            else {
             }
-
-            val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
-            monthlyDialog.setView(dialogBinding.root)
-            monthlyDialog.setCancelable(true)
-            monthlyDialog.show()
         }
     }
+
+    fun getTodoList(date: LocalDate, callback: (MutableList<Todo>?) -> Unit) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val dateString = date.format(formatter)
+        val todos = mutableListOf<Todo>()
+
+        db.collection("users")
+            .whereEqualTo("daydate1", dateString)
+            .get()
+            .addOnSuccessListener { result ->
+                //val todos = mutableListOf<Todo>()
+                for (document in result) {
+                    val daytitle = document.getString("daytitle") ?: ""
+
+                    val daycolor = Color.parseColor(document.getString("daycolor") ?:"#D9D9D9")
+
+                    val dayicon = document.getLong("dayicon")?.toInt() ?: 0
+
+                    val daydateString1 = document.getString("daydate1") ?: ""
+                    val firstTimeMap = document.get("firstTime") as HashMap<*, *>
+                    val daydate1 = Time(LocalDate.parse(daydateString1), firstTimeMap["hour"] as String, firstTimeMap["minute"] as String)
+
+                    val daydateString2 = document.getString("daydate2") ?: ""
+                    val lastTimeMap = document.get("lastTime") as HashMap<*, *>
+                    val daydate2 = Time(LocalDate.parse(daydateString2), lastTimeMap["hour"] as String, lastTimeMap["minute"] as String)
+
+                    val daymemo = document.getString("daymemo") ?: ""
+
+                    val show = document.getBoolean("dayshow") ?: false
+
+                    val documentId = document.id // 여기서 문서 ID를 가져옵니다.
+
+                    var todo = Todo(daytitle, daycolor, dayicon, daydate1, daydate2, daymemo, show, documentId)
+                    todo.firestoreDocumentId = documentId
+                    todos.add(todo)
+                }
+
+
+                Log.d("todo", "1: " + todos.toString())
+
+
+                callback(todos)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("FetchData", "Error getting documents.", exception)
+                callback(null)
+            }
+    }
+
+
+
+
 
     fun setDataTypeOfModelAndMarkColor(holidayBody: HolidayBody?, totalCount: Int?, data: CalendarDay, container: CalendarCellContainer) {
         val gson = GsonBuilder().create()
@@ -161,6 +232,7 @@ class MonthlyEventListAdapter(private val events: List<Todo>) : RecyclerView.Ada
         val binding = (holder as MonthlyEventListViewHolder).binding
         binding.eventText.text = events[position].title
         binding.eventColor.setCardBackgroundColor(events[position].color)
+        Log.d("hello", "셀 : " + events[position].toString())
     }
 }
 
