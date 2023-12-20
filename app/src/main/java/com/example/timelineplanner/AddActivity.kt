@@ -1,5 +1,6 @@
 package com.example.timelineplanner
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -268,10 +269,10 @@ class AddActivity : AppCompatActivity() {
         val dateString1 = selectedDate1.toString()
         val dateString2 = selectedDate2.toString()
 
-        val firstTimeHour = selectedFirstHour.toString()
-        val firstTimeMinute = selectedFirstMinute.toString()
-        val lastTimeHour = selectedLastHour.toString()
-        val lastTimeMinute = selectedLastMinute.toString()
+        val firstTimeHour = String.format("%02d", selectedFirstHour)
+        val firstTimeMinute = String.format("%02d", selectedFirstMinute)
+        val lastTimeHour = String.format("%02d", selectedLastHour)
+        val lastTimeMinute = String.format("%02d", selectedLastMinute)
 
         val memo = addMemo.text.toString()
 
@@ -296,8 +297,10 @@ class AddActivity : AppCompatActivity() {
             .addOnSuccessListener { documentReference ->
                 // 성공적으로 추가됐을 때 처리
                 val intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent)
-                Log.d("bin","데이터 저장됨")
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+                Log.d("bin", "데이터 저장됨")
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "저장이 안됐습니다", Toast.LENGTH_SHORT).show()

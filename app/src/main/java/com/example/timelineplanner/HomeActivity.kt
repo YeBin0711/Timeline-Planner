@@ -1,5 +1,6 @@
 package com.example.timelineplanner
 
+import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -56,6 +57,8 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
     var calendarHeaderTitle = "$month - $year" // default header
 
+    private val REQUEST_CODE_HOME = 102
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -80,7 +83,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         //추가창 뜨게 하는 버튼 이벤트
         binding.btnPlus.setOnClickListener{
             val intent = Intent(this, AddActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE_HOME)
         }
 
         //주간 달력 출력
@@ -168,6 +171,15 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     override fun onResume() {
         super.onResume()
         fetchDataFromFirestore(selectedDate)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_HOME && resultCode == Activity.RESULT_OK) {
+            // 처리할 데이터가 있을 경우
+            val receivedData = data?.getSerializableExtra("data")
+            // HomeActivity에서 데이터 처리
+        }
     }
 
     private fun fetchDataFromFirestore(selectedDate: LocalDate) {
