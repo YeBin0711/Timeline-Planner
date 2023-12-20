@@ -129,7 +129,7 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
                 for (document in result) {
                     val daytitle = document.getString("daytitle") ?: ""
 
-                    val daycolor = Color.parseColor(document.getString("daycolor") ?:"#D9D9D9")
+                    val daycolor = document.getLong("daycolor")?.toInt() ?: 0
 
                     val dayicon = document.getLong("dayicon")?.toInt() ?: 0
 
@@ -225,7 +225,6 @@ class MonthlyHeaderBinder : MonthHeaderFooterBinder<MonthlyHeaderContainer> {
     override fun bind(container: MonthlyHeaderContainer, data: CalendarMonth) {
     }
 }
-
 
 class TodoListDialogViewHolder(val binding: TodoListDialogItemBinding) : RecyclerView.ViewHolder(binding.root)
 

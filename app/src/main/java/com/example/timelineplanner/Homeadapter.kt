@@ -77,7 +77,7 @@ class Homeadapter(
 
         holder.imageViewColor.layoutParams.height = imageViewHeight
         // 해당 TextView의 layoutparams를 가져와서 설정
-        holder.emptyView.layoutParams.height=imageViewHeight - 100
+        holder.emptyView.layoutParams.height=imageViewHeight - 75
 
         var isChecked = false // 초기 상태
 
