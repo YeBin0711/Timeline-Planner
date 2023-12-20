@@ -3,7 +3,6 @@ package com.example.timelineplanner
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
@@ -11,17 +10,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import java.time.LocalDate
-import java.util.Locale
-import java.time.YearMonth
-import com.kizitonwose.calendar.core.atStartOfMonth
-import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.ActivityHomeBinding
-import com.example.timelineplanner.databinding.ItemCalendarDayBinding
 import com.example.timelineplanner.model.ItemData
 import com.example.timelineplanner.model.Time
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,10 +25,12 @@ import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.WeekDayBinder
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.Year
-import java.time.ZoneId
-import java.util.Date
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 
 class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickListener {
@@ -45,12 +42,13 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     private val itemList = ArrayList<ItemData>()
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
-    lateinit var clickedDate: LocalDate
+    val calendar = Calendar.getInstance()
     val year = selectedDate.year.toString()
     val month = selectedDate.month.toString()
     var weekyear = Calendar.getInstance().get(Calendar.YEAR).toString() // this year
     var weekmonth = Calendar.getInstance().get(Calendar.MONTH).toString()
     var weekday = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
+    var selectedDate1: LocalDate? = LocalDate.now()
 
     private val REQUEST_CODE_HOME = 102
 
@@ -76,23 +74,35 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         monthText2TextView = binding.monthSelector2.findViewById(R.id.monthText2)
 
         //추가창 뜨게 하는 버튼 이벤트
+        val requestLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult())   //Contract
+        {
+            //사후 처리
+            binding.weekCalendarView.notifyDateChanged(LocalDate.parse(it.data?.getStringExtra("date")))
+        }
         binding.btnPlus.setOnClickListener{
             val intent = Intent(this, AddActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE_HOME)
+            intent.putExtra("date", selectedDate1.toString())
+            //startActivity(intent)
+            requestLauncher.launch(intent)
         }
 
         //주간 달력 출력
         val currentDate = LocalDate.now()
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
-
             // Called every time we need to reuse a container.
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 // Initialize the calendar day for this container.
                 container.day = data
+                if(intent.getStringExtra("date") != null) {
+                    val intentDate = LocalDate.parse(intent.getStringExtra("date"))
+                    selectedDate1 = intentDate
+                    fetchDataFromFirestore(intentDate)
+                }
 
                 // Show the month dates. Remember that views are reused!
-                if (container.day.date != selectedDate) {
+                if (container.day.date != selectedDate1) {
                     container.calendarDayNumber.setTextColor(
                         ContextCompat.getColor(
                             this@HomeActivity,
@@ -106,18 +116,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                         )
                     )
                 }
-
-                weekyear = data.date.year.toString()
-                weekmonth = data.date.month.toString() // for use outside (in header)
-                weekday = data.date.dayOfMonth.toString()
-
-                container.calendarDayNumber.text = data.date.dayOfMonth.toString()
-                container.calendarDayName.text = data.date.dayOfWeek.toString().substring(0..2)
-
-                container.calendarDay.setOnClickListener {
-                    clickedDate = container.day.date
-                    fetchDataFromFirestore(clickedDate)
-                    //선택된 날짜 처리
+                else {
                     container.calendarDayNumber.setTextColor(
                         ContextCompat.getColor(
                             this@HomeActivity,
@@ -130,7 +129,37 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                             R.color.black
                         )
                     )
-                    //ToDo: 이전 날짜 회색 처리
+                }
+
+                weekyear = data.date.year.toString()
+                weekmonth = data.date.month.toString() // for use outside (in header)
+                weekday = data.date.dayOfMonth.toString()
+
+                container.calendarDayNumber.text = data.date.dayOfMonth.toString()
+                container.calendarDayName.text = data.date.dayOfWeek.toString().substring(0..2)
+
+                container.calendarDay.setOnClickListener {
+                    var clickedDate = container.day.date
+                    val currentSelection = selectedDate1
+                    if (currentSelection == container.day.date) {
+                        // If the user clicks the same date, clear selection.
+                        selectedDate1 = null
+                        // Reload this date so the dayBinder is called
+                        // and we can REMOVE the selection background.
+                        binding.weekCalendarView.notifyDateChanged(currentSelection)
+                    } else {
+                        selectedDate1 = container.day.date
+                        // Reload the newly selected date so the dayBinder is
+                        // called and we can ADD the selection background.
+                        binding.weekCalendarView.notifyDateChanged(container.day.date)
+                        if (currentSelection != null) {
+                            // We need to also reload the previously selected
+                            // date so we can REMOVE the selection background.
+                            binding.weekCalendarView.notifyDateChanged(currentSelection)
+                        }
+                    }
+                    // 클릭한 날짜에 대한 처리
+                    fetchDataFromFirestore(clickedDate)
                 }
             }
         }
@@ -153,6 +182,18 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         }
 
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data:Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 1 && resultCode == RESULT_OK) {
+            //사후처리
+            if(data?.getStringExtra("date") != null) {
+                fetchDataFromFirestore(LocalDate.parse(data?.getStringExtra("date")))
+                //fetchDataFromFirestore(selectedDate1!!)
+            }
+        }
+    }
+
     override fun onItemClick(position: Int) {
         if (position >= 0 && position < itemList.size) {
             val clickedItem = itemList[position]
@@ -168,14 +209,6 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         fetchDataFromFirestore(selectedDate)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_HOME && resultCode == Activity.RESULT_OK) {
-            // 처리할 데이터가 있을 경우
-            val receivedData = data?.getSerializableExtra("data")
-            // HomeActivity에서 데이터 처리
-        }
-    }
 
     private fun fetchDataFromFirestore(selectedDate: LocalDate) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")

@@ -24,17 +24,6 @@ class MonthlyActivity : AppCompatActivity() {
         cellBinding = CalendarCellBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //테마 적용
-        /*
-        PreferenceManager.getDefaultSharedPreferences(this).getString("themes", "light")?.let {
-            when(it) {
-                "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                "default" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-        }
-        */
-
         //툴바 메뉴 설정
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)

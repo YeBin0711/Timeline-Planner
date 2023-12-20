@@ -6,13 +6,13 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.widget.SwitchCompat
-import com.example.timelineplanner.databinding.ActivityAddBinding
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.SwitchCompat
+import com.example.timelineplanner.databinding.ActivityAddBinding
 import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
@@ -31,7 +31,6 @@ class AddActivity : AppCompatActivity() {
     private lateinit var addMemo: EditText
     private lateinit var buttonSave: Button
 
-
     var icon = 0 //아이콘 ID
     var color =0 //색상 코드
     var repeatType = 0
@@ -48,6 +47,7 @@ class AddActivity : AppCompatActivity() {
     var selectedDate = LocalDate.now() //현재 날짜
     var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate2: LocalDate = LocalDate.now() // 현재 날짜
+    lateinit var intentDate: LocalDate
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -125,13 +125,17 @@ class AddActivity : AppCompatActivity() {
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
 
         //오늘 날짜로 기본 text set
+        intentDate = LocalDate.parse(intent.getStringExtra("date"))
+        selectedDate = intentDate
+        selectedDate1 = intentDate
+        selectedDate2 = intentDate
         binding.date1.setText(
-            "${selectedDate.monthValue}월 ${selectedDate.dayOfMonth}일" +
-                    " (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+            "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
+                    " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
         )
         binding.date2.setText(
-            "${selectedDate.monthValue}월 ${selectedDate.dayOfMonth}일" +
-                    " (${selectedDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+            "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
+                    " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
         )
         //날짜 선택
         binding.date1.setOnClickListener() {
@@ -188,6 +192,7 @@ class AddActivity : AppCompatActivity() {
         //취소 버튼
         binding.btnCancel.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("date", intentDate.toString())
             startActivity(intent)
         }
         //저장 버튼
@@ -198,16 +203,9 @@ class AddActivity : AppCompatActivity() {
 
     //timePicker OkButton 함수
     fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
-        if (flag == 0) {
-            selectedFirstHour = hour
-            selectedFirstMinute = minute
-            binding.startTime.setText("%02d:%02d".format(hour, minute))
-            selectedLastHour = hour+1
-            selectedLastMinute = minute
-            binding.endTime.setText("%02d:%02d".format(hour + 1, minute))
-        } else if (flag == 1) {
-            selectedLastHour = hour
-            selectedLastMinute = minute
+        if (flag == 0){
+            binding.startTime.setText("%02d:%02d".format(hour, minute))}
+        else if (flag == 1) {
             binding.endTime.setText("%02d:%02d".format(hour, minute))
             //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
             val startDate = binding.date1.text.toString()
@@ -237,15 +235,6 @@ class AddActivity : AppCompatActivity() {
         if (flag == 0) {
             selectedDate1 = LocalDate.of(year, month, day)
             binding.date1.setText(
-                "${month}월 ${day}일 (${
-                    selectedDate1.dayOfWeek.getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.KOREAN
-                    )
-                })"
-            )
-            selectedDate2 = selectedDate1
-            binding.date2.setText(
                 "${month}월 ${day}일 (${
                     selectedDate1.dayOfWeek.getDisplayName(
                         TextStyle.SHORT,
@@ -307,11 +296,12 @@ class AddActivity : AppCompatActivity() {
             .add(newItemData)
             .addOnSuccessListener { documentReference ->
                 // 성공적으로 추가됐을 때 처리
+                //val intent = Intent(this, HomeActivity::class.java)
+                //startActivity(intent)
                 val intent = Intent(this, HomeActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                setResult(Activity.RESULT_OK, intent)
-                finish()
-                Log.d("bin", "데이터 저장됨")
+                intent.putExtra("date", intentDate.toString())
+                startActivity(intent)
+                Log.d("bin","데이터 저장됨")
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "저장이 안됐습니다", Toast.LENGTH_SHORT).show()

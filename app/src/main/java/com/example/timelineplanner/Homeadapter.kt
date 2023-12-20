@@ -16,6 +16,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.ActivityHomeBinding
@@ -135,8 +136,9 @@ class Homeadapter(
             val selectedItem: ItemData = itemList[position]// 선택된 아이템
             val intent = Intent(context, EditActivity::class.java)
             intent.putExtra("selectedItem", selectedItem)
-            context.startActivity(intent)
-            }
+            //context.startActivity(intent)
+            startActivityForResult(context as HomeActivity, intent, 1, null)
+        }
     }
 
     private fun calculateImageViewHeight(firstTime: Time, lastTime: Time): Int {

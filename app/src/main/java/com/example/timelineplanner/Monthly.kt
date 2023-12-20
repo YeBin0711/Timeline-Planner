@@ -67,14 +67,9 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
         }
 
         //Todo: 데이터베이스에서 일정 정보 가져오기
-
         var todos : MutableList<Todo>
         getTodoList(data.date){todos ->
             if(todos != null) {
-
-                Log.d("todo", "2: " + todos.toString())
-
-
                 //Todo: 보여지도록 선택한 것만 가져오기
                 var selectedTodos = mutableListOf<Todo>()
                 for(i in 0..todos.size-1) {
@@ -82,8 +77,6 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
                         selectedTodos.add(todos[i])
                     }
                 }
-
-                Log.d("todo", "3: " + selectedTodos.toString())
 
                 //Todo: 설정에 따라 todos 정렬(시간순, 제목순)
                 if(PreferenceManager.getDefaultSharedPreferences(container.view.context).getString("sortingStyles", "time") == "time") {
@@ -158,11 +151,6 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
                     todo.firestoreDocumentId = documentId
                     todos.add(todo)
                 }
-
-
-                Log.d("todo", "1: " + todos.toString())
-
-
                 callback(todos)
             }
             .addOnFailureListener { exception ->
