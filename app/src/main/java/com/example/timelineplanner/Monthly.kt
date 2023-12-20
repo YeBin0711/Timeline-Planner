@@ -66,14 +66,11 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
             }
         }
 
-
-
         //Todo: 데이터베이스에서 일정 정보 가져오기
 
         var todos : MutableList<Todo>
         getTodoList(data.date){todos ->
             if(todos != null) {
-
 
                 Log.d("todo", "2: " + todos.toString())
 
@@ -86,9 +83,7 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
                     }
                 }
 
-
                 Log.d("todo", "3: " + selectedTodos.toString())
-
 
                 //Todo: 설정에 따라 todos 정렬(시간순, 제목순)
                 if(PreferenceManager.getDefaultSharedPreferences(container.view.context).getString("sortingStyles", "time") == "time") {
@@ -175,10 +170,6 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
                 callback(null)
             }
     }
-
-
-
-
 
     fun setDataTypeOfModelAndMarkColor(holidayBody: HolidayBody?, totalCount: Int?, data: CalendarDay, container: CalendarCellContainer) {
         val gson = GsonBuilder().create()

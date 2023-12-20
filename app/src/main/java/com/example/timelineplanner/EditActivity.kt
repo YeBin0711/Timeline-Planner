@@ -21,7 +21,7 @@ import java.time.format.TextStyle
 
 
 class EditActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityEditBinding
+    lateinit var binding: ActivityEditBinding
     private lateinit var selectedItem: ItemData
     private lateinit var editfirstTime: TextView
     private lateinit var editlastTime: TextView
@@ -30,6 +30,12 @@ class EditActivity : AppCompatActivity() {
     var selectedDate: LocalDate = LocalDate.now()
     var selectedDate1: LocalDate = LocalDate.now()
     var selectedDate2: LocalDate = LocalDate.now()
+
+    var repeatType = 0
+    lateinit var repeatDays : Array<Int>
+    var alarmType = 0
+    lateinit var alarmTime : Array<Int>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditBinding.inflate(layoutInflater)
@@ -47,8 +53,7 @@ class EditActivity : AppCompatActivity() {
             editTitle.text = selectedItem.daytitle
 
             val editColor = findViewById<ImageButton>(R.id.edit_color_btn)
-            // 이미지뷰의 배경색을 변경하려면 setBackgroundColor을 사용합니다.
-            editColor.setBackgroundColor(Color.parseColor(selectedItem.daycolor))
+            editColor.setBackgroundColor(selectedItem.daycolor)
 
             val editIcon = findViewById<ImageButton>(R.id.edit_icon_btn)
             editIcon.setImageResource(selectedItem.dayicon)
@@ -84,31 +89,24 @@ class EditActivity : AppCompatActivity() {
             val colorDialog = ColorSelectionDialog()
             colorDialog.setColorSelectedListener { selectedColorId ->
                 binding.editColorBtn.tag = selectedColorId
-                when (selectedColorId) {
-                    "#FFD5D5" -> {
-                        binding.editColorBtn.setImageResource(R.color.lightred)
-                    }
-                    "#FAFFBD" -> {
-                        binding.editColorBtn.setImageResource(R.color.lightyellow)
-                    }
-                    "#ADFFAC" -> {
-                        binding.editColorBtn.setImageResource(R.color.lightgreen)
-                    }
-                    "#D9D9D9" -> {
-                        binding.editColorBtn.setImageResource(R.color.lightgray)
-                    }
-                    "#F2D5FF" -> {
-                        binding.editColorBtn.setImageResource(R.color.phvink)
-                    }
-                    "#7FE8FF" -> {
-                        binding.editColorBtn.setImageResource(R.color.skyblue)
-                    }
-                    else -> {
-                        // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
-                        binding.editColorBtn.setColorFilter(ContextCompat.getColor(this, R.color.lightgray))
-                    }
+
+                // 색상 리소스를 가져오기
+                val colorResource = when (selectedColorId) {
+                    Color.parseColor("#FFD5D5") -> R.color.lightred
+                    Color.parseColor("#FAFFBD") -> R.color.lightyellow
+                    Color.parseColor("#ADFFAC") -> R.color.lightgreen
+                    Color.parseColor("#D9D9D9") -> R.color.lightgray
+                    Color.parseColor("#F2D5FF") -> R.color.phvink
+                    Color.parseColor("#7FE8FF") -> R.color.skyblue
+                    else -> R.color.lightgray // 기본값 또는 처리되지 않은 경우
                 }
+                // 색상 리소스 ID를 실제 색상 값으로 가져오기
+                val colorValue = ContextCompat.getColor(this, colorResource)
+
+                // 색상을 이미지뷰 배경으로 설정
+                binding.editColorBtn.setBackgroundResource(colorResource)
             }
+
             colorDialog.show(supportFragmentManager, "color_dialog_tag")
         }
 
@@ -137,6 +135,18 @@ class EditActivity : AppCompatActivity() {
             }
 
             iconDialog.show(supportFragmentManager, "icon_dialog_tag")
+        }
+
+        //반복
+        binding.editTodoRepeat.setOnClickListener {
+            val repeatdialog = RepeatDialog1(this, this)
+            repeatdialog.show()
+        }
+
+        //알림
+        binding.editTodoAlarm.setOnClickListener {
+            val alarmdialog = AlarmDialog1(this, this)
+            alarmdialog.show()
         }
         // 삭제 버튼에 대한 클릭 리스너 추가
         binding.btnDelete.setOnClickListener {
@@ -262,7 +272,7 @@ class EditActivity : AppCompatActivity() {
         if (selectedItem != null) {
             val updatedTitle = binding.editTodoTitle.text.toString()
             val updatedMemo = binding.editTodoMemo.text.toString()
-            val updatedColor = binding.editColorBtn.tag as? String
+            val updatedColor = binding.editColorBtn.tag as? Int
             val updatedIcon = binding.editIconBtn.tag as? Int
 
             val updatedDateString1 = selectedDate1.toString()
@@ -279,6 +289,8 @@ class EditActivity : AppCompatActivity() {
             val editlastTimeMinute = editlastTimeParts[1]
 
             val editShow = binding.editCswitch.isChecked
+
+            val isCheckData = (selectedItem.daycolor )
 
             db.collection("users")
                 .document(selectedItem.firestoreDocumentId)
@@ -307,8 +319,7 @@ class EditActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     Log.e("EditActivity", "Firestore update failed: $e")
                 }
-            }
-
         }
-}
 
+    }
+}

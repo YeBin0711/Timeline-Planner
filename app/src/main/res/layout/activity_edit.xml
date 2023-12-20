@@ -163,7 +163,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
         <TextView
-            android:id="@+id/todo_repeat"
+            android:id="@+id/edit_todo_repeat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/todo_repeat"
@@ -184,7 +184,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
         <TextView
-            android:id="@+id/todo_alarm"
+            android:id="@+id/edit_todo_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/todo_alarm"

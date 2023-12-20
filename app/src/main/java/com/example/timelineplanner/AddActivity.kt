@@ -2,6 +2,7 @@ package com.example.timelineplanner
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -30,12 +31,14 @@ class AddActivity : AppCompatActivity() {
     private lateinit var addMemo: EditText
     private lateinit var buttonSave: Button
 
+
     var icon = 0 //아이콘 ID
-    var color = "" //색상 코드
+    var color =0 //색상 코드
     var repeatType = 0
     lateinit var repeatDays : Array<Int>
     var alarmType = 0
     lateinit var alarmTime : Array<Int>
+
 
     var selectedFirstHour = 8
     var selectedLastHour = 9
@@ -45,7 +48,9 @@ class AddActivity : AppCompatActivity() {
     var selectedDate = LocalDate.now() //현재 날짜
     var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate2: LocalDate = LocalDate.now() // 현재 날짜
+
     private val db = FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddBinding.inflate(layoutInflater)
@@ -65,12 +70,12 @@ class AddActivity : AppCompatActivity() {
             colorDialog.setColorSelectedListener { selectedColorId ->
                 binding.colorBtn.tag = selectedColorId
                 when (selectedColorId) {
-                    "#FFD5D5" -> binding.colorBtn.setImageResource(R.color.lightred)
-                    "#FAFFBD" -> binding.colorBtn.setImageResource(R.color.lightyellow)
-                    "#ADFFAC" -> binding.colorBtn.setImageResource(R.color.lightgreen)
-                    "#D9D9D9" -> binding.colorBtn.setImageResource(R.color.lightgray)
-                    "#F2D5FF" -> binding.colorBtn.setImageResource(R.color.phvink)
-                    "#7FE8FF" -> binding.colorBtn.setImageResource(R.color.skyblue)
+                    Color.parseColor("#FFD5D5") -> binding.colorBtn.setImageResource(R.color.lightred)
+                    Color.parseColor("#FAFFBD") -> binding.colorBtn.setImageResource(R.color.lightyellow)
+                    Color.parseColor("#ADFFAC") -> binding.colorBtn.setImageResource(R.color.lightgreen)
+                    Color.parseColor("#D9D9D9") -> binding.colorBtn.setImageResource(R.color.lightgray)
+                    Color.parseColor("#F2D5FF") -> binding.colorBtn.setImageResource(R.color.phvink)
+                    Color.parseColor("#7FE8FF") -> binding.colorBtn.setImageResource(R.color.skyblue)
                     else -> {
                         // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
                     }
@@ -267,7 +272,7 @@ class AddActivity : AppCompatActivity() {
         val title = addTitle.text.toString()
 
         val icon = binding.iconBtn.tag as? Int
-        val color = binding.colorBtn.tag as? String
+        val color = binding.colorBtn.tag as? Int
 
         val dateString1 = selectedDate1.toString()
         val dateString2 = selectedDate2.toString()

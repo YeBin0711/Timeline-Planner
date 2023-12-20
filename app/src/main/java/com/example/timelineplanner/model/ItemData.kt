@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter
 
 data class ItemData(
     val daytitle: String = "",
-    val daycolor: String = "",
+    val daycolor: Int = 0,
     val dayicon: Int = 0,
     var dayDate1: LocalDate,
     var dayDate2: LocalDate,
@@ -26,7 +26,7 @@ data class ItemData(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
-        parcel.readString() ?: "",
+        parcel.readInt(),
         parcel.readInt(),
         parcel.readSerializable() as LocalDate,
         parcel.readSerializable() as LocalDate,
@@ -39,7 +39,7 @@ data class ItemData(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(daytitle)
-        parcel.writeString(daycolor)
+        parcel.writeInt(daycolor)
         parcel.writeInt(dayicon)
         parcel.writeSerializable(dayDate1)
         parcel.writeSerializable(dayDate2)

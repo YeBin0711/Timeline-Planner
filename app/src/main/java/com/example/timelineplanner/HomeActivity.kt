@@ -41,21 +41,16 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     private lateinit var adapter: Homeadapter
     lateinit var binding: ActivityHomeBinding
     lateinit var monthText2TextView: TextView
-    private lateinit var Homeadapter:Homeadapter
     private val db = FirebaseFirestore.getInstance()// 문서 ID를 저장할 변수
     private val itemList = ArrayList<ItemData>()
-    private var beforeDate: LocalDate ?= null    //이전 날짜 추적 변수
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     lateinit var clickedDate: LocalDate
-    val calendar = Calendar.getInstance()
     val year = selectedDate.year.toString()
     val month = selectedDate.month.toString()
     var weekyear = Calendar.getInstance().get(Calendar.YEAR).toString() // this year
     var weekmonth = Calendar.getInstance().get(Calendar.MONTH).toString()
     var weekday = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
-
-    var calendarHeaderTitle = "$month - $year" // default header
 
     private val REQUEST_CODE_HOME = 102
 
@@ -198,7 +193,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                 for (document in result) {
                     val daytitle = document.getString("daytitle") ?: ""
 
-                    val daycolor = document.getString("daycolor") ?:"#D9D9D9"
+                    val daycolor = document.getLong("daycolor")?.toInt() ?: 0
 
                     val dayicon = document.getLong("dayicon")?.toInt() ?: 0
 
@@ -247,7 +242,6 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val koreanDateString = koreanDateFormat.format(Date(selectedDate.year - 1900, selectedDate.monthValue - 1, selectedDate.dayOfMonth))
 
         // monthText2의 TextView를 찾아 업데이트
-
         val monthText2TextView = binding.monthSelector2.findViewById<TextView>(R.id.monthText2)
         monthText2TextView.text = koreanDateString
 
