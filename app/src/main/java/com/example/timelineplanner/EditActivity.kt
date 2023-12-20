@@ -90,7 +90,6 @@ class EditActivity : AppCompatActivity() {
             val colorDialog = ColorSelectionDialog()
             colorDialog.setColorSelectedListener { selectedColorId ->
                 binding.editColorBtn.tag = selectedColorId
-
                 // 색상 리소스를 가져오기
                 val colorResource = when (selectedColorId) {
                     Color.parseColor("#FFD5D5") -> R.color.lightred
@@ -101,9 +100,6 @@ class EditActivity : AppCompatActivity() {
                     Color.parseColor("#7FE8FF") -> R.color.skyblue
                     else -> R.color.lightgray // 기본값 또는 처리되지 않은 경우
                 }
-                // 색상 리소스 ID를 실제 색상 값으로 가져오기
-                val colorValue = ContextCompat.getColor(this, colorResource)
-
                 // 색상을 이미지뷰 배경으로 설정
                 binding.editColorBtn.setBackgroundResource(colorResource)
             }
@@ -273,8 +269,8 @@ class EditActivity : AppCompatActivity() {
         if (selectedItem != null) {
             val updatedTitle = binding.editTodoTitle.text.toString()
             val updatedMemo = binding.editTodoMemo.text.toString()
-            val updatedColor = binding.editColorBtn.tag as? Int
-            val updatedIcon = binding.editIconBtn.tag as? Int
+            val updatedColor = binding.editColorBtn.tag as? Int ?: selectedItem.daycolor
+            val updatedIcon = binding.editIconBtn.tag as? Int ?: selectedItem.dayicon
 
             val updatedDateString1 = selectedDate1.toString()
             val updatedDateString2 = selectedDate2.toString()
