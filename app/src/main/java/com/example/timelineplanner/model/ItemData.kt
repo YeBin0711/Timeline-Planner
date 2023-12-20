@@ -4,6 +4,12 @@ import com.example.timelineplanner.model.Time
 import java.time.LocalDate
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
+import com.example.timelineplanner.Homeadapter
+import com.example.timelineplanner.MyApplication
+import com.example.timelineplanner.MyApplication.Companion.db
+import com.example.timelineplanner.Todo
+import java.time.format.DateTimeFormatter
 
 
 data class ItemData(
@@ -14,6 +20,7 @@ data class ItemData(
     var dayDate2: LocalDate,
     val firstTime: Time = Time("", ""),
     val lastTime: Time = Time("", ""),
+    val dayshow: Boolean = true,
     val daymemo: String = "",
     var firestoreDocumentId: String = ""
 ) : Parcelable {
@@ -25,6 +32,7 @@ data class ItemData(
         parcel.readSerializable() as LocalDate,
         parcel.readParcelable(Time::class.java.classLoader) ?: Time(),
         parcel.readParcelable(Time::class.java.classLoader) ?: Time(),
+        parcel.readByte() != 0.toByte(),
         parcel.readString() ?: "",
         parcel.readString() ?: ""
     )
@@ -37,6 +45,7 @@ data class ItemData(
         parcel.writeSerializable(dayDate2)
         parcel.writeParcelable(firstTime, flags)
         parcel.writeParcelable(lastTime, flags)
+        parcel.writeBoolean(dayshow)
         parcel.writeString(daymemo)
         parcel.writeString(firestoreDocumentId)
     }
@@ -84,4 +93,3 @@ data class Time(
         }
     }
 }
-

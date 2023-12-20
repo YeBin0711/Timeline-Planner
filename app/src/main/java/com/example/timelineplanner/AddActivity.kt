@@ -162,6 +162,9 @@ class AddActivity : AppCompatActivity() {
             if (isChecked) {
                 switchView.isChecked = true
             }
+            else{
+                switchView.isChecked = false
+            }
         }
         //달력에 표시 되게...
 
@@ -274,6 +277,8 @@ class AddActivity : AppCompatActivity() {
         val lastTimeHour = String.format("%02d", selectedLastHour)
         val lastTimeMinute = String.format("%02d", selectedLastMinute)
 
+        val show = binding.cswitch.isChecked
+
         val memo = addMemo.text.toString()
 
         val newItemData = hashMapOf(
@@ -290,6 +295,7 @@ class AddActivity : AppCompatActivity() {
                 "hour" to lastTimeHour,
                 "minute" to lastTimeMinute
             ),
+            "dayshow" to show,
             "daymemo" to memo,
         )
         db.collection("users")
