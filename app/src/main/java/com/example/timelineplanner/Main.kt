@@ -8,14 +8,15 @@ class Todo(
     val icon: Int,
     val firstTime: Time,
     val lastTime: Time,
-    val date: LocalDate,
     val memo: String,
     val show: Boolean,
-    val repeat: Repeat,
-    val alarm: Alarm
+    //val repeat: Repeat,
+    //val alarm: Alarm,
+    var firestoreDocumentId: String
 )
 
 class Time(
+    val date: LocalDate,
     val hour: String,
     val minute: String
 )
@@ -49,19 +50,3 @@ fun transIntoTimeForm(originTime: String?, timeForm: String?): String {
     return resultHour
 }
 
-fun getTodoList(): MutableList<Todo> {
-    val todo = mutableListOf<Todo>()
-    MyApplication.db.collection("Todo")
-        .get()
-        .addOnSuccessListener { result ->
-            for (document in result) {
-                val item = document.toObject(Todo::class.java)
-                todo.add(item)
-            }
-        }
-        .addOnFailureListener { exception ->
-            // 실패했을 때 처리
-        }
-
-    return todo
-}
