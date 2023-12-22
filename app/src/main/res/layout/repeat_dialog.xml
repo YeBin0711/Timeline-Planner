@@ -10,27 +10,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="5dp" >
-        <RadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/repeat_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="안 함"
             android:textSize="20sp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:theme="@style/RadioButton"/>
         <RadioButton
             android:id="@+id/repeat_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="매일"
             android:textSize="20sp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:theme="@style/RadioButton"/>
         <RadioButton
             android:id="@+id/repeat_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="매주"
             android:textSize="20sp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:theme="@style/RadioButton"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -95,14 +98,16 @@
             android:layout_height="wrap_content"
             android:text="매월"
             android:textSize="20sp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:theme="@style/RadioButton"/>
         <RadioButton
             android:id="@+id/repeat_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="매년"
             android:textSize="20sp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:theme="@style/RadioButton"/>
     </RadioGroup>
 
     <LinearLayout

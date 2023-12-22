@@ -1,6 +1,5 @@
 package com.example.timelineplanner
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.icu.util.Calendar
@@ -24,6 +23,13 @@ import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.WeekDayBinder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Year
@@ -35,11 +41,12 @@ import java.util.Locale
 
 class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickListener {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: Homeadapter
+    private var adapter: Homeadapter = Homeadapter(this, listOf<ItemData>(), this)
     lateinit var binding: ActivityHomeBinding
     lateinit var monthText2TextView: TextView
     private val db = FirebaseFirestore.getInstance()// 문서 ID를 저장할 변수
-    private val itemList = ArrayList<ItemData>()
+    //private val itemList = ArrayList<ItemData>()
+    private var itemList = mutableListOf<ItemData>()
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     val calendar = Calendar.getInstance()
@@ -58,28 +65,26 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        fetchDataFromFirestore(selectedDate)
-
-        recyclerView = findViewById(R.id.weekday_recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        fetchDataFromFirestore(selectedDate)
-
-        adapter = Homeadapter(this,itemList, this)
-        recyclerView.adapter = adapter
-
         //action bar
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         monthText2TextView = binding.monthSelector2.findViewById(R.id.monthText2)
 
+        recyclerView = findViewById(R.id.weekday_recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        fetchData(selectedDate)
+
         //추가창 뜨게 하는 버튼 이벤트
         val requestLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult())   //Contract
         {
             //사후 처리
-            binding.weekCalendarView.notifyDateChanged(LocalDate.parse(it.data?.getStringExtra("date")))
+            val intentDate = LocalDate.parse(it.data?.getStringExtra("resultDate"))
+            selectedDate1 = intentDate
+            selectedDate = intentDate
+            binding.weekCalendarView.notifyDateChanged(intentDate)
         }
         binding.btnPlus.setOnClickListener{
             val intent = Intent(this, AddActivity::class.java)
@@ -92,15 +97,11 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val currentDate = LocalDate.now()
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
+
             // Called every time we need to reuse a container.
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 // Initialize the calendar day for this container.
                 container.day = data
-                if(intent.getStringExtra("date") != null) {
-                    val intentDate = LocalDate.parse(intent.getStringExtra("date"))
-                    selectedDate1 = intentDate
-                    fetchDataFromFirestore(intentDate)
-                }
 
                 // Show the month dates. Remember that views are reused!
                 if (container.day.date != selectedDate1) {
@@ -144,7 +145,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     val currentSelection = selectedDate1
                     if (currentSelection == container.day.date) {
                         // If the user clicks the same date, clear selection.
-                        selectedDate1 = null
+                        //selectedDate1 = null
                         // Reload this date so the dayBinder is called
                         // and we can REMOVE the selection background.
                         binding.weekCalendarView.notifyDateChanged(currentSelection)
@@ -188,9 +189,11 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 1 && resultCode == RESULT_OK) {
             //사후처리
-            if(data?.getStringExtra("date") != null) {
-                fetchDataFromFirestore(LocalDate.parse(data?.getStringExtra("date")))
-                //fetchDataFromFirestore(selectedDate1!!)
+            if(data?.getStringExtra("resultDate") != null) {
+                val intentDate = LocalDate.parse(data?.getStringExtra("resultDate"))
+                selectedDate1 = intentDate
+                selectedDate = intentDate
+                binding.weekCalendarView.notifyDateChanged(intentDate)
             }
         }
     }
@@ -210,6 +213,81 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         fetchDataFromFirestore(selectedDate)
     }
 
+    private fun fetchData(selectedDate: LocalDate) {
+        var items = mutableListOf<ItemData>()
+        val channel = Channel<Homeadapter>()
+
+        val backgroundScope = CoroutineScope(Dispatchers.IO + Job())
+        backgroundScope.launch {
+            getDataFromFirestore(selectedDate) {items ->
+                itemList = items!!
+                adapter = Homeadapter(this@HomeActivity, itemList, this@HomeActivity)
+            }
+            channel.send(adapter)
+        }
+        val mainScope = GlobalScope.launch(Dispatchers.Main) {
+            channel.consumeEach {
+                recyclerView.adapter = it
+                adapter.notifyDataSetChanged()
+                Log.d("add", "fetchData : ${itemList}")
+            }
+        }
+    }
+
+    private fun getDataFromFirestore(selectedDate: LocalDate, callback: (MutableList<ItemData>?) -> Unit) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val dateString = selectedDate.format(formatter)
+
+        db.collection("users")
+            .whereEqualTo("daydate1", dateString)
+            .whereEqualTo("daydate2", dateString) // daydate1과 daydate2가 동일한 날짜인 경우 필터링
+            .orderBy("firstTime.hour")
+            .orderBy("firstTime.minute")
+            .get()
+            .addOnSuccessListener { result ->
+                val itemList = mutableListOf<ItemData>()
+
+                for (document in result) {
+                    val daytitle = document.getString("daytitle") ?: ""
+
+                    val daycolor = document.getLong("daycolor")?.toInt() ?: 0
+
+                    val dayicon = document.getLong("dayicon")?.toInt() ?: 0
+
+                    val daydateString1 = document.getString("daydate1") ?: ""
+                    val daydate1 = LocalDate.parse(daydateString1)
+
+                    val daydateString2 = document.getString("daydate2") ?: ""
+                    val daydate2 = LocalDate.parse(daydateString2)
+
+                    val firstTimeMap = document.get("firstTime") as HashMap<*, *>
+                    val firstTimeHour = firstTimeMap["hour"] as String
+                    val firstTimeMinute = firstTimeMap["minute"] as String
+                    val firstTimeObj = Time(firstTimeHour, firstTimeMinute)
+
+                    val lastTimeMap = document.get("lastTime") as HashMap<*, *>
+                    val lastTimeHour = lastTimeMap["hour"] as String
+                    val lastTimeMinute = lastTimeMap["minute"] as String
+                    val lastTimeObj = Time(lastTimeHour, lastTimeMinute)
+
+                    val dayshow = document.getBoolean("dayshow") ?: false // 기본값을 false로 설정
+
+                    val daymemo = document.getString("daymemo") ?: ""
+
+                    val documentId = document.id // 여기서 문서 ID를 가져옵니다.
+
+                    val itemData = ItemData(daytitle, daycolor, dayicon, daydate1, daydate2, firstTimeObj, lastTimeObj, dayshow, daymemo, documentId)
+                    itemData.firestoreDocumentId = documentId
+                    itemList.add(itemData)
+                }
+                callback(itemList)
+            }
+            .addOnFailureListener { exception ->
+                callback(null)
+                Log.e("FetchData", "Error getting documents.", exception)
+            }
+        Log.d("add", "getData : ${itemList}")
+    }
 
     private fun fetchDataFromFirestore(selectedDate: LocalDate) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")

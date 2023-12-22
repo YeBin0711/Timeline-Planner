@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        /*
+
         //아이디랑 비밀번호가 일치해야지만 로그인 가능 기능
         binding.acMainBtnLogin.setOnClickListener {
             //이메일, 비밀번호 로그인.......................
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-         */
+
 
     }
 }

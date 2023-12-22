@@ -1,9 +1,6 @@
 package com.example.timelineplanner
 
-import android.app.Activity
-import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -11,6 +8,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,7 +35,6 @@ class AddActivity : AppCompatActivity() {
     var alarmType = 0
     lateinit var alarmTime : Array<Int>
 
-
     var selectedFirstHour = 8
     var selectedLastHour = 9
     var selectedFirstMinute = 0
@@ -46,7 +43,7 @@ class AddActivity : AppCompatActivity() {
     var selectedDate = LocalDate.now() //현재 날짜
     var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate2: LocalDate = LocalDate.now() // 현재 날짜
-    lateinit var intentDate: LocalDate
+    var intentDate: LocalDate = LocalDate.now()
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -123,21 +120,13 @@ class AddActivity : AppCompatActivity() {
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
 
-        /* Monthly Activity 출력 화면 조절 중
-        val dateString = intent.getStringExtra("date")
         //오늘 날짜로 기본 text set
-        intentDate = LocalDate.parse(intent.getStringExtra("date"))
-        val selectedDate = LocalDate.parse(dateString)
-        selectedDate1 = intentDate
-        selectedDate2 = intentDate
-         */
-
-        val dateString = intent.getStringExtra("date")
-        intentDate = LocalDate.parse(dateString)
-        selectedDate1 = intentDate
-        selectedDate2 = intentDate
-
-
+        if (intent.getStringExtra("date") != null) {
+            intentDate = LocalDate.parse(intent.getStringExtra("date"))
+            selectedDate = intentDate
+            selectedDate1 = intentDate
+            selectedDate2 = intentDate
+        }
         binding.date1.setText(
             "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
                     " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
@@ -150,14 +139,14 @@ class AddActivity : AppCompatActivity() {
         binding.date1.setOnClickListener() {
             val todoDatePickerDialog = TodoDatePickerDialog(
                 this, this, startMonth.year + 1, endMonth.year - 1,
-                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 0
+                selectedDate1.year, selectedDate1.monthValue, selectedDate1.dayOfMonth, 0
             )
             todoDatePickerDialog.show()
         }
         binding.date2.setOnClickListener() {
             val todoDatePickerDialog = TodoDatePickerDialog(
                 this, this, startMonth.year + 1, endMonth.year - 1,
-                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 1
+                selectedDate2.year, selectedDate2.monthValue, selectedDate2.dayOfMonth, 1
             )
             todoDatePickerDialog.show()
         }
@@ -200,9 +189,10 @@ class AddActivity : AppCompatActivity() {
 
         //취소 버튼
         binding.btnCancel.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("date", intentDate.toString())
-            startActivity(intent)
+            //val intent = Intent()
+            intent.putExtra("resultDate", intentDate.toString())
+            setResult(RESULT_OK, intent)
+            finish()
         }
         //저장 버튼
         buttonSave.setOnClickListener {
@@ -264,6 +254,7 @@ class AddActivity : AppCompatActivity() {
                     )
                 })"
             )
+
         }
     }
 }
@@ -306,16 +297,17 @@ class AddActivity : AppCompatActivity() {
         db.collection("users")
             .add(newItemData)
             .addOnSuccessListener { documentReference ->
-                val intent = Intent(this, MonthlyActivity::class.java)
-                intent.putExtra("date", intentDate.toString())
-                setResult(Activity.RESULT_OK, intent)
-                finish() // AddActivity 종료
+                // 성공적으로 추가됐을 때 처리
+                //val intent = Intent()
+                intent.putExtra("resultDate", intentDate.toString())
+                setResult(RESULT_OK, intent)
+                finish()
                 Log.d("bin","데이터 저장됨")
             }
             .addOnFailureListener { e ->
-                // 실패했을 때 처리
                 Toast.makeText(this, "저장이 안됐습니다", Toast.LENGTH_SHORT).show()
                 Log.d("bin","되긴 개뿔")
+                // 실패했을 때 처리
             }
     }
 }

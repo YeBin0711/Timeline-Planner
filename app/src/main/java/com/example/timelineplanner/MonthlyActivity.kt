@@ -3,11 +3,13 @@ package com.example.timelineplanner
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.timelineplanner.databinding.ActivityMonthlyBinding
 import com.example.timelineplanner.databinding.CalendarCellBinding
+import com.example.timelineplanner.databinding.TodoListDialogBinding
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.MarginValues
 import java.time.LocalDate
@@ -36,7 +38,7 @@ class MonthlyActivity : AppCompatActivity() {
         binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
         binding.calendarView.monthMargins = MarginValues(15, 0, 15, 0)
         binding.calendarView.scrollToMonth(currentMonth)
-        binding.calendarView.dayBinder = MonthlyCellBinder()
+        binding.calendarView.dayBinder = MonthlyCellBinder(this)
         binding.calendarView.monthHeaderBinder = MonthlyHeaderBinder()
         binding.calendarView.monthScrollListener = { month ->
             selectedDate = LocalDate.of(month.yearMonth.year, month.yearMonth.monthValue, selectedDate.dayOfMonth)
@@ -48,6 +50,22 @@ class MonthlyActivity : AppCompatActivity() {
         binding.monthSelector.setOnClickListener() {
             val datepickerdialog = DatePickerDialog(this, this, startMonth.year+1, endMonth.year-1, selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
             datepickerdialog.show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data:Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 2 && resultCode == RESULT_OK) {
+            //사후처리
+            if(data?.getStringExtra("resultDate") != null) {
+                val intentDate = LocalDate.parse(data?.getStringExtra("resultDate"))
+                binding.calendarView.notifyDateChanged(intentDate)
+                var dialogBinding = TodoListDialogBinding.inflate(LayoutInflater.from(this), null, false)
+
+                binding.calendarView.notifyMonthChanged(YearMonth.of(intentDate.year, intentDate.month))
+                //dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(this, intentDate)
+                //dialogBinding.todoListOfDialog.adapter?.notifyDataSetChanged()
+            }
         }
     }
 

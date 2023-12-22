@@ -1,7 +1,6 @@
 package com.example.timelineplanner
 
 import android.app.Activity
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -29,7 +28,7 @@ class EditActivity : AppCompatActivity() {
     var selectedDate: LocalDate = LocalDate.now()
     var selectedDate1: LocalDate = LocalDate.now()
     var selectedDate2: LocalDate = LocalDate.now()
-    lateinit var intentDate: LocalDate
+    //var intentDate: LocalDate = LocalDate.now()
 
     var repeatType = 0
     lateinit var repeatDays : Array<Int>
@@ -152,8 +151,8 @@ class EditActivity : AppCompatActivity() {
                     .delete()
                     .addOnSuccessListener {
                         // 성공적으로 삭제되었을 때, HomeActivity로 돌아가기
-                        val intent = Intent()
-                        intent.putExtra("date", selectedItem.dayDate1.toString())
+                        //val intent = Intent()
+                        intent.putExtra("resultDate", selectedItem.dayDate1.toString())
                         setResult(Activity.RESULT_OK, intent)
                         finish() // 현재 EditActivity 종료
                     }
@@ -307,8 +306,8 @@ class EditActivity : AppCompatActivity() {
                     "daymemo", updatedMemo
                 )
                 .addOnSuccessListener {
-                    val intent = Intent()
-                    intent.putExtra("date", selectedItem.dayDate1.toString())
+                    //val intent = Intent()
+                    intent.putExtra("resultDate", selectedItem.dayDate1.toString())
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }

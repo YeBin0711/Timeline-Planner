@@ -135,6 +135,7 @@ class Homeadapter(
             intent.putExtra("selectedItem", selectedItem)
             //context.startActivity(intent)
             startActivityForResult(context as HomeActivity, intent, 1, null)
+            //requestLauncher.launch(intent)
         }
     }
 
