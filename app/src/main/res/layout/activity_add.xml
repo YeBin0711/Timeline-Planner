@@ -205,13 +205,17 @@
             style="@style/DefaultButton"
             android:text="취소"
             android:layout_gravity="bottom"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/lightgray"/>
         <Button
             android:id="@+id/btn_save"
             style="@style/DefaultButton"
             android:text="저장"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/lightgray"/>
     </LinearLayout>
 
 </LinearLayout>

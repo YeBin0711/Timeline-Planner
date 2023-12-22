@@ -1,9 +1,6 @@
 package com.example.timelineplanner
 
-import android.app.Activity
-import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -14,7 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
-import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
 import java.time.YearMonth
@@ -193,11 +189,8 @@ class AddActivity : AppCompatActivity() {
 
         //취소 버튼
         binding.btnCancel.setOnClickListener {
-            //val intent = Intent(this, HomeActivity::class.java)
-            //intent.putExtra("date", intentDate.toString())
-            //startActivity(intent)
-            val intent = Intent()
-            intent.putExtra("date", intentDate.toString())
+            //val intent = Intent()
+            intent.putExtra("resultDate", intentDate.toString())
             setResult(RESULT_OK, intent)
             finish()
         }
@@ -305,15 +298,10 @@ class AddActivity : AppCompatActivity() {
             .add(newItemData)
             .addOnSuccessListener { documentReference ->
                 // 성공적으로 추가됐을 때 처리
-                //val intent = Intent(this, HomeActivity::class.java)
-                //startActivity(intent)
-                val intent = Intent()
-                intent.putExtra("date", intentDate.toString())
+                //val intent = Intent()
+                intent.putExtra("resultDate", intentDate.toString())
                 setResult(RESULT_OK, intent)
                 finish()
-                //val intent = Intent(this, HomeActivity::class.java)
-                //intent.putExtra("date", intentDate.toString())
-                //startActivity(intent)
                 Log.d("bin","데이터 저장됨")
             }
             .addOnFailureListener { e ->

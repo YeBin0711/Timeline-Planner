@@ -39,7 +39,7 @@ class CalendarCellContainer(view: View) : ViewContainer(view) {
     lateinit var day: CalendarDay
     val binding = CalendarCellBinding.bind(view)
 }
-class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
+class MonthlyCellBinder(val activity: MonthlyActivity) : MonthDayBinder<CalendarCellContainer> {
     override fun create(view: View) = CalendarCellContainer(view)
 
     override fun bind(container: CalendarCellContainer, data: CalendarDay) {
@@ -96,22 +96,27 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
 
                 //todolist 다이얼로그
                 container.binding.calendarCell.setOnClickListener {
+                    val date = container.day.date
                     val dialogBinding = TodoListDialogBinding.inflate(LayoutInflater.from(container.view.context), null, false)
+                    val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
+
+                    monthlyDialog.setView(dialogBinding.root)
+                    monthlyDialog.setCancelable(true)
+                    val dialog = monthlyDialog.create()
+
                     dialogBinding.addTodoButton.elevation = 0f
-                    dialogBinding.yearMonthDate.text = "${container.day.date.year}년 ${container.day.date.monthValue}월 ${container.day.date.dayOfMonth}일"
+                    dialogBinding.yearMonthDate.text = "${date.year}년 ${date.monthValue}월 ${date.dayOfMonth}일"
                     dialogBinding.todoListOfDialog.layoutManager = LinearLayoutManager(container.view.context)
                     dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(container.view.context, selectedTodos)
                     dialogBinding.addTodoButton.setOnClickListener() {
                         //Todo: 일정 추가 이벤트
-                        val intent = Intent(container.view.context, EditActivity::class.java)
-                        intent.putExtra("date", container.day.date.toString())
-                        ActivityCompat.startActivityForResult(container.view.context as MonthlyActivity, intent, 2, null)
+                        dialog.dismiss()
+                        val intent = Intent(activity, AddActivity::class.java)
+                        intent.putExtra("date", date.toString())
+                        ActivityCompat.startActivityForResult(activity, intent, 2, null)
                     }
 
-                    val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
-                    monthlyDialog.setView(dialogBinding.root)
-                    monthlyDialog.setCancelable(true)
-                    monthlyDialog.show()
+                    dialog.show()
                 }
             }
             else {
@@ -303,4 +308,3 @@ class DatePickerDialog(context: Context, val activity: MonthlyActivity, val minY
         }
     }
 }
-
