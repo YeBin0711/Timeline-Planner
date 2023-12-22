@@ -1,17 +1,37 @@
 package com.example.timelineplanner
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.timelineplanner.databinding.ActivityMainBinding
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.user.UserApiClient
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+
+    val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+        if (error != null) {
+            Log.e(TAG, "카카오계정으로 로그인 실패", error)
+        } else if (token != null) {
+            Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.kakaoLoginBtn.setOnClickListener{
+            val intent1 = Intent(this,AuthCodeHandlerActivity::class.java)
+            startActivity(intent1)
+        }
 
         binding.acMainBtnJoin.setOnClickListener {
             val intent = Intent(this, JoinActivity::class.java)
@@ -25,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
+        /*
         //아이디랑 비밀번호가 일치해야지만 로그인 가능 기능
         binding.acMainBtnLogin.setOnClickListener {
             //이메일, 비밀번호 로그인.......................
@@ -58,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
+*/
 
     }
 }

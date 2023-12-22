@@ -88,4 +88,7 @@ dependencies {
 
     //coroutine
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+    //카카오톡 로그인
+    implementation ("com.kakao.sdk:v2-user:2.12.1")
 }

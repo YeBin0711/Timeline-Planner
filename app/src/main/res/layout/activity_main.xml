@@ -16,6 +16,7 @@
         android:layout_marginTop="113dp"/>
 
     <ImageButton
+        android:id="@+id/kakao_login_btn"
         android:layout_width="270dp"
         android:layout_height="48dp"
         android:layout_marginTop="280dp"
