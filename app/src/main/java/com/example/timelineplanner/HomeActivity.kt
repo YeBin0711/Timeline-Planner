@@ -89,7 +89,6 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         binding.btnPlus.setOnClickListener{
             val intent = Intent(this, AddActivity::class.java)
             intent.putExtra("date", selectedDate1.toString())
-            //startActivity(intent)
             requestLauncher.launch(intent)
         }
 
@@ -119,18 +118,21 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     )
                 }
                 else {
-                    container.calendarDayNumber.setTextColor(
-                        ContextCompat.getColor(
-                            this@HomeActivity,
-                            R.color.black
+                    val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                    if(currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                        container.calendarDayNumber.setTextColor(
+                            ContextCompat.getColor(
+                                this@HomeActivity,
+                                R.color.white
+                            )
                         )
-                    )
-                    container.calendarDayName.setTextColor(
-                        ContextCompat.getColor(
-                            this@HomeActivity,
-                            R.color.black
+                        container.calendarDayName.setTextColor(
+                            ContextCompat.getColor(
+                                this@HomeActivity,
+                                R.color.white
+                            )
                         )
-                    )
+                    }
                 }
 
                 weekyear = data.date.year.toString()

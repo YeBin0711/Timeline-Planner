@@ -3,13 +3,11 @@ package com.example.timelineplanner
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.timelineplanner.databinding.ActivityMonthlyBinding
 import com.example.timelineplanner.databinding.CalendarCellBinding
-import com.example.timelineplanner.databinding.TodoListDialogBinding
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.MarginValues
 import java.time.LocalDate
@@ -60,11 +58,8 @@ class MonthlyActivity : AppCompatActivity() {
             if(data?.getStringExtra("resultDate") != null) {
                 val intentDate = LocalDate.parse(data?.getStringExtra("resultDate"))
                 binding.calendarView.notifyDateChanged(intentDate)
-                var dialogBinding = TodoListDialogBinding.inflate(LayoutInflater.from(this), null, false)
-
                 binding.calendarView.notifyMonthChanged(YearMonth.of(intentDate.year, intentDate.month))
-                //dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(this, intentDate)
-                //dialogBinding.todoListOfDialog.adapter?.notifyDataSetChanged()
+
             }
         }
     }

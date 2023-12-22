@@ -14,4 +14,5 @@
     <color name="lightred">#FFD5D5</color>
     <color name="lightyellow">#FAFFBD</color>
     <color name="lightgreen">#ADFFAC</color>
+    <color name="colorOnPrimary">?attr/colorOnPrimary</color>
 </resources>

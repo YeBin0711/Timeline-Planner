@@ -28,7 +28,8 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:src="@drawable/user"
-                app:tint="?attr/colorOnPrimary"/>
+                app:tint="?attr/colorOnPrimary"
+                android:scaleType="centerCrop"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

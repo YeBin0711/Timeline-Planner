@@ -107,7 +107,7 @@ class MonthlyCellBinder(val activity: MonthlyActivity) : MonthDayBinder<Calendar
                     dialogBinding.addTodoButton.elevation = 0f
                     dialogBinding.yearMonthDate.text = "${date.year}년 ${date.monthValue}월 ${date.dayOfMonth}일"
                     dialogBinding.todoListOfDialog.layoutManager = LinearLayoutManager(container.view.context)
-                    dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(container.view.context, selectedTodos)
+                    dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(dialog, container.view.context, selectedTodos)
                     dialogBinding.addTodoButton.setOnClickListener() {
                         //Todo: 일정 추가 이벤트
                         dialog.dismiss()
@@ -133,7 +133,6 @@ class MonthlyCellBinder(val activity: MonthlyActivity) : MonthDayBinder<Calendar
             .whereEqualTo("daydate1", dateString)
             .get()
             .addOnSuccessListener { result ->
-                //val todos = mutableListOf<Todo>()
                 for (document in result) {
                     val daytitle = document.getString("daytitle") ?: ""
 
@@ -237,7 +236,7 @@ class MonthlyHeaderBinder : MonthHeaderFooterBinder<MonthlyHeaderContainer> {
 
 class TodoListDialogViewHolder(val binding: TodoListDialogItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-class TodoListDialogAdapter(val context: Context, val todoList: List<Todo>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TodoListDialogAdapter(val dialog: androidx.appcompat.app.AlertDialog, val context: Context, val todoList: List<Todo>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemCount(): Int {
         return todoList.size
     }
@@ -278,6 +277,7 @@ class TodoListDialogAdapter(val context: Context, val todoList: List<Todo>) : Re
             intent.putExtra("selectedItem", selectedItem)
             intent.putExtra("date", todoList[position].firstTime.date.toString())
             ActivityCompat.startActivityForResult(context as MonthlyActivity, intent, 2, null)
+            dialog.dismiss()
         }
     }
 }
