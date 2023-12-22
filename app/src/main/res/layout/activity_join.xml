@@ -114,6 +114,7 @@
             android:textStyle="bold"/>
 
         <EditText
+            android:id="@+id/ac_join_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"

@@ -39,6 +39,7 @@ class JoinActivity : AppCompatActivity() {
             val email = binding.acJoinEmailId.text.toString()
             val password1 = binding.acJoinPassword1.text.toString()
             val password2 = binding.acJoinPassword2.text.toString()
+            val name = binding.acJoinName.text.toString()
             val intent = Intent(this, MainActivity::class.java)
             if(email.isEmpty()){
                 Toast.makeText(baseContext,"이메일을 입력하세요.",Toast.LENGTH_SHORT).show()
@@ -52,6 +53,7 @@ class JoinActivity : AppCompatActivity() {
                         binding.acJoinEmailId.text.clear()
                         binding.acJoinPassword1.text.clear()
                         binding.acJoinPassword2.text.clear()
+                        binding.acJoinName.text.clear()
                         if (task.isSuccessful) {
                             MyApplication.auth.currentUser?.sendEmailVerification()
                                 ?.addOnCompleteListener { sendTask ->
