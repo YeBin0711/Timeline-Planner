@@ -51,6 +51,19 @@ class MonthlyActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data:Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 2 && resultCode == RESULT_OK) {
+            //사후처리
+            if(data?.getStringExtra("date") != null) {
+                val intentDate = LocalDate.parse(data?.getStringExtra("date"))
+                //selectedDate1 = intentDate
+                binding.calendarView.notifyDateChanged(intentDate)
+                //fetchDataFromFirestore(intentDate)
+            }
+        }
+    }
+
     fun onClickOkButton(year: Int, month: Int, day: Int) {
         selectedDate = LocalDate.of(year, month, day)
         binding.calendarView.scrollToDate(selectedDate)

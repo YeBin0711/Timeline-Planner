@@ -38,7 +38,7 @@ class AddActivity : AppCompatActivity() {
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate2: LocalDate = LocalDate.now() // 현재 날짜
-    lateinit var intentDate: LocalDate
+    var intentDate: LocalDate = LocalDate.now()
     private val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,10 +114,12 @@ class AddActivity : AppCompatActivity() {
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
 
         //오늘 날짜로 기본 text set
-        intentDate = LocalDate.parse(intent.getStringExtra("date"))
-        selectedDate = intentDate
-        selectedDate1 = intentDate
-        selectedDate2 = intentDate
+        if (intent.getStringExtra("date") != null) {
+            intentDate = LocalDate.parse(intent.getStringExtra("date"))
+            selectedDate = intentDate
+            selectedDate1 = intentDate
+            selectedDate2 = intentDate
+        }
         binding.date1.setText(
             "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
                     " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
@@ -178,9 +180,13 @@ class AddActivity : AppCompatActivity() {
 
         //취소 버튼
         binding.btnCancel.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
+            //val intent = Intent(this, HomeActivity::class.java)
+            //intent.putExtra("date", intentDate.toString())
+            //startActivity(intent)
+            val intent = Intent()
             intent.putExtra("date", intentDate.toString())
-            startActivity(intent)
+            setResult(RESULT_OK, intent)
+            finish()
         }
         //저장 버튼
         buttonSave.setOnClickListener {
@@ -290,9 +296,13 @@ class AddActivity : AppCompatActivity() {
                 // 성공적으로 추가됐을 때 처리
                 //val intent = Intent(this, HomeActivity::class.java)
                 //startActivity(intent)
-                val intent = Intent(this, HomeActivity::class.java)
+                val intent = Intent()
                 intent.putExtra("date", intentDate.toString())
-                startActivity(intent)
+                setResult(RESULT_OK, intent)
+                finish()
+                //val intent = Intent(this, HomeActivity::class.java)
+                //intent.putExtra("date", intentDate.toString())
+                //startActivity(intent)
                 Log.d("bin","데이터 저장됨")
             }
             .addOnFailureListener { e ->

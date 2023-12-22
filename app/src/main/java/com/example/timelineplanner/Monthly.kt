@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.MonthlyEventListItemBinding
 import com.example.timelineplanner.databinding.TodoListDialogBinding
 import com.example.timelineplanner.databinding.TodoListDialogItemBinding
+import com.example.timelineplanner.model.ItemData
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -101,8 +103,9 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
                     dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(container.view.context, selectedTodos)
                     dialogBinding.addTodoButton.setOnClickListener() {
                         //Todo: 일정 추가 이벤트
-                        val intent = Intent(container.view.context, AddActivity::class.java)
-                        container.view.context.startActivity(intent)
+                        val intent = Intent(container.view.context, EditActivity::class.java)
+                        intent.putExtra("date", container.day.date.toString())
+                        ActivityCompat.startActivityForResult(container.view.context as MonthlyActivity, intent, 2, null)
                     }
 
                     val monthlyDialog = MaterialAlertDialogBuilder(container.view.context)
@@ -259,9 +262,21 @@ class TodoListDialogAdapter(val context: Context, val todoList: List<Todo>) : Re
 
         //Todo: 월별 다이얼로그 일정 클릭 시 수정창 이동
         binding.todoListDialogItem.setOnClickListener() {
+            val selectedItem: ItemData = ItemData(
+                todoList[position].title,
+                todoList[position].color.toString(),
+                todoList[position].icon,
+                todoList[position].firstTime.date,
+                todoList[position].lastTime.date,
+                com.example.timelineplanner.model.Time(todoList[position].firstTime.hour, todoList[position].firstTime.minute),
+                com.example.timelineplanner.model.Time(todoList[position].lastTime.hour, todoList[position].lastTime.minute),
+                todoList[position].show,
+                todoList[position].memo,
+                todoList[position].firestoreDocumentId)
             val intent = Intent(context, EditActivity::class.java)
-            //intent.putExtra("todo", todoList[position])
-            context.startActivity(intent)
+            intent.putExtra("selectedItem", selectedItem)
+            intent.putExtra("date", todoList[position].firstTime.date.toString())
+            ActivityCompat.startActivityForResult(context as MonthlyActivity, intent, 2, null)
         }
     }
 }
