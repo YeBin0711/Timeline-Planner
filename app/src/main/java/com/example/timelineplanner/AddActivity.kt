@@ -1,6 +1,9 @@
 package com.example.timelineplanner
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -30,7 +33,7 @@ class AddActivity : AppCompatActivity() {
     private lateinit var buttonSave: Button
 
     var icon = 0 //아이콘 ID
-    var color = "" //색상 코드
+    var color =0 //색상 코드
     var repeatType = 0
     lateinit var repeatDays : Array<Int>
     var alarmType = 0
@@ -41,11 +44,13 @@ class AddActivity : AppCompatActivity() {
     var selectedFirstMinute = 0
     var selectedLastMinute = 0
 
-    var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
+    var selectedDate = LocalDate.now() //현재 날짜
     var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate2: LocalDate = LocalDate.now() // 현재 날짜
     var intentDate: LocalDate = LocalDate.now()
+
     private val db = FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddBinding.inflate(layoutInflater)
@@ -65,12 +70,12 @@ class AddActivity : AppCompatActivity() {
             colorDialog.setColorSelectedListener { selectedColorId ->
                 binding.colorBtn.tag = selectedColorId
                 when (selectedColorId) {
-                    "#FFD5D5" -> binding.colorBtn.setImageResource(R.color.lightred)
-                    "#FAFFBD" -> binding.colorBtn.setImageResource(R.color.lightyellow)
-                    "#ADFFAC" -> binding.colorBtn.setImageResource(R.color.lightgreen)
-                    "#D9D9D9" -> binding.colorBtn.setImageResource(R.color.lightgray)
-                    "#F2D5FF" -> binding.colorBtn.setImageResource(R.color.phvink)
-                    "#7FE8FF" -> binding.colorBtn.setImageResource(R.color.skyblue)
+                    Color.parseColor("#FFD5D5") -> binding.colorBtn.setImageResource(R.color.lightred)
+                    Color.parseColor("#FAFFBD") -> binding.colorBtn.setImageResource(R.color.lightyellow)
+                    Color.parseColor("#ADFFAC") -> binding.colorBtn.setImageResource(R.color.lightgreen)
+                    Color.parseColor("#D9D9D9") -> binding.colorBtn.setImageResource(R.color.lightgray)
+                    Color.parseColor("#F2D5FF") -> binding.colorBtn.setImageResource(R.color.phvink)
+                    Color.parseColor("#7FE8FF") -> binding.colorBtn.setImageResource(R.color.skyblue)
                     else -> {
                         // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
                     }
@@ -204,16 +209,9 @@ class AddActivity : AppCompatActivity() {
 
     //timePicker OkButton 함수
     fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
-        if (flag == 0) {
-            selectedFirstHour = hour
-            selectedFirstMinute = minute
-            binding.startTime.setText("%02d:%02d".format(hour, minute))
-            selectedLastHour = hour+1
-            selectedLastMinute = minute
-            binding.endTime.setText("%02d:%02d".format(hour + 1, minute))
-        } else if (flag == 1) {
-            selectedLastHour = hour
-            selectedLastMinute = minute
+        if (flag == 0){
+            binding.startTime.setText("%02d:%02d".format(hour, minute))}
+        else if (flag == 1) {
             binding.endTime.setText("%02d:%02d".format(hour, minute))
             //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
             val startDate = binding.date1.text.toString()
@@ -241,26 +239,19 @@ class AddActivity : AppCompatActivity() {
     //todoDatePicker OkButton 함수
     fun onClickOkButton4(year: Int, month: Int, day: Int, flag: Int) {
         if (flag == 0) {
-            selectedDate1 = LocalDate.of(year, month, day)
-            binding.date1.setText(
-                "${month}월 ${day}일 (${
-                    selectedDate1.dayOfWeek.getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.KOREAN
-                    )
-                })"
-            )
-            selectedDate2 = selectedDate1
-            binding.date2.setText(
-                "${month}월 ${day}일 (${
-                    selectedDate1.dayOfWeek.getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.KOREAN
-                    )
-                })"
-            )
-        }
-        else if (flag == 1){
+            if (year != null && month != null && day != null) {
+                selectedDate1 = LocalDate.of(year, month, day)
+                binding.date1.setText(
+                    "${month}월 ${day}일 (${
+                        selectedDate1.dayOfWeek.getDisplayName(
+                            TextStyle.SHORT,
+                            Locale.KOREAN
+                        )
+                    })"
+                )
+            }
+    } else if (flag == 1) {
+        if (year != null && month != null && day != null) {
             selectedDate2 = LocalDate.of(year, month, day)
             binding.date2.setText(
                 "${month}월 ${day}일 (${
@@ -273,20 +264,21 @@ class AddActivity : AppCompatActivity() {
 
         }
     }
+}
 
     private fun addDataToFirestore() {
         val title = addTitle.text.toString()
 
         val icon = binding.iconBtn.tag as? Int
-        val color = binding.colorBtn.tag as? String
+        val color = binding.colorBtn.tag as? Int
 
         val dateString1 = selectedDate1.toString()
         val dateString2 = selectedDate2.toString()
 
-        val firstTimeHour = selectedFirstHour.toString()
-        val firstTimeMinute = selectedFirstMinute.toString()
-        val lastTimeHour = selectedLastHour.toString()
-        val lastTimeMinute = selectedLastMinute.toString()
+        val firstTimeHour = String.format("%02d", selectedFirstHour)
+        val firstTimeMinute = String.format("%02d", selectedFirstMinute)
+        val lastTimeHour = String.format("%02d", selectedLastHour)
+        val lastTimeMinute = String.format("%02d", selectedLastMinute)
 
         val show = binding.cswitch.isChecked
 

@@ -132,7 +132,7 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
                 for (document in result) {
                     val daytitle = document.getString("daytitle") ?: ""
 
-                    val daycolor = Color.parseColor(document.getString("daycolor") ?:"#D9D9D9")
+                    val daycolor = document.getLong("daycolor")?.toInt() ?: 0
 
                     val dayicon = document.getLong("dayicon")?.toInt() ?: 0
 
@@ -161,10 +161,6 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
                 callback(null)
             }
     }
-
-
-
-
 
     fun setDataTypeOfModelAndMarkColor(holidayBody: HolidayBody?, totalCount: Int?, data: CalendarDay, container: CalendarCellContainer) {
         val gson = GsonBuilder().create()
@@ -264,7 +260,7 @@ class TodoListDialogAdapter(val context: Context, val todoList: List<Todo>) : Re
         binding.todoListDialogItem.setOnClickListener() {
             val selectedItem: ItemData = ItemData(
                 todoList[position].title,
-                todoList[position].color.toString(),
+                todoList[position].color,
                 todoList[position].icon,
                 todoList[position].firstTime.date,
                 todoList[position].lastTime.date,

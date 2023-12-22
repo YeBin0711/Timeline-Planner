@@ -2,7 +2,6 @@ package com.example.timelineplanner
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
@@ -34,8 +33,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Year
-import java.time.ZoneId
-import java.util.Date
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
@@ -46,14 +44,11 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     private lateinit var adapter: Homeadapter
     lateinit var binding: ActivityHomeBinding
     lateinit var monthText2TextView: TextView
-    private lateinit var Homeadapter:Homeadapter
     private val db = FirebaseFirestore.getInstance()// 문서 ID를 저장할 변수
-    //private var itemList = ArrayList<ItemData>()
+    //private val itemList = ArrayList<ItemData>()
     private var itemList = mutableListOf<ItemData>()
-    private var beforeDate: LocalDate ?= null    //이전 날짜 추적 변수
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
-    lateinit var clickedDate: LocalDate
     val calendar = Calendar.getInstance()
     val year = selectedDate.year.toString()
     val month = selectedDate.month.toString()
@@ -62,7 +57,8 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     var weekday = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
     var selectedDate1: LocalDate? = LocalDate.now()
 
-    var calendarHeaderTitle = "$month - $year" // default header
+    private val REQUEST_CODE_HOME = 102
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -257,7 +253,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                 for (document in result) {
                     val daytitle = document.getString("daytitle") ?: ""
 
-                    val daycolor = document.getString("daycolor") ?:"#D9D9D9"
+                    val daycolor = document.getLong("daycolor")?.toInt() ?: 0
 
                     val dayicon = document.getLong("dayicon")?.toInt() ?: 0
 
@@ -312,7 +308,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                 for (document in result) {
                     val daytitle = document.getString("daytitle") ?: ""
 
-                    val daycolor = document.getString("daycolor") ?:"#D9D9D9"
+                    val daycolor = document.getLong("daycolor")?.toInt() ?: 0
 
                     val dayicon = document.getLong("dayicon")?.toInt() ?: 0
 
@@ -323,13 +319,13 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     val daydate2 = LocalDate.parse(daydateString2)
 
                     val firstTimeMap = document.get("firstTime") as HashMap<*, *>
-                    val firstTimeHour = firstTimeMap["hour"] as String
-                    val firstTimeMinute = firstTimeMap["minute"] as String
+                    val firstTimeHour = firstTimeMap["hour"].toString()
+                    val firstTimeMinute = firstTimeMap["minute"].toString()
                     val firstTimeObj = Time(firstTimeHour, firstTimeMinute)
 
                     val lastTimeMap = document.get("lastTime") as HashMap<*, *>
-                    val lastTimeHour = lastTimeMap["hour"] as String
-                    val lastTimeMinute = lastTimeMap["minute"] as String
+                    val lastTimeHour = lastTimeMap["hour"].toString()
+                    val lastTimeMinute = lastTimeMap["minute"].toString()
                     val lastTimeObj = Time(lastTimeHour, lastTimeMinute)
 
                     val dayshow = document.getBoolean("dayshow") ?: false // 기본값을 false로 설정
@@ -361,7 +357,6 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val koreanDateString = koreanDateFormat.format(Date(selectedDate.year - 1900, selectedDate.monthValue - 1, selectedDate.dayOfMonth))
 
         // monthText2의 TextView를 찾아 업데이트
-
         val monthText2TextView = binding.monthSelector2.findViewById<TextView>(R.id.monthText2)
         monthText2TextView.text = koreanDateString
 

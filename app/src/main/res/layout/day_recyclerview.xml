@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_margin="10dp">
+    android:layout_marginLeft="10dp">
 
     <LinearLayout
         android:layout_width="60dp"
@@ -27,7 +27,7 @@
         <View
             android:id="@+id/emptyView"
             android:layout_width="wrap_content"
-            android:layout_height="10dp" />
+            android:layout_height="40dp" />
 
         <LinearLayout
             android:id="@+id/textViewContainer"
@@ -35,37 +35,46 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/last_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="17sp"/>
-
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/last_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="17sp" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <View
             android:id="@+id/ticon_background"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
 
         <ImageView
             android:id="@+id/ticon_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:padding="5sp"
             android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            android:src="@drawable/game" />
-
+            android:scaleType="fitCenter"/>
     </FrameLayout>
+        <View
+            android:id="@+id/line2"
+            android:layout_width="4dp"
+            android:layout_height="40dp"
+            android:background="@drawable/todo_dialog_line"/>
 
+    </LinearLayout>
     <LinearLayout
         android:layout_width="218dp"
         android:layout_height="wrap_content"
