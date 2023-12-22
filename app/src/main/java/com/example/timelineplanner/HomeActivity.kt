@@ -52,6 +52,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
     private val REQUEST_CODE_HOME = 102
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)

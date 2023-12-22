@@ -9,7 +9,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContextCompat
 import com.example.timelineplanner.databinding.ActivityEditBinding
 import com.example.timelineplanner.model.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,7 +21,7 @@ import java.util.Locale
 
 class EditActivity : AppCompatActivity() {
     lateinit var binding: ActivityEditBinding
-    private lateinit var selectedItem: ItemData
+    lateinit var selectedItem: ItemData
     private lateinit var editfirstTime: TextView
     private lateinit var editlastTime: TextView
 
@@ -48,7 +47,6 @@ class EditActivity : AppCompatActivity() {
         val intent = intent
         if (intent.hasExtra("selectedItem")) {
             selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")!!
-            // ... rest of your existing code
 
             val editTitle = findViewById<TextView>(R.id.edit_todo_title)
             editTitle.text = selectedItem.daytitle

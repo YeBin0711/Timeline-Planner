@@ -100,8 +100,8 @@ class MonthlyCellBinder : MonthDayBinder<CalendarCellContainer> {
                     dialogBinding.todoListOfDialog.layoutManager = LinearLayoutManager(container.view.context)
                     dialogBinding.todoListOfDialog.adapter = TodoListDialogAdapter(container.view.context, selectedTodos)
                     dialogBinding.addTodoButton.setOnClickListener() {
-                        //Todo: 일정 추가 이벤트
                         val intent = Intent(container.view.context, AddActivity::class.java)
+                        intent.putExtra("date", "${container.day.date.year}-${container.day.date.monthValue}-${container.day.date.dayOfMonth}")
                         container.view.context.startActivity(intent)
                     }
 
@@ -255,7 +255,7 @@ class TodoListDialogAdapter(val context: Context, val todoList: List<Todo>) : Re
         //Todo: 월별 다이얼로그 일정 클릭 시 수정창 이동
         binding.todoListDialogItem.setOnClickListener() {
             val intent = Intent(context, EditActivity::class.java)
-            //intent.putExtra("todo", todoList[position])
+            //intent.putExtra("ItemData", todoList[position])
             context.startActivity(intent)
         }
     }
@@ -287,4 +287,3 @@ class DatePickerDialog(context: Context, val activity: MonthlyActivity, val minY
         }
     }
 }
-

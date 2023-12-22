@@ -3,7 +3,6 @@ package com.example.timelineplanner
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -17,9 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
@@ -27,7 +24,6 @@ import com.example.timelineplanner.model.ItemData
 import com.example.timelineplanner.model.Time
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.ViewContainer
-import java.time.LocalDate
 
 
 class HomeViewHolder(val binding: DayRecyclerviewBinding):
@@ -43,6 +39,7 @@ class Homeadapter(
             .inflate(R.layout.day_recyclerview, parent, false)
         return ItemViewHolder(itemView)
     }
+
 
     override fun onBindViewHolder(holder: ItemViewHolder,position: Int) {
         val currentItem = itemList[position]
@@ -140,6 +137,7 @@ class Homeadapter(
             startActivityForResult(context as HomeActivity, intent, 1, null)
         }
     }
+
 
     private fun calculateImageViewHeight(firstTime: Time, lastTime: Time): Int {
         val firstHour = firstTime.hour.toInt()
