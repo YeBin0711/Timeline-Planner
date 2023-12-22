@@ -2,6 +2,7 @@ package com.example.timelineplanner
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
@@ -33,7 +34,8 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Year
-import java.time.YearMonth
+import java.time.ZoneId
+import java.util.Date
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
@@ -51,6 +53,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
     private var beforeDate: LocalDate ?= null    //이전 날짜 추적 변수
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
+    lateinit var clickedDate: LocalDate
     val calendar = Calendar.getInstance()
     val year = selectedDate.year.toString()
     val month = selectedDate.month.toString()
@@ -69,6 +72,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         //action bar
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
         monthText2TextView = binding.monthSelector2.findViewById(R.id.monthText2)
 
         //fetchDataFromFirestore(selectedDate)
@@ -106,17 +110,11 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val currentDate = LocalDate.now()
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
+
             // Called every time we need to reuse a container.
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 // Initialize the calendar day for this container.
                 container.day = data
-                /*
-                if(intent.getStringExtra("date") != null) {
-                    val intentDate = LocalDate.parse(intent.getStringExtra("date"))
-                    selectedDate1 = intentDate
-                    fetchDataFromFirestore(intentDate)
-                }
-                */
 
                 // Show the month dates. Remember that views are reused!
                 if (container.day.date != selectedDate1) {
@@ -154,6 +152,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
 
                 container.calendarDayNumber.text = data.date.dayOfMonth.toString()
                 container.calendarDayName.text = data.date.dayOfWeek.toString().substring(0..2)
+
                 container.calendarDay.setOnClickListener {
                     var clickedDate = container.day.date
                     val currentSelection = selectedDate1

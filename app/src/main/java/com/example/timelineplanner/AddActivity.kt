@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.example.timelineplanner.databinding.ActivityAddBinding
+import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
 import java.time.YearMonth
@@ -34,6 +35,11 @@ class AddActivity : AppCompatActivity() {
     lateinit var repeatDays : Array<Int>
     var alarmType = 0
     lateinit var alarmTime : Array<Int>
+
+    var selectedFirstHour = 8
+    var selectedLastHour = 9
+    var selectedFirstMinute = 0
+    var selectedLastMinute = 0
 
     var selectedDate: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
@@ -132,25 +138,27 @@ class AddActivity : AppCompatActivity() {
         binding.date1.setOnClickListener() {
             val todoDatePickerDialog = TodoDatePickerDialog(
                 this, this, startMonth.year + 1, endMonth.year - 1,
-                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 0
+                selectedDate1.year, selectedDate1.monthValue, selectedDate1.dayOfMonth, 0
             )
             todoDatePickerDialog.show()
         }
         binding.date2.setOnClickListener() {
             val todoDatePickerDialog = TodoDatePickerDialog(
                 this, this, startMonth.year + 1, endMonth.year - 1,
-                selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, 1
+                selectedDate2.year, selectedDate2.monthValue, selectedDate2.dayOfMonth, 1
             )
             todoDatePickerDialog.show()
         }
 
         //시간
         binding.startTime.setOnClickListener() {
-            val timePickerDialog = TimePickerDialog(this, this, 8, 0, 0)
+            val timePickerDialog = TimePickerDialog(this, this,
+                selectedFirstHour, selectedFirstMinute, 0)
             timePickerDialog.show()
         }
         binding.endTime.setOnClickListener() {
-            val timePickerDialog = TimePickerDialog(this, this, 9, 0, 1)
+            val timePickerDialog = TimePickerDialog(this, this,
+                selectedLastHour, selectedLastMinute, 1)
             timePickerDialog.show()
         }
 
@@ -196,9 +204,16 @@ class AddActivity : AppCompatActivity() {
 
     //timePicker OkButton 함수
     fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
-        if (flag == 0){
-            binding.startTime.setText("%02d:%02d".format(hour, minute))}
-        else if (flag == 1) {
+        if (flag == 0) {
+            selectedFirstHour = hour
+            selectedFirstMinute = minute
+            binding.startTime.setText("%02d:%02d".format(hour, minute))
+            selectedLastHour = hour+1
+            selectedLastMinute = minute
+            binding.endTime.setText("%02d:%02d".format(hour + 1, minute))
+        } else if (flag == 1) {
+            selectedLastHour = hour
+            selectedLastMinute = minute
             binding.endTime.setText("%02d:%02d".format(hour, minute))
             //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
             val startDate = binding.date1.text.toString()
@@ -235,6 +250,15 @@ class AddActivity : AppCompatActivity() {
                     )
                 })"
             )
+            selectedDate2 = selectedDate1
+            binding.date2.setText(
+                "${month}월 ${day}일 (${
+                    selectedDate1.dayOfWeek.getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.KOREAN
+                    )
+                })"
+            )
         }
         else if (flag == 1){
             selectedDate2 = LocalDate.of(year, month, day)
@@ -259,15 +283,10 @@ class AddActivity : AppCompatActivity() {
         val dateString1 = selectedDate1.toString()
         val dateString2 = selectedDate2.toString()
 
-        val firstTime = addFirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
-        val firstTimeParts = firstTime.split(":")
-        val firstTimeHour = firstTimeParts[0]
-        val firstTimeMinute = firstTimeParts[1]
-
-        val lastTime= addLastTIme.text.toString()
-        val lastTimeParts = lastTime.split(":")
-        val lastTimeHour = lastTimeParts[0]
-        val lastTimeMinute = lastTimeParts[1]
+        val firstTimeHour = selectedFirstHour.toString()
+        val firstTimeMinute = selectedFirstMinute.toString()
+        val lastTimeHour = selectedLastHour.toString()
+        val lastTimeMinute = selectedLastMinute.toString()
 
         val show = binding.cswitch.isChecked
 

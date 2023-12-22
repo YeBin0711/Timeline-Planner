@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.recyclerview.widget.RecyclerView
+import com.example.timelineplanner.databinding.ActivityHomeBinding
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
 import com.example.timelineplanner.databinding.ItemCalendarDayBinding
@@ -23,6 +24,7 @@ import com.example.timelineplanner.model.ItemData
 import com.example.timelineplanner.model.Time
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.ViewContainer
+import java.time.LocalDate
 
 
 class HomeViewHolder(val binding: DayRecyclerviewBinding):
@@ -211,7 +213,6 @@ class DayViewContainer(view: View) : ViewContainer(view) {
         fun onItemClick(position: Int)
     }
 }
-
 
 class DatePickerDialog2(context: Context, val activity: HomeActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
