@@ -28,7 +28,7 @@ class JoinActivity : AppCompatActivity() {
                 cb2.isChecked = false
             }
         }
-
+        //cb1이 선택되면 cb2가 꺼짐
         cb2.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 cb1.isChecked = false
