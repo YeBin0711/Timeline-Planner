@@ -113,18 +113,21 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                     )
                 }
                 else {
-                    container.calendarDayNumber.setTextColor(
-                        ContextCompat.getColor(
-                            this@HomeActivity,
-                            R.color.black
+                    val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                    if(currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                        container.calendarDayNumber.setTextColor(
+                            ContextCompat.getColor(
+                                this@HomeActivity,
+                                R.color.white
+                            )
                         )
-                    )
-                    container.calendarDayName.setTextColor(
-                        ContextCompat.getColor(
-                            this@HomeActivity,
-                            R.color.black
+                        container.calendarDayName.setTextColor(
+                            ContextCompat.getColor(
+                                this@HomeActivity,
+                                R.color.white
+                            )
                         )
-                    )
+                    }
                 }
 
                 weekyear = data.date.year.toString()
@@ -206,7 +209,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val backgroundScope = CoroutineScope(Dispatchers.IO + Job())
         backgroundScope.launch {
             getDataFromFirestore(selectedDate) {items ->
-                itemList = items!!
+                itemList = items?: mutableListOf()
                 adapter = Homeadapter(this@HomeActivity, itemList, this@HomeActivity)
             }
             channel.send(adapter)

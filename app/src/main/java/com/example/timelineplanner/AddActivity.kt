@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
+import java.util.Calendar
 import java.util.Locale
 
 class AddActivity : AppCompatActivity() {
@@ -21,27 +22,28 @@ class AddActivity : AppCompatActivity() {
     private lateinit var addTitle: EditText
     private lateinit var addColor: ImageView
     private lateinit var addIcon: ImageView
+    private lateinit var date: TextView
     private lateinit var addFirstTime: TextView
     private lateinit var addLastTIme: TextView
     private lateinit var addMemo: EditText
     private lateinit var buttonSave: Button
 
-    var icon = 0
+    var icon = 0 //아이콘 ID
     var color =0
     var repeatType = 0
     lateinit var repeatDays : Array<Int>
     var alarmType = 0
     lateinit var alarmTime : Array<Int>
 
-    var selectedFirstHour = 8
-    var selectedLastHour = 9
-    var selectedFirstMinute = 0
-    var selectedLastMinute = 0
+    var selectedFirstHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    var selectedLastHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    var selectedFirstMinute = Calendar.getInstance().get(Calendar.MINUTE)
+    var selectedLastMinute = Calendar.getInstance().get(Calendar.MINUTE)
 
     var selectedDate = LocalDate.now() //현재 날짜
     var selectedDate1: LocalDate = LocalDate.now()
     var selectedDate2: LocalDate = LocalDate.now()
-    var intentDate: LocalDate = LocalDate.now()
+    var intentDate: LocalDate? = LocalDate.now()
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -110,19 +112,19 @@ class AddActivity : AppCompatActivity() {
         val endMonth = currentMonth.plusMonths(100)
 
         //오늘 날짜 출력되게 하는 기본 text set
-        if (intent.getStringExtra("date") != null) {
+        if (intentDate != null && LocalDate.parse(intent.getStringExtra("date")) != null) {
             intentDate = LocalDate.parse(intent.getStringExtra("date"))
             selectedDate = intentDate
-            selectedDate1 = intentDate
-            selectedDate2 = intentDate
+            selectedDate1 = intentDate!!
+            selectedDate2 = intentDate!!
         }
         binding.date1.setText(
-            "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
-                    " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+            "${selectedDate1.monthValue}월 ${selectedDate1.dayOfMonth}일" +
+                    " (${selectedDate1.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
         )
         binding.date2.setText(
-            "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
-                    " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+            "${selectedDate2.monthValue}월 ${selectedDate2.dayOfMonth}일" +
+                    " (${selectedDate2.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
         )
 
         //시작 날짜 선택
@@ -179,7 +181,7 @@ class AddActivity : AppCompatActivity() {
 
         //취소 버튼
         binding.btnCancel.setOnClickListener {
-            intent.putExtra("resultDate", intentDate.toString())
+            intent.putExtra("resultDate", LocalDate.parse(intent.getStringExtra("date")).toString())
             setResult(RESULT_OK, intent)
             finish()
         }
@@ -193,9 +195,14 @@ class AddActivity : AppCompatActivity() {
     //timePicker OkButton 함수
     fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
         if (flag == 0){
-            binding.startTime.setText("%02d:%02d".format(hour, minute))}
+            binding.startTime.setText("%02d:%02d".format(hour, minute))
+            selectedFirstHour = hour
+            selectedFirstMinute = minute
+        }
         else if (flag == 1) {
             binding.endTime.setText("%02d:%02d".format(hour, minute))
+            selectedLastHour = hour
+            selectedLastMinute = minute
             //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
             val startDate = binding.date1.text.toString()
             val endDate = binding.date2.text.toString()
@@ -223,6 +230,7 @@ class AddActivity : AppCompatActivity() {
     fun onClickOkButton4(year: Int, month: Int, day: Int, flag: Int) {
         if (flag == 0) {
             if (year != null && month != null && day != null) {
+                intentDate = null
                 selectedDate1 = LocalDate.of(year, month, day)
                 binding.date1.setText(
                     "${month}월 ${day}일 (${
@@ -235,6 +243,7 @@ class AddActivity : AppCompatActivity() {
             }
         } else if (flag == 1) {
             if (year != null && month != null && day != null) {
+                intentDate = null
                 selectedDate2 = LocalDate.of(year, month, day)
                 binding.date2.setText(
                     "${month}월 ${day}일 (${
@@ -289,7 +298,7 @@ class AddActivity : AppCompatActivity() {
         db.collection("users")
             .add(newItemData)
             .addOnSuccessListener { documentReference ->
-                intent.putExtra("resultDate", intentDate.toString())
+                intent.putExtra("resultDate", LocalDate.parse(intent.getStringExtra("date")).toString())
                 setResult(RESULT_OK, intent)
                 finish()
             }

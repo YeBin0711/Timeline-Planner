@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.DayRecyclerviewBinding
@@ -38,8 +39,6 @@ class Homeadapter(
         return ItemViewHolder(itemView)
     }
 
-
-
     override fun onBindViewHolder(holder: ItemViewHolder,position: Int) {
         val currentItem = itemList[position]
 
@@ -52,6 +51,13 @@ class Homeadapter(
         holder.lastTime.text = "${currentItem.lastTime.hour}:${currentItem.lastTime.minute}"
 
         holder.textViewMemo.text = currentItem.daymemo
+
+
+        //Todo: 시간 형식 설정 반영
+        val timeForm = PreferenceManager.getDefaultSharedPreferences(context).getString("timeStyles", "12")
+        holder.firstTime.text = transIntoTimeForm(currentItem.firstTime.hour, timeForm) + ":${currentItem.firstTime.minute}"
+        holder.lastTime.text = transIntoTimeForm(currentItem.lastTime.hour, timeForm) + ":${currentItem.lastTime.minute}"
+
 
         if(position < itemList.size-1) {
             holder.line.background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(itemList[position].daycolor, itemList[position+1].daycolor))
