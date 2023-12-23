@@ -2,7 +2,6 @@ package com.example.timelineplanner
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -22,14 +21,13 @@ class AddActivity : AppCompatActivity() {
     private lateinit var addTitle: EditText
     private lateinit var addColor: ImageView
     private lateinit var addIcon: ImageView
-    private lateinit var date: TextView
     private lateinit var addFirstTime: TextView
     private lateinit var addLastTIme: TextView
     private lateinit var addMemo: EditText
     private lateinit var buttonSave: Button
 
-    var icon = 0 //아이콘 ID
-    var color =0 //색상 코드
+    var icon = 0
+    var color =0
     var repeatType = 0
     lateinit var repeatDays : Array<Int>
     var alarmType = 0
@@ -41,8 +39,8 @@ class AddActivity : AppCompatActivity() {
     var selectedLastMinute = 0
 
     var selectedDate = LocalDate.now() //현재 날짜
-    var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
-    var selectedDate2: LocalDate = LocalDate.now() // 현재 날짜
+    var selectedDate1: LocalDate = LocalDate.now()
+    var selectedDate2: LocalDate = LocalDate.now()
     var intentDate: LocalDate = LocalDate.now()
 
     private val db = FirebaseFirestore.getInstance()
@@ -73,15 +71,11 @@ class AddActivity : AppCompatActivity() {
                     Color.parseColor("#F2D5FF") -> binding.colorBtn.setImageResource(R.color.phvink)
                     Color.parseColor("#7FE8FF") -> binding.colorBtn.setImageResource(R.color.skyblue)
                     else -> {
-                        // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
+
                     }
                 }
-                // 선택된 아이콘 ID를 로그에 출력하는 부분을 람다식 바깥으로 빼냅니다.
-                Log.d("Selected Icon", "Icon ID: $selectedColorId")
-            }
 
-            // 이 부분은 람다식 밖에서 실행되도록 수정합니다.
-            Log.d("bin", "됐냐")
+            }
             colorDialog.show(supportFragmentManager, "color_dialog_tag")
         }
 
@@ -104,23 +98,18 @@ class AddActivity : AppCompatActivity() {
                     R.drawable.shower -> binding.iconBtn.setImageResource(R.drawable.shower)
                     R.drawable.game -> binding.iconBtn.setImageResource(R.drawable.empty)
                     else -> {
-                        // 선택된 아이콘 ID가 없거나 다른 ID인 경우에 대한 처리
+
                     }
                 }
-                // 선택된 아이콘 ID를 로그에 출력하는 부분을 람다식 바깥으로 빼냅니다.
-                Log.d("Selected Icon", "Icon ID: $selectedIconId")
             }
-
-            // 이 부분은 람다식 밖에서 실행되도록 수정합니다.
-            Log.d("bin", "됐냐")
             iconDialog.show(supportFragmentManager, "icon_dialog_tag")
         }
 
         val currentMonth = YearMonth.now()
-        val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
-        val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
+        val startMonth = currentMonth.minusMonths(100)
+        val endMonth = currentMonth.plusMonths(100)
 
-        //오늘 날짜로 기본 text set
+        //오늘 날짜 출력되게 하는 기본 text set
         if (intent.getStringExtra("date") != null) {
             intentDate = LocalDate.parse(intent.getStringExtra("date"))
             selectedDate = intentDate
@@ -135,7 +124,8 @@ class AddActivity : AppCompatActivity() {
             "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
                     " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
         )
-        //날짜 선택
+
+        //시작 날짜 선택
         binding.date1.setOnClickListener() {
             val todoDatePickerDialog = TodoDatePickerDialog(
                 this, this, startMonth.year + 1, endMonth.year - 1,
@@ -143,6 +133,7 @@ class AddActivity : AppCompatActivity() {
             )
             todoDatePickerDialog.show()
         }
+        //끝나는 날짜 선택
         binding.date2.setOnClickListener() {
             val todoDatePickerDialog = TodoDatePickerDialog(
                 this, this, startMonth.year + 1, endMonth.year - 1,
@@ -151,7 +142,7 @@ class AddActivity : AppCompatActivity() {
             todoDatePickerDialog.show()
         }
 
-        //시간
+        //시간 선택
         binding.startTime.setOnClickListener() {
             val timePickerDialog = TimePickerDialog(this, this,
                 selectedFirstHour, selectedFirstMinute, 0)
@@ -163,7 +154,7 @@ class AddActivity : AppCompatActivity() {
             timePickerDialog.show()
         }
 
-        //스위치 on/off
+        //달력에 출력할 것인지에 대한 스위치 on/off
         val switchView: SwitchCompat = findViewById(R.id.cswitch)
         switchView.setOnCheckedChangeListener {buttonView, isChecked ->
             if (isChecked) {
@@ -173,7 +164,6 @@ class AddActivity : AppCompatActivity() {
                 switchView.isChecked = false
             }
         }
-        //달력에 표시 되게...
 
         //반복
         binding.todoRepeat.setOnClickListener {
@@ -189,11 +179,11 @@ class AddActivity : AppCompatActivity() {
 
         //취소 버튼
         binding.btnCancel.setOnClickListener {
-            //val intent = Intent()
             intent.putExtra("resultDate", intentDate.toString())
             setResult(RESULT_OK, intent)
             finish()
         }
+
         //저장 버튼
         buttonSave.setOnClickListener {
             addDataToFirestore()
@@ -243,23 +233,25 @@ class AddActivity : AppCompatActivity() {
                     })"
                 )
             }
-    } else if (flag == 1) {
-        if (year != null && month != null && day != null) {
-            selectedDate2 = LocalDate.of(year, month, day)
-            binding.date2.setText(
-                "${month}월 ${day}일 (${
-                    selectedDate2.dayOfWeek.getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.KOREAN
-                    )
-                })"
-            )
+        } else if (flag == 1) {
+            if (year != null && month != null && day != null) {
+                selectedDate2 = LocalDate.of(year, month, day)
+                binding.date2.setText(
+                    "${month}월 ${day}일 (${
+                        selectedDate2.dayOfWeek.getDisplayName(
+                            TextStyle.SHORT,
+                            Locale.KOREAN
+                        )
+                    })"
+                )
 
+            }
         }
     }
-}
 
+    //firestore에 데이터 저장하기
     private fun addDataToFirestore() {
+        //저장하는 데이터들에 대한 변수 지정
         val title = addTitle.text.toString()
 
         val icon = binding.iconBtn.tag as? Int
@@ -297,17 +289,13 @@ class AddActivity : AppCompatActivity() {
         db.collection("users")
             .add(newItemData)
             .addOnSuccessListener { documentReference ->
-                // 성공적으로 추가됐을 때 처리
-                //val intent = Intent()
                 intent.putExtra("resultDate", intentDate.toString())
                 setResult(RESULT_OK, intent)
                 finish()
-                Log.d("bin","데이터 저장됨")
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "저장이 안됐습니다", Toast.LENGTH_SHORT).show()
-                Log.d("bin","되긴 개뿔")
-                // 실패했을 때 처리
+
             }
     }
 }

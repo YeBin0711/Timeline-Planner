@@ -7,28 +7,17 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.timelineplanner.databinding.ActivityMainBinding
-import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-
-    private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-        if (error != null) {
-            Log.e(TAG, "로그인 실패1 $error")
-        } else if (token != null) {
-            Log.e(TAG, "로그인 성공 ${token.accessToken}")
-            val intent = Intent(this,HomeActivity::class.java)
-            startActivity(intent)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 카카오톡 로그인 버튼 클릭 시
+        // 카카오톡 로그인 버튼
         binding.kakaoLoginBtn.setOnClickListener {
             UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
                 if (error != null) {
@@ -36,7 +25,6 @@ class MainActivity : AppCompatActivity() {
                 } else if (token != null) {
                     Log.i(TAG, "카카오 계정으로 로그인 성공: ${token.accessToken}")
 
-                    // 로그인 성공 후의 동작 수행
                     val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -44,20 +32,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        //회원가입 버튼
         binding.acMainBtnJoin.setOnClickListener {
             val intent = Intent(this, JoinActivity::class.java)
             startActivity(intent)
         }
 
-
-        //이 부분을 키면 로그인만 누르면 넘어가짐 대신 밑에 acMainBtnLogin은 주석 처리해야함!
-
-        binding.acMainBtnLogin.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-        }
-
-        /*
         //아이디랑 비밀번호가 일치해야지만 로그인 가능 기능
         binding.acMainBtnLogin.setOnClickListener {
             //이메일, 비밀번호 로그인.......................
@@ -89,8 +69,5 @@ class MainActivity : AppCompatActivity() {
                     }
             }
         }
-
-*/
-
     }
 }

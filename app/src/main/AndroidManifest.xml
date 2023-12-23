@@ -23,6 +23,7 @@
         <meta-data android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_native_app_key"/>
 
+        <!--카카오톡 로그인을 위한 sdk 추가-->
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -31,7 +32,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
                 <data android:host="oauth"
                     android:scheme="kakao652608920c48620d95a7bca8590741c4" />
             </intent-filter>
@@ -43,8 +43,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

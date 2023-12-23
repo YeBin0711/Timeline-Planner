@@ -133,7 +133,6 @@ class MonthlyCellBinder(val activity: MonthlyActivity) : MonthDayBinder<Calendar
             .whereEqualTo("daydate1", dateString)
             .get()
             .addOnSuccessListener { result ->
-                //val todos = mutableListOf<Todo>()
                 for (document in result) {
                     val daytitle = document.getString("daytitle") ?: ""
 
@@ -153,7 +152,7 @@ class MonthlyCellBinder(val activity: MonthlyActivity) : MonthDayBinder<Calendar
 
                     val show = document.getBoolean("dayshow") ?: false
 
-                    val documentId = document.id // 여기서 문서 ID를 가져옵니다.
+                    val documentId = document.id
 
                     var todo = Todo(daytitle, daycolor, dayicon, daydate1, daydate2, daymemo, show, documentId)
                     todo.firestoreDocumentId = documentId

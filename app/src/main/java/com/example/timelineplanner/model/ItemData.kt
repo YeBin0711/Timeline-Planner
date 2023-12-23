@@ -1,15 +1,8 @@
 package com.example.timelineplanner.model
 
-import com.example.timelineplanner.model.Time
 import java.time.LocalDate
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Log
-import com.example.timelineplanner.Homeadapter
-import com.example.timelineplanner.MyApplication
-import com.example.timelineplanner.MyApplication.Companion.db
-import com.example.timelineplanner.Todo
-import java.time.format.DateTimeFormatter
 
 
 data class ItemData(

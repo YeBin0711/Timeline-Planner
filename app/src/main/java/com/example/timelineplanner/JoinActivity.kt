@@ -22,24 +22,25 @@ class JoinActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //이메일 수신에 대한 체크박스
         cb1.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                cb2.isChecked = false // cb1 선택 시 cb2 해제
+                cb2.isChecked = false
             }
         }
 
         cb2.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                cb1.isChecked = false // cb2 선택 시 cb1 해제
+                cb1.isChecked = false
             }
         }
 
+        //회원가입 버튼을 누를 때 실행되는 내용들
         binding.acJoinBtnJoin.setOnClickListener {
-            //이메일,비밀번호 회원가입........................
+
             val email = binding.acJoinEmailId.text.toString()
             val password1 = binding.acJoinPassword1.text.toString()
             val password2 = binding.acJoinPassword2.text.toString()
-            val name = binding.acJoinName.text.toString()
             val intent = Intent(this, MainActivity::class.java)
             if(email.isEmpty()){
                 Toast.makeText(baseContext,"이메일을 입력하세요.",Toast.LENGTH_SHORT).show()
