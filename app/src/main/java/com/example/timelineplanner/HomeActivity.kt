@@ -222,7 +222,7 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
         val backgroundScope = CoroutineScope(Dispatchers.IO + Job())
         backgroundScope.launch {
             getDataFromFirestore(selectedDate) {items ->
-                itemList = items!!
+                itemList = items?: mutableListOf()
                 adapter = Homeadapter(this@HomeActivity, itemList, this@HomeActivity)
             }
             channel.send(adapter)
@@ -288,7 +288,6 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                 callback(null)
                 Log.e("FetchData", "Error getting documents.", exception)
             }
-        Log.d("add", "getData : ${itemList}")
     }
 
     private fun fetchDataFromFirestore(selectedDate: LocalDate) {

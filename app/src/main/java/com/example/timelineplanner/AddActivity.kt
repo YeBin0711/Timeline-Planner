@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
+import java.util.Calendar
 import java.util.Locale
 
 class AddActivity : AppCompatActivity() {
@@ -35,15 +36,15 @@ class AddActivity : AppCompatActivity() {
     var alarmType = 0
     lateinit var alarmTime : Array<Int>
 
-    var selectedFirstHour = 8
-    var selectedLastHour = 9
-    var selectedFirstMinute = 0
-    var selectedLastMinute = 0
+    var selectedFirstHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    var selectedLastHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    var selectedFirstMinute = Calendar.getInstance().get(Calendar.MINUTE)
+    var selectedLastMinute = Calendar.getInstance().get(Calendar.MINUTE)
 
     var selectedDate = LocalDate.now() //현재 날짜
     var selectedDate1: LocalDate = LocalDate.now() // 현재 날짜
     var selectedDate2: LocalDate = LocalDate.now() // 현재 날짜
-    var intentDate: LocalDate = LocalDate.now()
+    var intentDate: LocalDate? = LocalDate.now()
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -121,19 +122,20 @@ class AddActivity : AppCompatActivity() {
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
 
         //오늘 날짜로 기본 text set
-        if (intent.getStringExtra("date") != null) {
+        if (intentDate != null && LocalDate.parse(intent.getStringExtra("date")) != null) {
             intentDate = LocalDate.parse(intent.getStringExtra("date"))
             selectedDate = intentDate
-            selectedDate1 = intentDate
-            selectedDate2 = intentDate
+            selectedDate1 = intentDate!!
+            selectedDate2 = intentDate!!
+            Log.d("add", "if문 : "+selectedDate1.toString())
         }
         binding.date1.setText(
-            "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
-                    " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+            "${selectedDate1.monthValue}월 ${selectedDate1.dayOfMonth}일" +
+                    " (${selectedDate1.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
         )
         binding.date2.setText(
-            "${intentDate.monthValue}월 ${intentDate.dayOfMonth}일" +
-                    " (${intentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+            "${selectedDate2.monthValue}월 ${selectedDate2.dayOfMonth}일" +
+                    " (${selectedDate2.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
         )
         //날짜 선택
         binding.date1.setOnClickListener() {
@@ -190,7 +192,7 @@ class AddActivity : AppCompatActivity() {
         //취소 버튼
         binding.btnCancel.setOnClickListener {
             //val intent = Intent()
-            intent.putExtra("resultDate", intentDate.toString())
+            intent.putExtra("resultDate", LocalDate.parse(intent.getStringExtra("date")).toString())
             setResult(RESULT_OK, intent)
             finish()
         }
@@ -203,9 +205,14 @@ class AddActivity : AppCompatActivity() {
     //timePicker OkButton 함수
     fun onClickOkButton3(hour: Int, minute: Int, flag: Int) {
         if (flag == 0){
-            binding.startTime.setText("%02d:%02d".format(hour, minute))}
+            binding.startTime.setText("%02d:%02d".format(hour, minute))
+            selectedFirstHour = hour
+            selectedFirstMinute = minute
+        }
         else if (flag == 1) {
             binding.endTime.setText("%02d:%02d".format(hour, minute))
+            selectedLastHour = hour
+            selectedLastMinute = minute
             //endTime이 startTime보다 빠르면 끝나는 날짜를 다음날로 변경
             val startDate = binding.date1.text.toString()
             val endDate = binding.date2.text.toString()
@@ -233,6 +240,7 @@ class AddActivity : AppCompatActivity() {
     fun onClickOkButton4(year: Int, month: Int, day: Int, flag: Int) {
         if (flag == 0) {
             if (year != null && month != null && day != null) {
+                intentDate = null
                 selectedDate1 = LocalDate.of(year, month, day)
                 binding.date1.setText(
                     "${month}월 ${day}일 (${
@@ -242,22 +250,24 @@ class AddActivity : AppCompatActivity() {
                         )
                     })"
                 )
+                Log.d("add", "다이얼로그 확인 : "+selectedDate1.toString())
             }
-    } else if (flag == 1) {
-        if (year != null && month != null && day != null) {
-            selectedDate2 = LocalDate.of(year, month, day)
-            binding.date2.setText(
-                "${month}월 ${day}일 (${
-                    selectedDate2.dayOfWeek.getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.KOREAN
-                    )
-                })"
-            )
+        } else if (flag == 1) {
+            if (year != null && month != null && day != null) {
+                intentDate = null
+                selectedDate2 = LocalDate.of(year, month, day)
+                binding.date2.setText(
+                    "${month}월 ${day}일 (${
+                        selectedDate2.dayOfWeek.getDisplayName(
+                            TextStyle.SHORT,
+                            Locale.KOREAN
+                        )
+                    })"
+                )
 
+            }
         }
     }
-}
 
     private fun addDataToFirestore() {
         val title = addTitle.text.toString()
@@ -267,6 +277,7 @@ class AddActivity : AppCompatActivity() {
 
         val dateString1 = selectedDate1.toString()
         val dateString2 = selectedDate2.toString()
+        Log.d("add", "저장 : "+selectedDate1.toString())
 
         val firstTimeHour = String.format("%02d", selectedFirstHour)
         val firstTimeMinute = String.format("%02d", selectedFirstMinute)
@@ -299,7 +310,7 @@ class AddActivity : AppCompatActivity() {
             .addOnSuccessListener { documentReference ->
                 // 성공적으로 추가됐을 때 처리
                 //val intent = Intent()
-                intent.putExtra("resultDate", intentDate.toString())
+                intent.putExtra("resultDate", LocalDate.parse(intent.getStringExtra("date")).toString())
                 setResult(RESULT_OK, intent)
                 finish()
                 Log.d("bin","데이터 저장됨")
