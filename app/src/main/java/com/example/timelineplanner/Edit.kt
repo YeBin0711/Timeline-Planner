@@ -2,17 +2,15 @@ package com.example.timelineplanner
 
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.core.content.ContextCompat.startActivity
 import com.example.timelineplanner.databinding.AlarmDialogBinding
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.RepeatDialogBinding
 import com.example.timelineplanner.databinding.TimePickerBinding
 
+//Edit
 class TodoDatePickerDialog1(context: Context, val activity: EditActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int, var flag: Int): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +50,6 @@ class TimePickerDialog1(context: Context, val activity: EditActivity, var hour: 
         binding.minPicker1.maxValue = 59
         binding.minPicker1.value = minute
 
-        //항상 두 글자로 출력
         binding.hourPicker1.setFormatter { hour -> String.format("%02d", hour) }
         binding.minPicker1.setFormatter { minute -> String.format("%02d", minute) }
 

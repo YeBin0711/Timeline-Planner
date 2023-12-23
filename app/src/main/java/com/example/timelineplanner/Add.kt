@@ -10,17 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.example.timelineplanner.databinding.AlarmDialogBinding
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.example.timelineplanner.databinding.DatePickerBinding
 import com.example.timelineplanner.databinding.RepeatDialogBinding
 import com.example.timelineplanner.databinding.TimePickerBinding
-import android.app.Activity
-import android.content.Intent
 import androidx.core.content.ContextCompat
-import com.example.timelineplanner.databinding.IconDialogBinding
 
+//색상 선택 다이얼로그
 class ColorSelectionDialog : DialogFragment() {
 
     private var colorSelectedListener: ((Int) -> Unit)? = null
@@ -78,7 +75,7 @@ class ColorSelectionDialog : DialogFragment() {
     }
 }
 
-
+//아이콘 선택 다이얼로그
 class IconSelectionDialog : DialogFragment() {
 
     private var iconSelectedListener: ((Int) -> Unit)? = null
@@ -174,6 +171,7 @@ class IconSelectionDialog : DialogFragment() {
         return view
     }
 }
+//날짜 선택 데이트피커, 다이얼로그
 class TodoDatePickerDialog(context: Context, val activity: AddActivity, val minYear: Int, val maxYear: Int, var year: Int, var month: Int, var day: Int, var flag: Int): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -200,6 +198,7 @@ class TodoDatePickerDialog(context: Context, val activity: AddActivity, val minY
     }
 }
 
+//시간 선택 타임피커, 다이얼로그
 class TimePickerDialog(context: Context, val activity: AddActivity, var hour: Int, var minute: Int, var flag: Int): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -227,6 +226,7 @@ class TimePickerDialog(context: Context, val activity: AddActivity, var hour: In
     }
 }
 
+//반복 다이얼로그
 class RepeatDialog(context: Context, val activity: AddActivity): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -279,6 +279,7 @@ class RepeatDialog(context: Context, val activity: AddActivity): Dialog(context)
     }
 }
 
+//알람 다이얼로그
 class AlarmDialog(context: Context, val activity: AddActivity): Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

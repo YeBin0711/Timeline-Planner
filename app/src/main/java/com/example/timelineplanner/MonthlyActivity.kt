@@ -30,9 +30,9 @@ class MonthlyActivity : AppCompatActivity() {
 
         //달력 설정
         val currentMonth = YearMonth.now()
-        val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
-        val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
-        val firstDayOfWeek = firstDayOfWeekFromLocale() // Available from the library
+        val startMonth = currentMonth.minusMonths(100)
+        val endMonth = currentMonth.plusMonths(100)
+        val firstDayOfWeek = firstDayOfWeekFromLocale()
         binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
         binding.calendarView.monthMargins = MarginValues(15, 0, 15, 0)
         binding.calendarView.scrollToMonth(currentMonth)

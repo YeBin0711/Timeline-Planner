@@ -22,4 +22,7 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!--카카오 로그인 -->
+    <string name="kakao_native_app_key">652608920c48620d95a7bca8590741c4</string>
 </resources>

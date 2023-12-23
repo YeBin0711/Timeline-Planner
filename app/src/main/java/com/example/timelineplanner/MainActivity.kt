@@ -1,30 +1,42 @@
 package com.example.timelineplanner
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.timelineplanner.databinding.ActivityMainBinding
+import com.kakao.sdk.user.UserApiClient
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 카카오톡 로그인 버튼
+        binding.kakaoLoginBtn.setOnClickListener {
+            UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
+                if (error != null) {
+                    Toast.makeText(baseContext, "카카오 계정으로 로그인 실패: $error", Toast.LENGTH_SHORT).show()
+                } else if (token != null) {
+                    Log.i(TAG, "카카오 계정으로 로그인 성공: ${token.accessToken}")
+
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }
+
+        //회원가입 버튼
         binding.acMainBtnJoin.setOnClickListener {
             val intent = Intent(this, JoinActivity::class.java)
             startActivity(intent)
         }
-
-        //이 부분을 키면 로그인만 누르면 넘어가짐 대신 밑에 acMainBtnLogin은 주석 처리해야함!
-
-        binding.acMainBtnLogin.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-        }
-
 
         //아이디랑 비밀번호가 일치해야지만 로그인 가능 기능
         binding.acMainBtnLogin.setOnClickListener {
@@ -57,8 +69,5 @@ class MainActivity : AppCompatActivity() {
                     }
             }
         }
-
-
-
     }
 }

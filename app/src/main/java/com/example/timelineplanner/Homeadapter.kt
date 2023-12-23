@@ -39,12 +39,10 @@ class Homeadapter(
         return ItemViewHolder(itemView)
     }
 
-
     override fun onBindViewHolder(holder: ItemViewHolder,position: Int) {
         val currentItem = itemList[position]
 
         holder.textViewTitle.text = currentItem.daytitle
-        // 배경색을 적용할 뷰의 ID에 접근하여 배경색 설정
         holder.imageViewColor.setBackgroundColor(currentItem.daycolor)
 
         holder.imageViewIcon.setImageResource(currentItem.dayicon)
@@ -72,20 +70,18 @@ class Homeadapter(
         )
 
         holder.imageViewColor.layoutParams.height = imageViewHeight
-        // 해당 TextView의 layoutparams를 가져와서 설정
         holder.emptyView.layoutParams.height=imageViewHeight - 75
 
-        var isChecked = false // 초기 상태
+        var isChecked = false
 
         //checkbox 색상 변경 코드
         holder.checkBox.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    isChecked = !isChecked // 상태를 토글합니다.
+                    isChecked = !isChecked
 
                     if (isChecked)
                         when(currentItem.daycolor) {
-                        // CheckBox가 체크되면 원하는 작업을 실행합니다.
                         Color.parseColor("#FFD5D5") -> {
                             holder.checkBoxColor.setBackgroundResource(R.color.lightred)
                             holder.checkBoxIcon.setImageResource(R.drawable.check)
@@ -117,55 +113,41 @@ class Homeadapter(
                         }
 
                     } else {
-                        // CheckBox가 체크 해제되면 원하는 작업을 실행합니다.
                         holder.checkBoxColor.setBackgroundResource(R.drawable.checkbox_custom)
                         holder.checkBoxIcon.setImageResource(R.drawable.checkbox_custom)
                     }
                 }
             }
-            // 이벤트가 소비되었음을 나타냅니다.
+
             true
         }
 
-        holder.itemView.setOnClickListener { view -> // 아이템 클릭 시 처리할 내용 작성
+        holder.itemView.setOnClickListener { view ->
             // 아이템 클릭 시 처리할 내용 작성
-            val selectedItem: ItemData = itemList[position]// 선택된 아이템
+            val selectedItem: ItemData = itemList[position]
             val intent = Intent(context, EditActivity::class.java)
             intent.putExtra("selectedItem", selectedItem)
-            //context.startActivity(intent)
             startActivityForResult(context as HomeActivity, intent, 1, null)
-            //requestLauncher.launch(intent)
+
         }
     }
 
 
+    //이미지 뷰 크기 변환하는 코드
     private fun calculateImageViewHeight(firstTime: Time, lastTime: Time): Int {
         val firstHour = firstTime.hour.toInt()
         val lastHour = lastTime.hour.toInt()
 
         val difference = lastHour - firstHour
         val calculatedHeight = when {
-            difference <= 1 -> 200 // 시간 차이가 1시간 미만인 경우 최소 높이 적용
+            difference <= 1 -> 200
             difference == 2 -> 250
             difference == 3 -> 300
-            difference == 4 -> 400 // 시간 차이가 5시간 이상인 경우 최대 높이 적용
-            else -> 450 // 그 외의 경우, 시간 차이에 비례한 높이 적용
+            difference == 4 -> 400
+            else -> 450
         }
 
         return calculatedHeight
-    }
-    private fun extractHourFromString(time: String): Int {
-        val parts = time.split(":")
-        if (parts.size == 2) {
-            val hour = parts[0]
-            return try {
-                hour.toInt()
-            } catch (e: NumberFormatException) {
-                // Handle the exception appropriately or provide a default value
-                0 // Return a default value when the conversion fails
-            }
-        }
-        return 0 // Default value or handle error appropriately
     }
 
     override fun getItemCount() = itemList.size
@@ -183,7 +165,6 @@ class Homeadapter(
         val checkBoxIcon : ImageView = itemView.findViewById(R.id.checkbox_icon)
         val line : View = itemView.findViewById(R.id.line2)
 
-        // 아이템 클릭 리스너 설정
         init {
             itemView.setOnClickListener {
                 val position = adapterPosition
@@ -200,7 +181,7 @@ class DayViewContainer(view: View) : ViewContainer(view) {
     val calendarDayNumber = ItemCalendarDayBinding.bind(view).calendarDayNumber
     val calendarDayName = ItemCalendarDayBinding.bind(view).calendarDayName
 
-    // Will be set when this container is bound
+
     lateinit var day: WeekDay
 
     init {

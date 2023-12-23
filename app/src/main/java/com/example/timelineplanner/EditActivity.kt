@@ -28,7 +28,6 @@ class EditActivity : AppCompatActivity() {
     var selectedDate: LocalDate = LocalDate.now()
     var selectedDate1: LocalDate = LocalDate.now()
     var selectedDate2: LocalDate = LocalDate.now()
-    //var intentDate: LocalDate = LocalDate.now()
 
     var repeatType = 0
     lateinit var repeatDays : Array<Int>
@@ -42,7 +41,7 @@ class EditActivity : AppCompatActivity() {
         editfirstTime = findViewById(R.id.edit_start_time)
         editlastTime = findViewById(R.id.edit_end_time)
 
-        //editTitle = findViewById(R.id.edit_todo_title)
+        //HomeActivity에서 선택한 데이터 가져오기
         val intent = intent
         if (intent.hasExtra("selectedItem")) {
             selectedItem = intent.getParcelableExtra<ItemData>("selectedItem")!!
@@ -82,6 +81,7 @@ class EditActivity : AppCompatActivity() {
             documentId.text = selectedItem.firestoreDocumentId
 
         }
+
         //색상
         binding.editColorBtn.setOnClickListener {
             val colorDialog = ColorSelectionDialog()
@@ -162,6 +162,7 @@ class EditActivity : AppCompatActivity() {
             }
         }
 
+        //수정한 것을 저장하는 버튼
         binding.editBtnSave.setOnClickListener {
             editDataToFirestore()
         }
@@ -170,7 +171,7 @@ class EditActivity : AppCompatActivity() {
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
 
-        //날짜 선택
+        //시작 날짜 선택
         binding.editDate1.setOnClickListener() {
             val todoDatePickerDialog = TodoDatePickerDialog1(
                 this, this, startMonth.year + 1, endMonth.year - 1,
@@ -178,6 +179,8 @@ class EditActivity : AppCompatActivity() {
             )
             todoDatePickerDialog.show()
         }
+
+        //끝나는 날짜 선택
         binding.editDate2.setOnClickListener() {
             val todoDatePickerDialog = TodoDatePickerDialog1(
                 this, this, startMonth.year + 1, endMonth.year - 1,
@@ -186,17 +189,18 @@ class EditActivity : AppCompatActivity() {
             todoDatePickerDialog.show()
         }
 
-        //시간
+        //시작 시간 선택
         binding.editStartTime.setOnClickListener() {
             val timePickerDialog = TimePickerDialog1(this, this, 8, 0, 0)
             timePickerDialog.show()
         }
+        //끝나는 시간 선택
         binding.editEndTime.setOnClickListener() {
             val timePickerDialog = TimePickerDialog1(this, this, 9, 0, 1)
             timePickerDialog.show()
         }
 
-        //스위치 on/off
+        //달력에 출력할 것인지에 대한 스위치 on/off
         val switchView: SwitchCompat = findViewById(R.id.edit_cswitch)
         switchView.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
@@ -205,6 +209,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
+    //TimePicker에 대한 함수
     fun onClickOkButton5(hour: Int, minute: Int, flag: Int) {
         if (flag == 0){
             binding.editStartTime.setText("%02d:%02d".format(hour, minute))}
@@ -233,8 +238,8 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
+    //DatePicker에서 사용하는 함수
     fun onClickOkButton6(year: Int, month: Int, day: Int, flag: Int) {
-        //selectedDate = LocalDate.of(year, month, day)
         if (flag == 0) {
             selectedDate1 = LocalDate.of(year, month, day)
             binding.editDate1.setText(
@@ -261,6 +266,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
+    //Firestore 데이터 수정하기
     private fun editDataToFirestore() {
 
         if (selectedItem != null) {
@@ -272,7 +278,7 @@ class EditActivity : AppCompatActivity() {
             val updatedDateString1 = selectedDate1.toString()
             val updatedDateString2 = selectedDate2.toString()
 
-            val editfirstTime = editfirstTime.text.toString() // 이 부분은 Firestore에서 가져온 문자열이어야 합니다.
+            val editfirstTime = editfirstTime.text.toString()
             val editfirstTimeParts = editfirstTime.split(":")
             val editfirstTimeHour = editfirstTimeParts[0]
             val editfirstTimeMinute = editfirstTimeParts[1]
@@ -283,8 +289,6 @@ class EditActivity : AppCompatActivity() {
             val editlastTimeMinute = editlastTimeParts[1]
 
             val editShow = binding.editCswitch.isChecked
-
-            val isCheckData = (selectedItem.daycolor )
 
             db.collection("users")
                 .document(selectedItem.firestoreDocumentId)
