@@ -133,6 +133,20 @@ class HomeActivity : AppCompatActivity(), DayViewContainer.RecyclerViewClickList
                             )
                         )
                     }
+                    else {
+                        container.calendarDayNumber.setTextColor(
+                            ContextCompat.getColor(
+                                this@HomeActivity,
+                                R.color.black
+                            )
+                        )
+                        container.calendarDayName.setTextColor(
+                            ContextCompat.getColor(
+                                this@HomeActivity,
+                                R.color.black
+                            )
+                        )
+                    }
                 }
 
                 weekyear = data.date.year.toString()
